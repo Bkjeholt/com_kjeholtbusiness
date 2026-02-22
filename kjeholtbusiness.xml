@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" version="5.0" method="upgrade">
+    <name>COM_KJEHOLTBUSINESS</name>
+    <creationDate>2026-02-19</creationDate>
+    <author>Kjeholt Engineering and Services AB</author>
+    <authorEmail>info@kjeholt.se</authorEmail>
+    <authorUrl>www.kjeholt.se</authorUrl>
+    <copyright>Copyright (C) 2026 Kjeholt Engineering and Services AB. All rights reserved.</copyright>
+    <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+    <version>0.1.1</version>
+    <description>COM_KJEHOLTBUSINESS_XML_DESCRIPTION</description>
+    <namespace path="src">KjeholtEngineering\Component\KjeholtBusiness</namespace>
+    <scriptfile>script.php</scriptfile>
+
+    <!-- Administratörsfiler -->
+    <administration>
+        <files folder="administrator/components/com_kjeholtbusiness">
+            <folder>services</folder>
+            <folder>src</folder>
+            <folder>forms</folder>
+            <folder>sql</folder>
+            <folder>tmpl</folder>
+<!--        <folder>language</folder>  --> 
+            <file>script.php</file>
+        </files>
+    </administration>
+
+    <!-- Webbplatsfiler -->
+    <files folder="components/com_kjeholtbusiness">
+        <folder>services</folder>
+        <folder>src</folder>
+        <folder>forms</folder>
+<!--        <folder>language</folder>  --> 
+        <folder>tmpl</folder>
+    </files>
+
+    <!-- Språkfiler -->
+    <!-- 
+    <languages folder="language">
+        <language tag="sv-SE">com_kjeholtbusiness.ini</language>
+        <language tag="sv-SE">com_kjeholtbusiness.sys.ini</language>
+    </languages>
+ -->
+ 
+    <media destination="com_kjeholtbusiness" folder="media/com_kjeholtbusiness">
+        <folder>css</folder>
+        <folder>js</folder>
+        <folder>images</folder>
+        <folder>templates</folder>
+    </media>
+    
+    <!-- Databasinstallation -->
+    <install>
+        <sql>
+            <file driver="mysql" charset="utf8mb4">sql/install.mysql.utf8.sql</file>
+        </sql>
+    </install>
+
+    <!-- Databasavinstallation -->
+    <uninstall>
+        <sql>
+            <file driver="mysql" charset="utf8mb4">sql/uninstall.mysql.utf8.sql</file>
+        </sql>
+    </uninstall>
+
+    <!-- Menytyper för webbplatsen -->
+    <menu>
+        Kjeholt Business Dashboard
+    </menu>
+
+    <!-- Åtkomstkontroll -->
+    <access>
+        <section name="component">
+            <action name="core.admin" title="JACTION_ADMIN" description="JACTION_ADMIN_COMPONENT_DESC"/>
+            <action name="core.manage" title="JACTION_MANAGE" description="JACTION_MANAGE_COMPONENT_DESC"/>
+            <action name="core.create" title="JACTION_CREATE" description="JACTION_CREATE_COMPONENT_DESC"/>
+            <action name="core.delete" title="JACTION_DELETE" description="JACTION_DELETE_COMPONENT_DESC"/>
+            <action name="core.edit" title="JACTION_EDIT" description="JACTION_EDIT_COMPONENT_DESC"/>
+            <action name="core.edit.state" title="JACTION_EDITSTATE" description="JACTION_EDITSTATE_COMPONENT_DESC"/>
+            <action name="core.edit.own" title="JACTION_EDITOWN" description="JACTION_EDITOWN_COMPONENT_DESC"/>
+        </section>
+        <section name="project">
+            <action name="project.create" title="COM_KJEHOLTBUSINESS_ACTION_CREATE_PROJECT" description="COM_KJEHOLTBUSINESS_ACTION_CREATE_PROJECT_DESC"/>
+            <action name="project.edit" title="COM_KJEHOLTBUSINESS_ACTION_EDIT_PROJECT" description="COM_KJEHOLTBUSINESS_ACTION_EDIT_PROJECT_DESC"/>
+            <action name="project.delete" title="COM_KJEHOLTBUSINESS_ACTION_DELETE_PROJECT" description="COM_KJEHOLTBUSINESS_ACTION_DELETE_PROJECT_DESC"/>
+            <action name="project.view" title="COM_KJEHOLTBUSINESS_ACTION_VIEW_PROJECT" description="COM_KJEHOLTBUSINESS_ACTION_VIEW_PROJECT_DESC"/>
+        </section>
+        <section name="subproject">
+            <action name="subproject.create" title="COM_KJEHOLTBUSINESS_ACTION_CREATE_SUBPROJECT" description="COM_KJEHOLTBUSINESS_ACTION_CREATE_SUBPROJECT_DESC"/>
+            <action name="subproject.edit" title="COM_KJEHOLTBUSINESS_ACTION_EDIT_SUBPROJECT" description="COM_KJEHOLTBUSINESS_ACTION_EDIT_SUBPROJECT_DESC"/>
+            <action name="subproject.delete" title="COM_KJEHOLTBUSINESS_ACTION_DELETE_SUBPROJECT" description="COM_KJEHOLTBUSINESS_ACTION_DELETE_SUBPROJECT_DESC"/>
+            <action name="subproject.view" title="COM_KJEHOLTBUSINESS_ACTION_VIEW_SUBPROJECT" description="COM_KJEHOLTBUSINESS_ACTION_VIEW_SUBPROJECT_DESC"/>
+        </section>
+        <section name="expency">
+            <action name="expency.create" title="COM_KJEHOLTBUSINESS_ACTION_CREATE_EXPENCY" description="COM_KJEHOLTBUSINESS_ACTION_CREATE_EXPENCY_DESC"/>
+            <action name="expency.edit" title="COM_KJEHOLTBUSINESS_ACTION_EDIT_EXPENCY" description="COM_KJEHOLTBUSINESS_ACTION_EDIT_EXPENCY_DESC"/>
+            <action name="expency.delete" title="COM_KJEHOLTBUSINESS_ACTION_DELETE_EXPENCY" description="COM_KJEHOLTBUSINESS_ACTION_DELETE_EXPENCY_DESC"/>
+            <action name="expency.view" title="COM_KJEHOLTBUSINESS_ACTION_VIEW_EXPENCY" description="COM_KJEHOLTBUSINESS_ACTION_VIEW_EXPENCY_DESC"/>
+        </section>
+    </access>
+
+    <!-- Konfiguration -->
+    <config>
+    </config>
+</extension>

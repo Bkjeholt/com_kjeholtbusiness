@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <field name="id" type="hidden" />
+    <field name="name" type="text" label="COM_KJEHOLTBUSINESS_SUBPROJECT_FIELD_NAME_LABEL" description="COM_KJEHOLTBUSINESS_SUBPROJECT_FIELD_NAME_DESC" required="true" size="40" />
+    <field name="description" type="editor" label="COM_KJEHOLTBUSINESS_SUBPROJECT_FIELD_DESCRIPTION_LABEL" description="COM_KJEHOLTBUSINESS_SUBPROJECT_FIELD_DESCRIPTION_DESC" filter="safehtml" buttons="true" />
+    <field name="sequence_id" type="number" label="COM_KJEHOLTBUSINESS_SUBPROJECT_FIELD_SEQUENCE_ID_LABEL" description="COM_KJEHOLTBUSINESS_SUBPROJECT_FIELD_SEQUENCE_ID_DESC" required="true" />
+    <field name="project_id" type="number" label="COM_KJEHOLTBUSINESS_SUBPROJECT_FIELD_PROJECT_ID_LABEL" description="COM_KJEHOLTBUSINESS_SUBPROJECT_FIELD_PROJECT_ID_DESC" required="true" />
+    <field name="start_date" type="calendar" label="COM_KJEHOLTBUSINESS_SUBPROJECT_FIELD_START_DATE_LABEL" description="COM_KJEHOLTBUSINESS_SUBPROJECT_FIELD_START_DATE_DESC" format="%Y-%m-%d" />
+    <field name="hourly_rate" type="text" label="COM_KJEHOLTBUSINESS_SUBPROJECT_FIELD_HOURLY_RATE_LABEL" description="COM_KJEHOLTBUSINESS_SUBPROJECT_FIELD_HOURLY_RATE_DESC" required="true" />
+    <field name="status" type="list" label="COM_KJEHOLTBUSINESS_SUBPROJECT_FIELD_STATUS_LABEL" description="COM_KJEHOLTBUSINESS_SUBPROJECT_FIELD_STATUS_DESC" default="not-started">
+        <option value="not-started">COM_KJEHOLTBUSINESS_SUBPROJECT_STATUS_NOT_STARTED</option>
+        <option value="active">COM_KJEHOLTBUSINESS_SUBPROJECT_STATUS_ACTIVE</option>
+        <option value="ready">COM_KJEHOLTBUSINESS_SUBPROJECT_STATUS_READY</option>
+        <option value="waiting-for-payment">COM_KJEHOLTBUSINESS_SUBPROJECT_STATUS_WAITING_FOR_PAYMENT</option>
+        <option value="closed">COM_KJEHOLTBUSINESS_SUBPROJECT_STATUS_CLOSED</option>
+    </field>
+</form>
+

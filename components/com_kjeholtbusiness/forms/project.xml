@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <field name="id" type="hidden" />
+    <field name="name" type="text" label="COM_KJEHOLTBUSINESS_PROJECT_FIELD_NAME_LABEL" description="COM_KJEHOLTBUSINESS_PROJECT_FIELD_NAME_DESC" required="true" size="40" />
+    <field name="description" type="editor" label="COM_KJEHOLTBUSINESS_PROJECT_FIELD_DESCRIPTION_LABEL" description="COM_KJEHOLTBUSINESS_PROJECT_FIELD_DESCRIPTION_DESC" filter="safehtml" buttons="true" />
+    <field name="property_name" type="text" label="COM_KJEHOLTBUSINESS_PROJECT_FIELD_PROPERTY_NAME_LABEL" description="COM_KJEHOLTBUSINESS_PROJECT_FIELD_PROPERTY_NAME_DESC" required="true" size="40" />
+    <field name="start_date" type="calendar" label="COM_KJEHOLTBUSINESS_PROJECT_FIELD_START_DATE_LABEL" description="COM_KJEHOLTBUSINESS_PROJECT_FIELD_START_DATE_DESC" format="%Y-%m-%d" />
+    <field name="status" type="list" label="COM_KJEHOLTBUSINESS_PROJECT_FIELD_STATUS_LABEL" description="COM_KJEHOLTBUSINESS_PROJECT_FIELD_STATUS_DESC" default="preliminary">
+        <option value="preliminary">COM_KJEHOLTBUSINESS_PROJECT_STATUS_PRELIMINARY</option>
+        <option value="confirmed">COM_KJEHOLTBUSINESS_PROJECT_STATUS_CONFIRMED</option>
+        <option value="on-going">COM_KJEHOLTBUSINESS_PROJECT_STATUS_ON_GOING</option>
+        <option value="finalized">COM_KJEHOLTBUSINESS_PROJECT_STATUS_FINALIZED</option>
+        <option value="cancelled">COM_KJEHOLTBUSINESS_PROJECT_STATUS_CANCELLED</option>
+    </field>
+    <field name="customer_id" type="user" label="COM_KJEHOLTBUSINESS_PROJECT_FIELD_CUSTOMER_ID_LABEL" description="COM_KJEHOLTBUSINESS_PROJECT_FIELD_CUSTOMER_ID_DESC" />
+    <field name="company_id" type="number" label="COM_KJEHOLTBUSINESS_PROJECT_FIELD_COMPANY_ID_LABEL" description="COM_KJEHOLTBUSINESS_PROJECT_FIELD_COMPANY_ID_DESC" required="true" />
+</form>
+

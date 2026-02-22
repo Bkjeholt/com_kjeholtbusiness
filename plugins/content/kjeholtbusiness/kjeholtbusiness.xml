@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" version="5.0" group="content" method="upgrade">
+    <name>PLG_CONTENT_KJEHOLTBUSINESS</name>
+    <creationDate>2026-02-19</creationDate>
+    <author>Kjeholt Engineering and Services AB</author>
+    <authorEmail>info@kjeholt.se</authorEmail>
+    <authorUrl>www.kjeholt.se</authorUrl>
+    <copyright>Copyright (C) 2026 Kjeholt Engineering and Services AB. All rights reserved.</copyright>
+    <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+    <version>0.1.0</version>
+    <description>PLG_CONTENT_KJEHOLTBUSINESS_XML_DESCRIPTION</description>
+    <namespace path="src">KjeholtEngineering\Plugin\Content\KjeholtBusiness</namespace>
+    <files>
+        <folder>services</folder>
+        <folder>src</folder>
+        <folder>forms</folder>
+        <folder>language</folder>
+    </files>
+    <languages>
+        <language tag="sv-SE">language/sv-SE/plg_content_kjeholtbusiness.ini</language>
+    </languages>
+</extension>
+

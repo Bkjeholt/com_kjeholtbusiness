@@ -1,0 +1,15 @@
+<?php
+namespace KjeholtEngineering\Component\KjeholtBusiness\Site\Controller;
+
+defined('_JEXEC') or die;
+
+use Joomla\CMS\MVC\Controller\BaseController;
+
+class DisplayController extends BaseController
+{
+    public function display($cachable = false, $urlparams = [])
+    {
+        return parent::display($cachable, $urlparams);
+    }
+}
+
