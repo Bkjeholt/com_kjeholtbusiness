@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component" version="5.0" method="upgrade">
     <name>COM_KJEHOLTBUSINESS</name>
-    <creationDate>2026-02-19</creationDate>
+    <creationDate>2026-03-13</creationDate>
     <author>Kjeholt Engineering and Services AB</author>
     <authorEmail>info@kjeholt.se</authorEmail>
-    <authorUrl>www.kjeholt.se</authorUrl>
+    <authorUrl>engineering.kjeholt.se</authorUrl>
     <copyright>Copyright (C) 2026 Kjeholt Engineering and Services AB. All rights reserved.</copyright>
     <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
-    <version>0.1.1</version>
+    <version>0.2.1</version>
     <description>COM_KJEHOLTBUSINESS_XML_DESCRIPTION</description>
     <namespace path="src">KjeholtEngineering\Component\KjeholtBusiness</namespace>
     <scriptfile>script.php</scriptfile>
@@ -20,7 +20,7 @@
             <folder>forms</folder>
             <folder>sql</folder>
             <folder>tmpl</folder>
-<!--        <folder>language</folder>  --> 
+<!--             <folder>language</folder>  -->
             <file>script.php</file>
         </files>
     </administration>
@@ -30,13 +30,15 @@
         <folder>services</folder>
         <folder>src</folder>
         <folder>forms</folder>
-<!--        <folder>language</folder>  --> 
+<!--         <folder>language</folder>  --> 
         <folder>tmpl</folder>
     </files>
 
     <!-- Språkfiler -->
-    <!-- 
+<!--      
     <languages folder="language">
+        <language tag="en-GB">com_kjeholtbusiness.ini</language>
+        <language tag="en-GB">com_kjeholtbusiness.sys.ini</language>
         <language tag="sv-SE">com_kjeholtbusiness.ini</language>
         <language tag="sv-SE">com_kjeholtbusiness.sys.ini</language>
     </languages>
@@ -49,14 +51,12 @@
         <folder>templates</folder>
     </media>
     
-    <!-- Databasinstallation -->
+    <!-- Database handling -->
     <install>
         <sql>
             <file driver="mysql" charset="utf8mb4">sql/install.mysql.utf8.sql</file>
         </sql>
     </install>
-
-    <!-- Databasavinstallation -->
     <uninstall>
         <sql>
             <file driver="mysql" charset="utf8mb4">sql/uninstall.mysql.utf8.sql</file>
@@ -67,7 +67,11 @@
     <menu>
         Kjeholt Business Dashboard
     </menu>
-
+<!--  
+    <updateservers>
+		<server type="collection" name="Update server for the Kjeholt Business support Suite">http://joomla.kjeholt.se/updates/extension.xml</server>
+	</updateservers>
+-->
     <!-- Åtkomstkontroll -->
     <access>
         <section name="component">
@@ -91,11 +95,17 @@
             <action name="subproject.delete" title="COM_KJEHOLTBUSINESS_ACTION_DELETE_SUBPROJECT" description="COM_KJEHOLTBUSINESS_ACTION_DELETE_SUBPROJECT_DESC"/>
             <action name="subproject.view" title="COM_KJEHOLTBUSINESS_ACTION_VIEW_SUBPROJECT" description="COM_KJEHOLTBUSINESS_ACTION_VIEW_SUBPROJECT_DESC"/>
         </section>
-        <section name="expency">
-            <action name="expency.create" title="COM_KJEHOLTBUSINESS_ACTION_CREATE_EXPENCY" description="COM_KJEHOLTBUSINESS_ACTION_CREATE_EXPENCY_DESC"/>
-            <action name="expency.edit" title="COM_KJEHOLTBUSINESS_ACTION_EDIT_EXPENCY" description="COM_KJEHOLTBUSINESS_ACTION_EDIT_EXPENCY_DESC"/>
-            <action name="expency.delete" title="COM_KJEHOLTBUSINESS_ACTION_DELETE_EXPENCY" description="COM_KJEHOLTBUSINESS_ACTION_DELETE_EXPENCY_DESC"/>
-            <action name="expency.view" title="COM_KJEHOLTBUSINESS_ACTION_VIEW_EXPENCY" description="COM_KJEHOLTBUSINESS_ACTION_VIEW_EXPENCY_DESC"/>
+        <section name="expense">
+            <action name="expense.create" title="COM_KJEHOLTBUSINESS_ACTION_CREATE_EXPENSE" description="COM_KJEHOLTBUSINESS_ACTION_CREATE_EXPENSE_DESC"/>
+            <action name="expense.edit" title="COM_KJEHOLTBUSINESS_ACTION_EDIT_EXPENSE" description="COM_KJEHOLTBUSINESS_ACTION_EDIT_EXPENCSE_DESC"/>
+            <action name="expense.delete" title="COM_KJEHOLTBUSINESS_ACTION_DELETE_EXPENSE" description="COM_KJEHOLTBUSINESS_ACTION_DELETE_EXPENSE_DESC"/>
+            <action name="expense.view" title="COM_KJEHOLTBUSINESS_ACTION_VIEW_EXPENSE" description="COM_KJEHOLTBUSINESS_ACTION_VIEW_EXPENCSE_DESC"/>
+        </section>
+        <section name="time">
+        	<action name="time.create" title="COM_KJEHOLTBUSINESS_ACTION_CREATE_TIME" description="COM_KJEHOLTBUSINESS_ACTION_CREATE_TIME_DESC"/>
+            <action name="time.edit" title="COM_KJEHOLTBUSINESS_ACTION_EDIT_TIME" description="COM_KJEHOLTBUSINESS_ACTION_EDIT_TIME_DESC"/>
+            <action name="time.delete" title="COM_KJEHOLTBUSINESS_ACTION_DELETE_TIME" description="COM_KJEHOLTBUSINESS_ACTION_DELETE_TIME_DESC"/>
+            <action name="time.view" title="COM_KJEHOLTBUSINESS_ACTION_VIEW_TIME" description="COM_KJEHOLTBUSINESS_ACTION_VIEW_TIME_DESC"/>
         </section>
     </access>
 

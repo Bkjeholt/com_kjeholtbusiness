@@ -20,6 +20,15 @@ class Com_KjeholtbusinessInstallerScript
      */
     public function install($parent)
     {
+
+        Log::add('Debug: Check to see that all tables have been created.', Log::DEBUG, 'com_kjeholtbusiness');
+        
+        $db = JFactory::getDbo();
+        $query = "SHOW TABLES;";
+        $db->setQuery($query);
+        $tables = $db->loadColumn();
+        error_log("Debug: Tabeller i databasen: " . print_r($tables, true));
+        
         $parent->getParent()->setRedirectURL('index.php?option=com_kjeholtbusiness');
         return true;
     }

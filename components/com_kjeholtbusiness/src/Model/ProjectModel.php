@@ -34,9 +34,18 @@ class ProjectModel extends FormModel
         // Check the session for previously entered form data.
         $data = Factory::getApplication()->getUserState(
             'com_kjeholtbusiness.project',  // a unique name to identify the data in the session
-            array("name" => "Uppdrag för att testa formuläret",
-                "property_name" => "Värmdö Södersunda 1:74",
-                "status" => "preliminary"
+            array("project_name" => "Uppdrag för att testa formuläret",
+                  "property_name" => "Värmdö Södersunda 1:74",
+                  "project_status" => "preliminary",
+                  "start_date" => "2026-04-01",
+                  "customer_subfields" => 
+                      array("customer_name" => "Kundnamn", "customer_number" => "12345678"),
+                  "subproject_subfields" =>
+                      array("subproject_name" => "Initial projektering",
+                            "start_date" => "2026-04-01",
+                            "hourly_rate" => "1000",
+                            "subproject_status" => "preliminary" )
+                  )
             ) // prefill data if no data found in session
             );
         
