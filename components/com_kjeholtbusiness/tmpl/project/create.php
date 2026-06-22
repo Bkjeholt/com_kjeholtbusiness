@@ -4,26 +4,28 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Log\Log;
 
 
 // set up client-side validation - we also need class="form-validate" on the <form> below and
 // will also need to set the js validation rule in the class attribute of the field in the form XML file
 
 $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
-//$wa->useScript('form.validate');
+$wa->useScript('form.validate');
 
 // include the no-uppercase.js script for client validation
 // (This will pull in form.validate as a dependency, so the above line isn't really necessary in this case)
 // $wa->useScript('com_exampleform.validate-no-uppercase');
 
 ?>
-<form action="<?php echo Route::_('index.php?option=com_kjeholtbusiness'); ?>"
+<h3>COM_KJEHOLTBUSINESS_PROJECT_CREATE_HEADING</h3>
+<form action="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=project'); ?>"
     class="form-validate" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
 
     <?php echo $this->form->renderFieldset('mainFieldset');  ?>
 
-    <button type="button" class="btn btn-primary" onclick="Joomla.submitbutton('post.submit')">Submit</button>
+    <button type="submit" class="btn btn-primary">Submit</button>
 
-    <input type="hidden" name="task" />
+    <input type="hidden" name="task" value="project.submit" />
     <?php echo HtmlHelper::_('form.token'); ?>
 </form>

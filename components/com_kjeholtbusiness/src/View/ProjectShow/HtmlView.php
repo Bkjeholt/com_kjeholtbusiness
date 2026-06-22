@@ -1,5 +1,5 @@
 <?php
-namespace KjeholtEngineering\Component\KjeholtBusiness\Site\View\Projects;
+namespace KjeholtEngineering\Component\KjeholtBusiness\Site\View\ProjectShow;
 
 defined('_JEXEC') or die;
 
@@ -9,13 +9,13 @@ use Joomla\CMS\Log\Log;
 
 class HtmlView extends BaseHtmlView
 {
-    protected $items;
+    protected $item;
 
     public function display($tpl = null)
     {
-        Log::add('View/Projects/HtmlView->display()', Log::DEBUG, 'com_kjeholtbusiness');
+        Log::add('View/ProjectShow/HtmlView->display()', Log::DEBUG, 'com_kjeholtbusiness');
         
-        $this->items = $this->get('Items');
+        $this->item = $this->get('getProjectInfo');
 
 //        var_dump($this->items);
         

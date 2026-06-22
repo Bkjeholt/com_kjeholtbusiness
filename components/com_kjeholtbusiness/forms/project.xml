@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<form name="projectFormName">
+<form addfieldprefix="KjeholtEngineering\Component\KjeholtBusiness\Site\Field" 
+      name="projectFormName">
     <fieldset name="mainFieldset" 
               label="mainFieldsetLabel" 
               description="mainFieldsetDescription">
@@ -9,37 +10,45 @@
                type="hidden" />
         <field name="company_id" 
                type="hidden" />
-        <field name="project_name" 
+        <field name="user_id" 
+               type="hidden" />
+        <field name="name" 
                type="text" 
-               label="COM_KJEHOLTBUSINESS_PROJECT_FIELD_NAME_LABEL" 
-               description="COM_KJEHOLTBUSINESS_PROJECT_FIELD_NAME_DESC" 
-               required="true" 
+               label="Uppdragets namn" 
+               description="COM_KJEHOLTBUSINESS_PROJECT_FIELD_NAME_DESC"
                size="40" />
-        <field name="project_description" 
+        <field name="description" 
                type="editor" 
-               label="COM_KJEHOLTBUSINESS_PROJECT_FIELD_DESCRIPTION_LABEL" 
+               label="Uppdragsbeskrivning" 
                description="COM_KJEHOLTBUSINESS_PROJECT_FIELD_DESCRIPTION_DESC" 
                filter="safehtml" 
                buttons="true" />
-        <field name="property_name" type="text" label="COM_KJEHOLTBUSINESS_PROJECT_FIELD_PROPERTY_NAME_LABEL" description="COM_KJEHOLTBUSINESS_PROJECT_FIELD_PROPERTY_NAME_DESC" required="true" size="40" />
-        <field name="start_date" type="calendar" label="COM_KJEHOLTBUSINESS_PROJECT_FIELD_START_DATE_LABEL" description="COM_KJEHOLTBUSINESS_PROJECT_FIELD_START_DATE_DESC" format="%Y-%m-%d" />
-        <field name="customer_subfields" 
+        <field name="property_name" 
+               type="text" 
+               label="Fastighetsbeteckning" 
+               description="COM_KJEHOLTBUSINESS_PROJECT_FIELD_PROPERTY_NAME_DESC" 
+               size="40" />
+        <field name="start_date" 
+               type="calendar" 
+               label="Planerat startdatum" 
+               description="COM_KJEHOLTBUSINESS_PROJECT_FIELD_START_DATE_DESC" 
+               format="%Y-%m-%d" />
+ 		<field name="subproject_selector"
+ 		       type="radio"
+ 		       default="0"
+ 		       label="Har uppdraget några definerade deluppdrag?">
+ 		    <option value="0">Nej, lägg till ett standarddeluppdrag</option>
+ 		    <option value="1">Ja, definiera ett eller flera deluppdrag</option>
+ 		</field>
+        <field name="subproject_subforms" 
                type="subform"
                min="1"
-               formsource="components/com_kjeholtbusiness/forms/customer.xml" 
-               multiple="false"
-               label="COM_KJEHOLTBUSINESS_PROJECT_FIELD_CUSTOMER_SUBFORM_LABEL" 
-               description="COM_KJEHOLTBUSINESS_PROJECT_FIELD_CUSTOMER_SUBFORM_LABEL" />
- 
-        <field name="subproject_subfields" 
-               type="subform"
-               min="1"
+               max="2"
                formsource="components/com_kjeholtbusiness/forms/subproject.xml" 
                multiple="true"
-               label="COM_KJEHOLTBUSINESS_PROJECT_FIELD_SUBPROJECT_SUBFORM_LABEL" 
+               showon="subproject_selector:1"
+               label="Skapa ett eller flera deluppdrag" 
                description="COM_KJEHOLTBUSINESS_PROJECT_FIELD_SUBPROJECT_SUBFORM_LABEL" />
-    </fieldset>
- 
- 
+      </fieldset>
 </form>
 

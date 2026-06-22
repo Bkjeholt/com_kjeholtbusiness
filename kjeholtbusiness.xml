@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component" version="5.0" method="upgrade">
     <name>COM_KJEHOLTBUSINESS</name>
-    <creationDate>2026-03-13</creationDate>
+    <creationDate>2026-04-17</creationDate>
     <author>Kjeholt Engineering and Services AB</author>
     <authorEmail>info@kjeholt.se</authorEmail>
     <authorUrl>engineering.kjeholt.se</authorUrl>
     <copyright>Copyright (C) 2026 Kjeholt Engineering and Services AB. All rights reserved.</copyright>
     <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
-    <version>0.2.1</version>
+    <version>0.2.7.w</version>
     <description>COM_KJEHOLTBUSINESS_XML_DESCRIPTION</description>
     <namespace path="src">KjeholtEngineering\Component\KjeholtBusiness</namespace>
     <scriptfile>script.php</scriptfile>
@@ -15,18 +15,19 @@
     <!-- Administratörsfiler -->
     <administration>
         <files folder="administrator/components/com_kjeholtbusiness">
+            <file>kjeholtbusiness.php</file>
             <folder>services</folder>
             <folder>src</folder>
             <folder>forms</folder>
             <folder>sql</folder>
             <folder>tmpl</folder>
-<!--             <folder>language</folder>  -->
-            <file>script.php</file>
+<!--             <folder>language</folder> -->
         </files>
     </administration>
 
     <!-- Webbplatsfiler -->
     <files folder="components/com_kjeholtbusiness">
+        <file>kjeholtbusiness.php</file>
         <folder>services</folder>
         <folder>src</folder>
         <folder>forms</folder>
@@ -54,7 +55,8 @@
     <!-- Database handling -->
     <install>
         <sql>
-            <file driver="mysql" charset="utf8mb4">sql/install.mysql.utf8.sql</file>
+            <file driver="mysql" charset="utf8mb4">sql/install.mysql.utf8.sql</file> 
+<!--             <file driver="mysql" charset="utf8mb4">sql/test.sql</file> -->
         </sql>
     </install>
     <uninstall>
@@ -62,6 +64,11 @@
             <file driver="mysql" charset="utf8mb4">sql/uninstall.mysql.utf8.sql</file>
         </sql>
     </uninstall>
+	<update>
+ 		<schemas>
+  			<schemapath type="mysql">sql/updates/mysql</schemapath>
+ 		</schemas>
+</update>
 
     <!-- Menytyper för webbplatsen -->
     <menu>

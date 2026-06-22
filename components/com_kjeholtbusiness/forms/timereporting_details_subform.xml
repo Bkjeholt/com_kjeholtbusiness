@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+       <field name="timereport_date" 
+              type="calendar" 
+              label="COM_KJEHOLTBUSINESS_TIMEREPORTING_FIELD_DATE_LABEL" 
+              description="COM_KJEHOLTBUSINESS_TIMEREPORTING_FIELD_DATE_DESC" 
+              format="%Y-%m-%d" />
+       <field name="timereport_start_time"	
+              type="time" 
+              min="00:00"
+              max="23:59"
+              label="COM_KJEHOLTBUSINESS_TIMEREPORTING_FIELD_START_LABEL" 
+              description="COM_KJEHOLTBUSINESS_TIMEREPORTING_FIELD_START_DESC" />
+       <field name="timereport_finalize_selection"
+              type="radio"	
+              default="1"
+              label="COM_KJEHOLTBUSINESS_TIMEREPORTING_FIELD_FINALIZE_LABEL"
+              description="COM_KJEHOLTBUSINESS_TIMEREPORTING_FIELD_FINALIZE_DESC">
+              <option value="1">COM_KJEHOLTBUSINESS_TIMEREPORTING_FIELD_FINALIZE_OPTION_ONGOING</option>
+              <option value="2">COM_KJEHOLTBUSINESS_TIMEREPORTING_FIELD_FINALIZE_OPTION_FINALIZED_DEFAULT</option>
+              <option value="3">COM_KJEHOLTBUSINESS_TIMEREPORTING_FIELD_FINALIZE_OPTION_FINALIZED_DEFAULT</option>
+       </field>
+       <field name="timereport_end_time"
+              type="time"	
+              showon="timereport_finalize_selection:2"
+              min="00:00"
+              max="23:59"
+              label="COM_KJEHOLTBUSINESS_TIMEREPORTING_FIELD_END_LABEL"
+              description="COM_KJEHOLTBUSINESS_TIMEREPORTING_FIELD_END_DESC" />
+ </form>

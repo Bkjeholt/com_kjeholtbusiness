@@ -5,7 +5,7 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\MVC\Model\ItemModel;
 
-class ExpencyModel extends ItemModel
+class ExpensesModel extends ItemModel
 {
     public function getTable($type = 'Expency', $prefix = 'Table', $config = [])
     {

@@ -1,5 +1,5 @@
 <?php
-namespace KjeholtEngineering\Component\KjeholtBusiness\Site\View\Projects;
+namespace KjeholtEngineering\Component\KjeholtBusiness\Site\View\ProjectSummary;
 
 defined('_JEXEC') or die;
 
@@ -13,11 +13,11 @@ class HtmlView extends BaseHtmlView
 
     public function display($tpl = null)
     {
-        Log::add('View/Projects/HtmlView->display()', Log::DEBUG, 'com_kjeholtbusiness');
+        Log::add('View/ProjectSummary/HtmlView->display()', Log::DEBUG, 'com_kjeholtbusiness');
         
         $this->items = $this->get('Items');
 
-//        var_dump($this->items);
+        var_dump($this->items);
         
         return parent::display($tpl);
     }

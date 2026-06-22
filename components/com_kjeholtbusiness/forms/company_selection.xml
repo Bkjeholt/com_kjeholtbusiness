@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+ <form addfieldprefix="KjeholtEngineering\Component\KjeholtBusiness\Site\Field" 
+       name="companySelection">
+    <fieldset name="companySelectionFieldset" 
+              label="Välj aktuellt företag" 
+              description="mainFieldsetDescription">
+       <field name="company_id"
+              type="sql" 
+              query="SELECT id, name FROM kjeholtbusiness_TempCompanies"
+              key_field="id"
+              value_field="name"/>
+    </fieldset>
+</form>

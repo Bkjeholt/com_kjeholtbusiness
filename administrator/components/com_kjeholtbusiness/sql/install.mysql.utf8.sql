@@ -11,8 +11,9 @@ CREATE TABLE IF NOT EXISTS `#__kjeholtbusiness_companies` (
   `email` VARCHAR(255) DEFAULT NULL,
   `website` VARCHAR(255) DEFAULT NULL,
   `description` TEXT,
-  `checked_out` INT(11) UNSIGNED DEFAULT NULL,
-  `checked_out_time` DATETIME DEFAULT NULL,
+  `acl_view_id` INT(11) UNSIGNED DEFAULT 0,
+  `acl_user_id` INT(11) UNSIGNED DEFAULT 0,
+  `acl_admin_id` INT(11) UNSIGNED DEFAULT 0,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `created_by` INT(11) UNSIGNED NOT NULL DEFAULT 0,
   `modified_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -25,17 +26,17 @@ CREATE TABLE IF NOT EXISTS `#__kjeholtbusiness_companies` (
 CREATE TABLE IF NOT EXISTS `#__kjeholtbusiness_projects` (
   `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL DEFAULT '',
-  `alias` VARCHAR(400) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
   `description` TEXT,
   `property_name` VARCHAR(255) DEFAULT NULL,
   `start_date` DATE NULL DEFAULT NULL,
   `end_date` DATE NULL DEFAULT NULL,
-  `status` ENUM('preliminary','confirmed','ongoing','closing','finalized','cancelled') DEFAULT 'preliminary',
+  `status` ENUM('preliminary','confirmed','ongoing','closing','finalized','cancelled') DEFAULT 'ongoing',
   `customer_id` INT(11) UNSIGNED DEFAULT NULL COMMENT 'FK to #__customers',
   `company_id` INT(11) UNSIGNED NOT NULL DEFAULT 1,
   `article_id` INT(11) UNSIGNED DEFAULT NULL COMMENT 'FK to #__content',
-  `checked_out` INT(11) UNSIGNED DEFAULT NULL,
-  `checked_out_time` DATETIME DEFAULT NULL,
+  `acl_view_id` INT(11) UNSIGNED DEFAULT 0,
+  `acl_user_id` INT(11) UNSIGNED DEFAULT 0,
+  `acl_admin_id` INT(11) UNSIGNED DEFAULT 0,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `created_by` INT(11) UNSIGNED NOT NULL DEFAULT 0,
   `modified_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -47,17 +48,15 @@ CREATE TABLE IF NOT EXISTS `#__kjeholtbusiness_projects` (
 -- Subprojects table
 CREATE TABLE IF NOT EXISTS `#__kjeholtbusiness_subprojects` (
   `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `asset_id` INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'FK to #__assets',
   `name` VARCHAR(255) NOT NULL DEFAULT '',
-  `alias` VARCHAR(400) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
   `description` TEXT,
   `project_id` INT(11) UNSIGNED NOT NULL,
   `start_date` DATE NULL DEFAULT NULL,
+  `end_date` DATE NULL DEFAULT NULL,
   `invoice_id` INT(11) UNSIGNED NULL DEFAULT NULL,
   `hourly_rate` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
-  `status` ENUM('not_started','ongoing','waiting_for_payment','finalized','cancelled') DEFAULT 'not_started',
-  `checked_out` INT(11) UNSIGNED DEFAULT NULL,
-  `checked_out_time` DATETIME DEFAULT NULL,
+  `estimated_amount_of_hours` INT NOT NULL DEFAULT 0,
+  `status` ENUM('not_started','ongoing','waiting_for_payment','finalized','cancelled') DEFAULT 'ongoing',
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `created_by` INT(11) UNSIGNED NOT NULL DEFAULT 0,
   `modified_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -68,17 +67,14 @@ CREATE TABLE IF NOT EXISTS `#__kjeholtbusiness_subprojects` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
 
 -- Expenses table (combining both time entries and costs)
+
 CREATE TABLE IF NOT EXISTS `#__kjeholtbusiness_expenses` (
   `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `asset_id` INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'FK to #__assets',
   `name` VARCHAR(255) NOT NULL DEFAULT '',
   `description` TEXT,
   `subproject_id` INT(11) UNSIGNED NOT NULL,
   `date` DATE NOT NULL DEFAULT CURRENT_DATE,
-  `type` ENUM('hours','costs') DEFAULT 'hours',
-  `value` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
-  `checked_out` INT(11) UNSIGNED DEFAULT NULL,
-  `checked_out_time` DATETIME DEFAULT NULL,
+  `amount` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `created_by` INT(11) UNSIGNED NOT NULL DEFAULT 0,
   `modified_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -86,3 +82,21 @@ CREATE TABLE IF NOT EXISTS `#__kjeholtbusiness_expenses` (
   `params` TEXT,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `#__kjeholtbusiness_timecards` (
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) NOT NULL DEFAULT '',
+  `description` TEXT,
+  `subproject_id` INT(11) UNSIGNED NOT NULL,
+  `start_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `end_time` TIMESTAMP NULL DEFAULT NULL,
+  `adjustment` INT(11) NOT NULL DEFAULT 0,  -- Adjustment in minutes, can be positive or negative
+  `status` ENUM('ongoing','ended','froozen') DEFAULT 'ongoing',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `created_by` INT(11) UNSIGNED NOT NULL DEFAULT 0,
+  `modified_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `modified_by` INT(11) UNSIGNED NOT NULL DEFAULT 0,
+  `params` TEXT,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
+
