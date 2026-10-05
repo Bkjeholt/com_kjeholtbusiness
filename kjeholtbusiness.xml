@@ -7,7 +7,7 @@
     <authorUrl>www.kjeholt.se</authorUrl>
     <copyright>Copyright (C) 2026 Kjeholt Engineering and Services AB. All rights reserved.</copyright>
     <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
-    <version>0.1.1</version>
+    <version>0.1.2</version>
     <description>COM_KJEHOLTBUSINESS_XML_DESCRIPTION</description>
     <namespace path="src">KjeholtEngineering\Component\KjeholtBusiness</namespace>
     <scriptfile>script.php</scriptfile>
@@ -15,22 +15,24 @@
     <!-- Administratörsfiler -->
     <administration>
         <files folder="administrator/components/com_kjeholtbusiness">
+            <filename>kjeholtbusiness.php</filename>
             <folder>services</folder>
             <folder>src</folder>
             <folder>forms</folder>
             <folder>sql</folder>
             <folder>tmpl</folder>
-<!--        <folder>language</folder>  --> 
+            <folder>language</folder>
         </files>
     </administration>
 
     <!-- Webbplatsfiler -->
     <files folder="components/com_kjeholtbusiness">
+        <filename>kjeholtbusiness.php</filename>
         <folder>services</folder>
         <folder>src</folder>
         <folder>forms</folder>
-<!--        <folder>language</folder>  --> 
         <folder>tmpl</folder>
+        <folder>language</folder>
     </files>
 
     <!-- Språkfiler -->
