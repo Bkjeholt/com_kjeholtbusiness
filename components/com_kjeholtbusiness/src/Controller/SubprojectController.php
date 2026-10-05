@@ -7,9 +7,19 @@ use Joomla\CMS\MVC\Controller\FormController;
 
 class SubprojectController extends FormController
 {
-    public function __construct($config = [])
+    protected function allowAdd($data = [])
     {
-        parent::__construct($config);
+        return $this->app->getIdentity()->authorise('subproject.create', 'com_kjeholtbusiness');
+    }
+
+    protected function allowEdit($data = [], $key = 'id')
+    {
+        $recordId = isset($data[$key]) ? (int) $data[$key] : 0;
+
+        if ($recordId === 0) {
+            return false;
+        }
+
+        return $this->app->getIdentity()->authorise('subproject.edit', 'com_kjeholtbusiness.subproject.' . $recordId);
     }
 }
-

@@ -6,9 +6,9 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ItemModel;
 
-class SubprojectModel extends ItemModel
+class ExpencyModel extends ItemModel
 {
-    public function getTable($name = 'Subproject', $prefix = 'Table', $options = [])
+    public function getTable($name = 'Expency', $prefix = 'Table', $options = [])
     {
         return parent::getTable($name, $prefix, $options);
     }
@@ -16,8 +16,8 @@ class SubprojectModel extends ItemModel
     public function getForm($data = [], $loadData = true)
     {
         $form = $this->loadForm(
-            'com_kjeholtbusiness.subproject',
-            'subproject',
+            'com_kjeholtbusiness.expency',
+            'expency',
             [
                 'control'   => 'jform',
                 'load_data' => $loadData,
@@ -34,7 +34,7 @@ class SubprojectModel extends ItemModel
     protected function loadFormData()
     {
         $app  = Factory::getApplication();
-        $data = $app->getUserState('com_kjeholtbusiness.edit.subproject.data', []);
+        $data = $app->getUserState('com_kjeholtbusiness.edit.expency.data', []);
 
         if (empty($data)) {
             $data = $this->getItem();

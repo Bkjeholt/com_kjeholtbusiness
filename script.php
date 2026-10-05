@@ -75,8 +75,48 @@ class Com_KjeholtbusinessInstallerScript
         {
             // Enable the plugin after installation or update
             $this->enablePlugin();
+
+            if ($type === 'install')
+            {
+                $this->seedDemoData();
+            }
         }
         return true;
+    }
+
+    /**
+     * Seed demo data on a fresh install, only when the projects table is empty.
+     */
+    private function seedDemoData()
+    {
+        $db = Factory::getDbo();
+
+        $query = $db->getQuery(true)
+            ->select('COUNT(*)')
+            ->from($db->quoteName('#__kjeholtbusiness_projects'));
+        $db->setQuery($query);
+
+        try
+        {
+            if ((int) $db->loadResult() > 0)
+            {
+                return;
+            }
+
+            $seedFile = __DIR__ . '/administrator/components/com_kjeholtbusiness/sql/seed_data.sql';
+
+            if (!is_file($seedFile))
+            {
+                return;
+            }
+
+            $db->setQuery(file_get_contents($seedFile));
+            $db->execute();
+        }
+        catch (Exception $e)
+        {
+            Log::add('Error seeding demo data: ' . $e->getMessage(), Log::ERROR, 'com_kjeholtbusiness');
+        }
     }
 
     /**

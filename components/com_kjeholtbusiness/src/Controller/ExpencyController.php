@@ -5,11 +5,11 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\MVC\Controller\FormController;
 
-class ProjectController extends FormController
+class ExpencyController extends FormController
 {
     protected function allowAdd($data = [])
     {
-        return $this->app->getIdentity()->authorise('project.create', 'com_kjeholtbusiness');
+        return $this->app->getIdentity()->authorise('expency.create', 'com_kjeholtbusiness');
     }
 
     protected function allowEdit($data = [], $key = 'id')
@@ -20,6 +20,6 @@ class ProjectController extends FormController
             return false;
         }
 
-        return $this->app->getIdentity()->authorise('project.edit', 'com_kjeholtbusiness.project.' . $recordId);
+        return $this->app->getIdentity()->authorise('expency.edit', 'com_kjeholtbusiness.expency.' . $recordId);
     }
 }

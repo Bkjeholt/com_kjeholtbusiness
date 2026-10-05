@@ -85,7 +85,7 @@ use Joomla\CMS\HTML\HTMLHelper;
             </div>
         </div>
 
-        <input type="hidden" name="task" value="project.edit">
+        <input type="hidden" name="task" value="">
         <?php echo HTMLHelper::_('form.token'); ?>
     </form>
 </div>

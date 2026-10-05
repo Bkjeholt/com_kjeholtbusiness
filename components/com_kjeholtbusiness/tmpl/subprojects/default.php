@@ -3,6 +3,7 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\HTML\HTMLHelper;
 ?>
 <div class="kjeholtbusiness-subprojects">
     <h1><?php echo Text::_('COM_KJEHOLTBUSINESS_SUBPROJECTS_TITLE'); ?></h1>

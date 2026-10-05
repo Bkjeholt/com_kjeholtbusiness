@@ -3,6 +3,8 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Layout\LayoutHelper;
 ?>
 <div class="kjeholtbusiness-project">
     <h1><?php echo Text::_('COM_KJEHOLTBUSINESS_PROJECT_TITLE'); ?></h1>
@@ -16,7 +18,7 @@ use Joomla\CMS\Router\Route;
             <?php echo $this->form->renderField('customer_id'); ?>
             <?php echo $this->form->renderField('company_id'); ?>
         </div>
-        <input type="hidden" name="task" value="project.edit">
+        <input type="hidden" name="task" value="">
         <?php echo HTMLHelper::_('form.token'); ?>
     </form>
 </div>

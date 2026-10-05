@@ -13,14 +13,16 @@ class KjeholtBusiness extends CMSPlugin
         if ($context === 'com_content.article')
         {
             $input = Factory::getApplication()->input;
-            $projectId = $input->get('kjeholt_project_id', 0, 'INT');
+            $jform   = $input->post->get('jform', [], 'array');
+            $params  = $jform['params'] ?? [];
+            $projectId = (int) ($params['kjeholt_project_id'] ?? 0);
 
             if ($projectId > 0 && $isNew)
             {
                 $db = Factory::getDbo();
                 $query = $db->getQuery(true)
                     ->update($db->quoteName('#__kjeholtbusiness_projects'))
-                    ->set($db->quoteName('article_id') . ' = ' . $article->id)
+                    ->set($db->quoteName('article_id') . ' = ' . (int) $article->id)
                     ->where($db->quoteName('id') . ' = ' . $projectId);
 
                 try
