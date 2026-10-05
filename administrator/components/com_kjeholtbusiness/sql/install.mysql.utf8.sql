@@ -29,7 +29,8 @@ CREATE TABLE IF NOT EXISTS `#__kjeholtbusiness_subprojects` (
   `created_by` int NOT NULL DEFAULT 0,
   `modified_by` int NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
-  KEY `idx_project_id` (`project_id`)
+  KEY `idx_project_id` (`project_id`),
+  CONSTRAINT `fk_subproject_project` FOREIGN KEY (`project_id`) REFERENCES `#__kjeholtbusiness_projects` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `#__kjeholtbusiness_expencies` (
@@ -45,7 +46,8 @@ CREATE TABLE IF NOT EXISTS `#__kjeholtbusiness_expencies` (
   `created_by` int NOT NULL DEFAULT 0,
   `modified_by` int NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
-  KEY `idx_subproject_id` (`subproject_id`)
+  KEY `idx_subproject_id` (`subproject_id`),
+  CONSTRAINT `fk_expency_subproject` FOREIGN KEY (`subproject_id`) REFERENCES `#__kjeholtbusiness_subprojects` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `#__kjeholtbusiness_user_authorities` (

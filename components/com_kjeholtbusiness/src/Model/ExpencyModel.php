@@ -31,6 +31,30 @@ class ExpencyModel extends ItemModel
         return $form;
     }
 
+    public function save($data)
+    {
+        $app  = Factory::getApplication();
+        $user = $app->getIdentity();
+        $db   = $this->getDatabase();
+
+        unset($data['created_by'], $data['modified_by'], $data['created_at'], $data['modified_at']);
+
+        if (empty($data['id'])) {
+            $data['created_by'] = (int) $user->id;
+        } else {
+            $data['modified_by'] = (int) $user->id;
+        }
+
+        $table = $this->getTable();
+
+        if (!$table->save($data)) {
+            $this->setError($table->getError());
+            return false;
+        }
+
+        return $table->id;
+    }
+
     protected function loadFormData()
     {
         $app  = Factory::getApplication();

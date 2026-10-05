@@ -1,0 +1,10 @@
+# IDE metadata
+.nbproject/
+.project
+.buildpath
+.idea/
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
