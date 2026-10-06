@@ -25,7 +25,7 @@ return new class implements ServiceProviderInterface {
     public function register(Container $container): void 
     {
 
-        Log::add('Reistrering av com_kjeholtbusiness.', Log::INFO, 'com_kjeholtbusiness');
+        Log::add('Registrering av com_kjeholtbusiness (admin).', Log::INFO, 'com_kjeholtbusiness');
  
         // Registrera autoloader för Helper-namnutrymmet (om det inte redan görs via composer.json)
 /*        $loader = new \Joomla\CMS\Autoloader\Psr4AutoloaderClass;
