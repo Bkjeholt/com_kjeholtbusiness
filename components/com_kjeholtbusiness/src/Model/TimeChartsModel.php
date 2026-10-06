@@ -4,7 +4,8 @@ namespace KjeholtEngineering\Component\KjeholtBusiness\Site\Model;
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
-use Joomla\Database\ParameterType;\nuse Joomla\CMS\MVC\Model\ListModel;
+use Joomla\Database\ParameterType;
+use Joomla\CMS\MVC\Model\ListModel;
 
 class TimeChartsModel extends ListModel
 {
