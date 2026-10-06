@@ -2,7 +2,7 @@
 
 namespace KjeholtEngineering\Component\KjeholtBusiness\Administrator\Extension;
 
-defined('JPATH_PLATFORM') or die;
+defined('_JEXEC') or die;
 
 use Joomla\CMS\Extension\BootableExtensionInterface;
 use Joomla\CMS\Extension\MVCComponent;
@@ -11,6 +11,8 @@ use Psr\Container\ContainerInterface;
 use Joomla\CMS\Component\Router\RouterServiceTrait;
 use Joomla\CMS\Component\Router\RouterServiceInterface;
 use Joomla\Database\DatabaseAwareTrait;
+
+Log::add('Extension file loaded.', Log::DEBUG, 'com_kjeholtbusiness');
 
 class KjeholtBusinessComponent extends MVCComponent implements
     RouterServiceInterface, BootableExtensionInterface
@@ -27,6 +29,6 @@ class KjeholtBusinessComponent extends MVCComponent implements
 
     public function boot(ContainerInterface $container)
     {
-        Log::add('boot: com_kjeholtbusiness booted. BUILD=9d9d666+ctor', Log::DEBUG, 'com_kjeholtbusiness');
+        Log::add('boot: com_kjeholtbusiness booted. BUILD=aed3abb-guardfix', Log::DEBUG, 'com_kjeholtbusiness');
     }
 }
