@@ -57,12 +57,13 @@ return new class implements ServiceProviderInterface {
         $container->set(
             ComponentInterface::class,
             function (Container $container) {
-                // The next line creates an instance of our com_example component Extension class
-                $component = new MVCComponent($container->get(ComponentDispatcherFactoryInterface::class));
+                $component = new KjeholtBusinessComponent(
+                    $container->get(ComponentDispatcherFactoryInterface::class)
+                );
                 $component->setMVCFactory($container->get(MVCFactoryInterface::class));
-                
                 $component->setRouterFactory($container->get(RouterFactoryInterface::class));
                 $component->setDatabase($container->get(DatabaseInterface::class));
+                $component->setCategoryFactory($container->get(CategoryFactoryInterface::class));
 
                 return $component;
             }
