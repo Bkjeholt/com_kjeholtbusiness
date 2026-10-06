@@ -50,7 +50,7 @@ return new class implements ServiceProviderInterface {
             *      3. return the CategoryFactory instance
             */
         
-        $container->registerServiceProvider(new CategoryFactorServiceProvider('\\KjeholtEngineering\\Component\\KjeholtBusiness'))
+        $container->registerServiceProvider(new CategoryFactorServiceProvider('\\KjeholtEngineering\\Component\\KjeholtBusiness'));
         $container->registerServiceProvider(new MVCFactoryServiceProvider('\\KjeholtEngineering\\Component\\KjeholtBusiness'));
         $container->registerServiceProvider(new ComponentDispatcherFactoryServiceProvider('\\KjeholtEngineering\\Component\\KjeholtBusiness'));
         $container->registerServiceProvider(new RouterFactoryServiceProvider('\\KjeholtEngineering\\Component\\KjeholtBusiness'));
