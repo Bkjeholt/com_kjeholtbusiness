@@ -16,8 +16,6 @@ use KjeholtEngineering\Component\KjeholtBusiness\Administrator\Extension\Kjeholt
 return new class implements ServiceProviderInterface {
     public function register(Container $container): void
     {
-        \Joomla\CMS\Log\Log::add('Registrering av com_kjeholtbusiness (site).', \Joomla\CMS\Log\Log::INFO, 'com_kjeholtbusiness');
-
         $container->registerServiceProvider(new MVCFactory('\\KjeholtEngineering\\Component\\KjeholtBusiness'));
         $container->registerServiceProvider(new ComponentDispatcherFactory('\\KjeholtEngineering\\Component\\KjeholtBusiness'));
         $container->registerServiceProvider(new RouterFactory('\\KjeholtEngineering\\Component\\KjeholtBusiness'));
