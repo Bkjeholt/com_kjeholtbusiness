@@ -21,14 +21,17 @@ $app = Factory::getApplication();
 // (This will pull in form.validate as a dependency, so the above line isn't really necessary in this case)
 // $wa->useScript('com_exampleform.validate-no-uppercase');
 
+/*
 $postdata = $app->getUserState('com_kjeholtbusiness.project.postdata');
-
-
 if ($postdata) {
     echo '<h3>Senast postade data</h3>';
     echo '<pre>' . htmlspecialchars(print_r($postdata, true), ENT_QUOTES) . '</pre>';
 }
+*/
 ?>
+<?php Log::add('ProjectsTmpl->default->items result= ' . htmlspecialchars(print_r($this->items, true), ENT_QUOTES), Log::DEBUG, 'com_kjeholtbusiness');?>
+<?php Log::add('ProjectsTmpl->default->item result= ' . htmlspecialchars(print_r($this->item, true), ENT_QUOTES), Log::DEBUG, 'com_kjeholtbusiness');?>
+
 <h1>Sammanfattning av uppdraget</h1>
 
 <?php 
@@ -42,29 +45,44 @@ view   = <?php echo htmlspecialchars($view, ENT_QUOTES); ?> <br/>
 layout = <?php echo htmlspecialchars($layout, ENT_QUOTES); ?> 	<br/>
 task   = <?php echo htmlspecialchars($task, ENT_QUOTES); ?>	<br/>
 id     = <?php echo htmlspecialchars($projectId, ENT_QUOTES); ?> </p>	
-//item   = <?php echo htmlspecialchars($this->item, ENT_QUOTES); ?> </p>	
 
 <table>
+	<thead>
 	<tr>
         <th>Namn</th>
         <th>Beskrivning</th>
         <th>Fastighetsbeteckning</th>
     </tr>
+    </thead>
+	<tbody>
     <tr>
         <td><?php echo htmlspecialchars($this->item->name, ENT_QUOTES); ?></td>
         <td><?php echo htmlspecialchars($this->item->description, ENT_QUOTES); ?></td>
         <td><?php echo htmlspecialchars($this->item->property_name, ENT_QUOTES); ?></td>
     </tr>
+    </tbody>
+    
 </table>
 <?php 
 
-$subProjects = $this->item->subprojects;
+if ($this->item) {
+    echo '<h3>Aktuell data</h3>';
+    echo '<pre>' . htmlspecialchars(print_r($this->item, true), ENT_QUOTES) . '</pre>';
+}
+$subProjects = $this->item->subproject_subforms;
 
-if ($subProjects) {
-    echo '<h2>Deluppdrag</h2>';
-    echo '<table>';
-    echo '<tr><th>Namn</th><th>Beskrivning</th><th>Startdag</th><th>Status</th></tr>';
-    foreach ($subProjects as $subProject) {
+if (!empty($subProjects)) { ?>
+<h2>Deluppdrag</h2>
+<table>
+	<thead>
+		<tr>
+			<th>Namn</th>
+			<th>Beskrivning</th>
+			<th>Startdag</th>
+			<th>Status</th>
+		</tr>
+	</thead>
+    <?php foreach ($subProjects as $subProject) {
         echo '<tr>';
         echo '<td>' . htmlspecialchars($subProject->name, ENT_QUOTES) . '</td>';
         echo '<td>' . htmlspecialchars($subProject->description, ENT_QUOTES) . '</td>';

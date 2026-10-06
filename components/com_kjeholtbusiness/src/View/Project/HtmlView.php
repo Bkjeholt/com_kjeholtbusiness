@@ -26,7 +26,7 @@ class HtmlView extends BaseHtmlView
         
         switch ($app->input->getCmd('layout', 'default')) {
             case 'show':
-                Log::add('ProjectView->show', Log::DEBUG, 'com_kjeholtbusiness');
+                Log::add('ProjectView->show ProjectId='.$projectId, Log::DEBUG, 'com_kjeholtbusiness');
                 // Ensure the model is loaded and set for the view
 /*                $model = $this->getModel();
                 if (!$model) {

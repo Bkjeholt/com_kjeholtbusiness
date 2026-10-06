@@ -4,6 +4,8 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Log\Log;
+
 ?>
 <div class="com-kjeholtbusiness-projects">
     <form action="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=projects'); ?>" method="post" name="adminForm" id="adminForm">
@@ -22,14 +24,31 @@ use Joomla\CMS\HTML\HTMLHelper;
                                 </tr>
                             </thead>
                             <tbody>
+                            <?php Log::add('ProjectsTmpl->default->item result= ' . htmlspecialchars(print_r($this->items, true), ENT_QUOTES), Log::DEBUG, 'com_kjeholtbusiness');
+                            ?>
                                 <?php foreach ($this->items as $i => $item) : ?>
                                     <tr>
 <!--                                         <th scope="row"><?php echo $item->id; ?></th>  -->
-                                        <td><a href="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=project&layout=show&projectid=' . $item->id); ?>"><?php echo $this->escape($item->name); ?></a></td>
-                                        <td><?php echo $item->property_name; ?></td>
-                                        <td><?php echo Text::_('COM_KJEHOLTBUSINESS_PROJECT_STATUS_' . strtoupper($item->status)); ?></td>
-                                        <td><?php echo $item->start_date; ?></td>
+                                        <td><a href="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=project&layout=show&projectid=' . $item["id"]); ?>"><?php echo $this->escape($item["name"]); ?></a></td>
+                                        <td><?php echo $item["property_name"]; ?></td>
+                                        <td><?php echo Text::_(/*'COM_KJEHOLTBUSINESS_PROJECT_STATUS_' .*/ strtoupper($item["status"])); ?></td>
+                                        <td><?php echo $item["start_date"]; ?></td>
                                     </tr>
+                                    <tr>
+                                    	<td> Beskrivning </td>
+										<td colspan="3"><?php echo $item["description"]; ?></td>
+									</tr>
+									<?php foreach ($item['subprojects'] as $subProjectItem) : ?>
+									<tr>
+									    
+										<td> Delprojekt </td>
+										<td colspan="3">
+											<a href="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=subproject&layout=show&subprojectid=' . $subProjectItem["id"]); ?>"><?php echo $this->escape($subProjectItem["name"]); ?></a><br/>
+											<?php echo $subProjectItem["description"]; ?><br/>
+											<?php echo $subProjectItem["status"]?>
+									    </td>
+									</tr>
+									<?php endforeach; ?>
                                 <?php endforeach; ?>
                             </tbody>
                         </table>

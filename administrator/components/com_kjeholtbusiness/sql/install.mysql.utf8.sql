@@ -57,6 +57,9 @@ CREATE TABLE IF NOT EXISTS `#__kjeholtbusiness_subprojects` (
   `hourly_rate` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
   `estimated_amount_of_hours` INT NOT NULL DEFAULT 0,
   `status` ENUM('not_started','ongoing','waiting_for_payment','finalized','cancelled') DEFAULT 'ongoing',
+  `acl_view_id` INT(11) UNSIGNED DEFAULT 0,
+  `acl_user_id` INT(11) UNSIGNED DEFAULT 0,
+  `acl_admin_id` INT(11) UNSIGNED DEFAULT 0,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `created_by` INT(11) UNSIGNED NOT NULL DEFAULT 0,
   `modified_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -75,6 +78,9 @@ CREATE TABLE IF NOT EXISTS `#__kjeholtbusiness_expenses` (
   `subproject_id` INT(11) UNSIGNED NOT NULL,
   `date` DATE NOT NULL DEFAULT CURRENT_DATE,
   `amount` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  `acl_view_id` INT(11) UNSIGNED DEFAULT 0,
+  `acl_user_id` INT(11) UNSIGNED DEFAULT 0,
+  `acl_admin_id` INT(11) UNSIGNED DEFAULT 0,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `created_by` INT(11) UNSIGNED NOT NULL DEFAULT 0,
   `modified_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -92,6 +98,9 @@ CREATE TABLE IF NOT EXISTS `#__kjeholtbusiness_timecards` (
   `end_time` TIMESTAMP NULL DEFAULT NULL,
   `adjustment` INT(11) NOT NULL DEFAULT 0,  -- Adjustment in minutes, can be positive or negative
   `status` ENUM('ongoing','ended','froozen') DEFAULT 'ongoing',
+  `acl_view_id` INT(11) UNSIGNED DEFAULT 0,
+  `acl_user_id` INT(11) UNSIGNED DEFAULT 0,
+  `acl_admin_id` INT(11) UNSIGNED DEFAULT 0,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `created_by` INT(11) UNSIGNED NOT NULL DEFAULT 0,
   `modified_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -100,3 +109,23 @@ CREATE TABLE IF NOT EXISTS `#__kjeholtbusiness_timecards` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE IF NOT EXISTS `#__kjeholtbusiness_invoices` (
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `invoice_number` VARCHAR(50) NOT NULL DEFAULT '',
+  `subproject_id` INT(11) UNSIGNED NOT NULL,
+  `date` DATE NOT NULL DEFAULT CURRENT_DATE,
+  `due_date` DATE NOT NULL DEFAULT CURRENT_DATE,
+  `total_amount` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  `rot_reduction` ENUM('yes','no') DEFAULT 'no',
+  `rot_percentage` DECIMAL(5,2) NOT NULL DEFAULT 30.00,
+  `status` ENUM('draft','sent','paid','overdue') DEFAULT 'draft',
+  `acl_view_id` INT(11) UNSIGNED DEFAULT 0,
+  `acl_user_id` INT(11) UNSIGNED DEFAULT 0,
+  `acl_admin_id` INT(11) UNSIGNED DEFAULT 0,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `created_by` INT(11) UNSIGNED NOT NULL DEFAULT 0,
+  `modified_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `modified_by` INT(11) UNSIGNED NOT NULL DEFAULT 0,
+  `params` TEXT,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;

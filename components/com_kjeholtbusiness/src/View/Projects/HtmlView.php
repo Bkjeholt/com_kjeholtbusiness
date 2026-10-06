@@ -17,6 +17,8 @@ class HtmlView extends BaseHtmlView
         
         $this->items = $this->get('Items');
 
+        Log::add('ProjectsView->item result= ' . htmlspecialchars(print_r($this->items, true), ENT_QUOTES), Log::DEBUG, 'com_kjeholtbusiness');
+        
 //        var_dump($this->items);
         
         return parent::display($tpl);
