@@ -1,5 +1,5 @@
 <?php
-namespace KjeholtEngineering\Component\Kjeholtbusiness\Site\Controller;
+namespace KjeholtEngineering\Component\KjeholtBusiness\Site\Controller;
 
 defined('_JEXEC') or die;
 

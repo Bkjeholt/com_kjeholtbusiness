@@ -6,7 +6,7 @@
     <authorEmail>info@kjeholt.se</authorEmail>
     <authorUrl>engineering.kjeholt.se</authorUrl>
     <copyright>Copyright (C) 2026 Kjeholt Engineering and Services AB. All rights reserved.</copyright>
-    <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+    <license>GNU General Public License version 2 or later</license>
     <version>0.2.9.1w</version>
     <description>COM_KJEHOLTBUSINESS_XML_DESCRIPTION</description>
     <namespace path="src">KjeholtEngineering\Component\KjeholtBusiness</namespace>
@@ -108,7 +108,7 @@
 			<action name="timereport.delete" title="COM_KJEHOLTBUSINESS_ACTION_DELETE_TIMEREPORT" description="COM_KJEHOLTBUSINESS_ACTION_DELETE_TIMEREPORT_DESC"/>
 			<action name="timereport.view" title="COM_KJEHOLTBUSINESS_ACTION_VIEW_TIMEREPORT" description="COM_KJEHOLTBUSINESS_ACTION_VIEW_TIMEREPORT_DESC"/>
         </section>
-        <section namw="invoice">
+        <section name="invoice">
 			<action name="invoice.create" title="COM_KJEHOLTBUSINESS_ACTION_CREATE_INVOICE" description="COM_KJEHOLTBUSINESS_ACTION_CREATE_INVOICE_DESC"/>
 			<action name="invoice.edit" title="COM_KJEHOLTBUSINESS_ACTION_EDIT_INVOICE" description="COM_KJEHOLTBUSINESS_ACTION_EDIT_INVOICE_DESC"/>
 			<action name="invoice.delete" title="COM_KJEHOLTBUSINESS_ACTION_DELETE_INVOICE" description="COM_KJEHOLTBUSINESS_ACTION_DELETE_INVOICE_DESC"/>

@@ -50,7 +50,7 @@ return new class implements ServiceProviderInterface {
             *      3. return the CategoryFactory instance
             */
         
-//        $container->registerServiceProvider(new CategoryFactorServiceProvider('\\KjeholtEngineering\\Component\\KjeholtBusiness'));
+        $container->registerServiceProvider(new CategoryFactorServiceProvider('\\KjeholtEngineering\\Component\\KjeholtBusiness'))
         $container->registerServiceProvider(new MVCFactoryServiceProvider('\\KjeholtEngineering\\Component\\KjeholtBusiness'));
         $container->registerServiceProvider(new ComponentDispatcherFactoryServiceProvider('\\KjeholtEngineering\\Component\\KjeholtBusiness'));
         $container->registerServiceProvider(new RouterFactoryServiceProvider('\\KjeholtEngineering\\Component\\KjeholtBusiness'));
@@ -61,13 +61,6 @@ return new class implements ServiceProviderInterface {
                 $component = new MVCComponent($container->get(ComponentDispatcherFactoryInterface::class));
                 $component->setMVCFactory($container->get(MVCFactoryInterface::class));
                 
-                return $component;
-                
-                /* The line below will get from the DIC the entry with key 'Joomla\CMS\Categories\CategoryFactoryInterface'
-                    * The CategoryFactory instance will be returned, and we'll save a reference to it in our component by
-                    * calling setCategoryFactory(), passing it in as the parameter
-                    */
-                $component->setCategoryFactory($container->get(CategoryFactoryInterface::class));
                 $component->setRouterFactory($container->get(RouterFactoryInterface::class));
                 $component->setDatabase($container->get(DatabaseInterface::class));
 

@@ -1,5 +1,5 @@
 <?php
-namespace KjeholtEngineering\Component\KjeholtBusiness\Site\View\Expencies;
+namespace KjeholtEngineering\Component\KjeholtBusiness\Site\View\Expancies;
 
 defined('_JEXEC') or die;
 

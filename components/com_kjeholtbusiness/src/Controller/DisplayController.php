@@ -22,7 +22,7 @@ class DisplayController extends BaseController
 
         if ($companyId === null) {
             Log::add('DisplayController: No company_id found in cookies.', Log::DEBUG, 'com_kjeholtbusiness');
-            setcookie('kjeholtbusiness_company_id', '1', time() + 30, '/');
+            setcookie('kjeholtbusiness_company_id', '1', time() + 30 * 86400, '/');
             $companyId = '1'; // Använd värdet direkt i denna request
         } else {
             Log::add('DisplayController: Found company_id in cookies: ' . $companyId, Log::DEBUG, 'com_kjeholtbusiness');

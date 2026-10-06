@@ -1,6 +1,6 @@
 <?php
 
-namespace KjeholtEngineering\Component\KjeholtBusiness\Site\Service;
+namespace KjeholtEngineering\Component\KjeholtBusiness\Administrator\Service;
 
 use Joomla\CMS\Categories\Categories;
 
