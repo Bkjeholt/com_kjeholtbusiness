@@ -3,12 +3,16 @@ namespace KjeholtEngineering\Component\KjeholtBusiness\Site\Model;
 
 defined('_JEXEC') or die;
 
-use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\CMS\Factory;
+use Joomla\Database\ParameterType;\nuse Joomla\CMS\MVC\Model\ListModel;
 
 class TimeChartsModel extends ListModel
 {
     protected function getListQuery()
     {
+        $app       = Factory::getApplication();
+        $companyId = (int) $app->getUserState('com_kjeholtbusiness.company.id', 1);
+
         $db    = $this->getDatabase();
         $query = $db->getQuery(true);
 
@@ -37,6 +41,8 @@ class TimeChartsModel extends ListModel
                 $db->quoteName('#__kjeholtbusiness_projects', 'p'),
                 $db->quoteName('p.id') . ' = ' . $db->quoteName('sp.project_id')
             )
+            ->where($db->quoteName('p.company_id') . ' = :company_id')
+            ->bind(':company_id', $companyId, ParameterType::INTEGER)
             ->order($db->quoteName('tc.start_time') . ' DESC');
 
         return $query;
