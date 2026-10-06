@@ -18,8 +18,15 @@ class KjeholtBusinessComponent extends MVCComponent implements
     use RouterServiceTrait;
     use DatabaseAwareTrait;
 
+    public function __construct($dispatcherFactory)
+    {
+        Log::add('KjeholtBusinessComponent: constructor entered.', Log::DEBUG, 'com_kjeholtbusiness');
+        parent::__construct($dispatcherFactory);
+        Log::add('KjeholtBusinessComponent: parent constructor done.', Log::DEBUG, 'com_kjeholtbusiness');
+    }
+
     public function boot(ContainerInterface $container)
     {
-        Log::add('boot: com_kjeholtbusiness booted. BUILD=e34f26b+', Log::DEBUG, 'com_kjeholtbusiness');
+        Log::add('boot: com_kjeholtbusiness booted. BUILD=9d9d666+ctor', Log::DEBUG, 'com_kjeholtbusiness');
     }
 }
