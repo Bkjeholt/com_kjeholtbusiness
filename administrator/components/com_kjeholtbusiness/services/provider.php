@@ -57,13 +57,22 @@ return new class implements ServiceProviderInterface {
             ComponentInterface::class,
             function (Container $container) {
                 Log::add('Component closure: start.', Log::DEBUG, 'com_kjeholtbusiness');
-                $component = new KjeholtBusinessComponent(
-                    $container->get(ComponentDispatcherFactoryInterface::class)
-                );
-                $component->setMVCFactory($container->get(MVCFactoryInterface::class));
-                $component->setRouterFactory($container->get(RouterFactoryInterface::class));
-                $component->setDatabase($container->get(DatabaseInterface::class));
-
+                Log::add('Closure step 1: get dispatcher factory.', Log::DEBUG, 'com_kjeholtbusiness');
+                $dispatcherFactory = $container->get(ComponentDispatcherFactoryInterface::class);
+                Log::add('Closure step 2: construct component.', Log::DEBUG, 'com_kjeholtbusiness');
+                $component = new KjeholtBusinessComponent($dispatcherFactory);
+                Log::add('Closure step 3: get MVC factory.', Log::DEBUG, 'com_kjeholtbusiness');
+                $mvcFactory = $container->get(MVCFactoryInterface::class);
+                Log::add('Closure step 4: set MVC factory.', Log::DEBUG, 'com_kjeholtbusiness');
+                $component->setMVCFactory($mvcFactory);
+                Log::add('Closure step 5: get router factory.', Log::DEBUG, 'com_kjeholtbusiness');
+                $routerFactory = $container->get(RouterFactoryInterface::class);
+                Log::add('Closure step 6: set router factory.', Log::DEBUG, 'com_kjeholtbusiness');
+                $component->setRouterFactory($routerFactory);
+                Log::add('Closure step 7: get database.', Log::DEBUG, 'com_kjeholtbusiness');
+                $db = $container->get(DatabaseInterface::class);
+                Log::add('Closure step 8: set database.', Log::DEBUG, 'com_kjeholtbusiness');
+                $component->setDatabase($db);
                 Log::add('Component closure: done.', Log::DEBUG, 'com_kjeholtbusiness');
                 return $component;
             }
