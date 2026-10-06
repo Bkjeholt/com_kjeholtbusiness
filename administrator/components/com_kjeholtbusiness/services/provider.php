@@ -25,7 +25,7 @@ return new class implements ServiceProviderInterface {
     public function register(Container $container): void 
     {
 
-        Log::add('Registrering av com_kjeholtbusiness (admin).', Log::INFO, 'com_kjeholtbusiness');
+        Log::add('Registrering av com_kjeholtbusiness (admin). BUILD=e34f26b+', Log::INFO, 'com_kjeholtbusiness');
  
         // Registrera autoloader för Helper-namnutrymmet (om det inte redan görs via composer.json)
 /*        $loader = new \Joomla\CMS\Autoloader\Psr4AutoloaderClass;
@@ -56,6 +56,7 @@ return new class implements ServiceProviderInterface {
         $container->set(
             ComponentInterface::class,
             function (Container $container) {
+                Log::add('Component closure: start.', Log::DEBUG, 'com_kjeholtbusiness');
                 $component = new KjeholtBusinessComponent(
                     $container->get(ComponentDispatcherFactoryInterface::class)
                 );
@@ -63,6 +64,7 @@ return new class implements ServiceProviderInterface {
                 $component->setRouterFactory($container->get(RouterFactoryInterface::class));
                 $component->setDatabase($container->get(DatabaseInterface::class));
 
+                Log::add('Component closure: done.', Log::DEBUG, 'com_kjeholtbusiness');
                 return $component;
             }
         );

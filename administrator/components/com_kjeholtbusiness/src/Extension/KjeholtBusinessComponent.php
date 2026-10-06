@@ -20,6 +20,6 @@ class KjeholtBusinessComponent extends MVCComponent implements
 
     public function boot(ContainerInterface $container)
     {
-        Log::add('boot: com_kjeholtbusiness booted (no category service).', Log::DEBUG, 'com_kjeholtbusiness');
+        Log::add('boot: com_kjeholtbusiness booted. BUILD=e34f26b+', Log::DEBUG, 'com_kjeholtbusiness');
     }
 }
