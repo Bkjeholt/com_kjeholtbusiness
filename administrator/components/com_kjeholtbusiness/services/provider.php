@@ -57,6 +57,7 @@ return new class implements ServiceProviderInterface {
             ComponentInterface::class,
             function (Container $container) {
                 Log::add('Component closure: start.', Log::DEBUG, 'com_kjeholtbusiness');
+                try {
                 Log::add('Closure step 1: get dispatcher factory.', Log::DEBUG, 'com_kjeholtbusiness');
                 $dispatcherFactory = $container->get(ComponentDispatcherFactoryInterface::class);
                 Log::add('Closure step 2: construct component.', Log::DEBUG, 'com_kjeholtbusiness');
@@ -73,6 +74,10 @@ return new class implements ServiceProviderInterface {
                 $db = $container->get(DatabaseInterface::class);
                 Log::add('Closure step 8: set database.', Log::DEBUG, 'com_kjeholtbusiness');
                 $component->setDatabase($db);
+                } catch (\Throwable $closureError) {
+                Log::add('CLOSURE FATAL: ' . $closureError->getMessage() . ' in ' . $closureError->getFile() . ':' . $closureError->getLine(), Log::ERROR, 'com_kjeholtbusiness');
+                throw $closureError;
+                }
                 Log::add('Component closure: done.', Log::DEBUG, 'com_kjeholtbusiness');
                 return $component;
             }
