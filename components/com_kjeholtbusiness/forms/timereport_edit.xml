@@ -14,6 +14,17 @@
                label="COM_KJEHOLTBUSINESS_TIMEREPORTS_DESCRIPTION"
                rows="5"
                cols="40" />
+        <field name="subproject_id"
+               type="sql"
+               label="COM_KJEHOLTBUSINESS_TIMEREPORTS_SUBPROJECT"
+               query="SELECT 0 AS id, '---' AS title
+                      UNION ALL
+                      SELECT sp.id AS id, CONCAT(p.name, ' : ', sp.name) AS title
+                      FROM #__kjeholtbusiness_subprojects AS sp
+                      JOIN #__kjeholtbusiness_projects AS p ON p.id = sp.project_id
+                      ORDER BY id"
+               key_field="id"
+               value_field="title" />
         <field name="start_time"
                type="calendar"
                label="COM_KJEHOLTBUSINESS_TIMEREPORTS_START"

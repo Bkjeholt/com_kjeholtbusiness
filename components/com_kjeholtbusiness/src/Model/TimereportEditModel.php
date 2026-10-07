@@ -101,6 +101,7 @@ class TimereportEditModel extends FormModel
         $updated->description = (string) ($data['description'] ?? $item->description);
         $updated->start_time  = (string) ($data['start_time'] ?? $item->start_time);
         $updated->end_time    = isset($data['end_time']) && $data['end_time'] !== '' ? (string) $data['end_time'] : $item->end_time;
+        $updated->subproject_id = (int) ($data['subproject_id'] ?? $item->subproject_id);
         $updated->adjustment  = (int) ($data['adjustment'] ?? $item->adjustment);
         $updated->status      = (string) ($data['status'] ?? $item->status);
         $updated->modified_by = (int) Factory::getUser()->id;
