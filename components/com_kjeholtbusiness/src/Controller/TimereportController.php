@@ -6,6 +6,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\Language\Text;
 use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\TimecardService;
 use Joomla\CMS\Log\Log;
 
@@ -134,7 +135,28 @@ class TimereportController extends BaseController
             $app->setUserState('com_kjeholtbusiness.timereport.postdata', $validData);
             $this->setRedirect(Route::_('index.php?option=com_kjeholtbusiness&view=timereport&layout=listofopentimereports', false));
         }
-        
-        
+
+
+    }
+
+    public function stop($key = null, $urlVar = null)
+    {
+        $this->checkToken();
+
+        $app    = Factory::getApplication();
+        $userId = (int) Factory::getUser()->id;
+
+        $ended = TimecardService::endOngoing($userId);
+
+        if ($ended > 0) {
+            $app->enqueueMessage(
+                Text::plural('COM_KJEHOLTBUSINESS_TIMEREPORT_N_ENDED', $ended),
+                'message'
+            );
+        } else {
+            $app->enqueueMessage(Text::_('COM_KJEHOLTBUSINESS_TIMEREPORT_NONE_ONGOING'), 'notice');
+        }
+
+        $this->setRedirect(Route::_('index.php?option=com_kjeholtbusiness&view=timereport', false));
     }
 }
