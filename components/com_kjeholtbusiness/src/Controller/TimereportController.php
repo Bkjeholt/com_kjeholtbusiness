@@ -147,9 +147,10 @@ class TimereportController extends BaseController
         $db    = Factory::getDbo();
         $user  = Factory::getUser();
 
-        $endTime = $app->input->post->getString('jform', [])['end_time'] ?? Factory::getDate()->toSql();
-        $endTime = trim((string) $endTime) ?: Factory::getDate()->toSql();
-        $description = trim((string) ($app->input->post->get('jform', [], 'array')['description'] ?? ''));
+        $jform = $app->input->post->get('jform', [], 'array');
+
+        $endTime = trim((string) ($jform['end_time'] ?? '')) ?: Factory::getDate()->toSql();
+        $description = trim((string) ($jform['description'] ?? ''));
 
         // Apply the editable description to the ongoing report(s) before ending
         if ($description !== '') {
