@@ -78,6 +78,8 @@ CREATE TABLE IF NOT EXISTS `#__kjeholtbusiness_expenses` (
   `subproject_id` INT(11) UNSIGNED NOT NULL,
   `date` DATE NOT NULL DEFAULT CURRENT_DATE,
   `amount` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  `supplier` VARCHAR(255) NOT NULL DEFAULT '',
+  `status` ENUM('new','validated','froozen') DEFAULT 'new',
   `acl_view_id` INT(11) UNSIGNED DEFAULT 0,
   `acl_user_id` INT(11) UNSIGNED DEFAULT 0,
   `acl_admin_id` INT(11) UNSIGNED DEFAULT 0,

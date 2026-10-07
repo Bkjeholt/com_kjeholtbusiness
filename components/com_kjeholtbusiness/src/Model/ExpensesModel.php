@@ -29,6 +29,8 @@ class ExpensesModel extends ListModel
                 $db->quoteName('e.subproject_id'),
                 $db->quoteName('e.date'),
                 $db->quoteName('e.amount'),
+                $db->quoteName('e.supplier'),
+                $db->quoteName('e.status'),
                 $db->quoteName('e.created_by'),
                 $db->quoteName('sp.name', 'subproject_name'),
                 $db->quoteName('p.name', 'project_name'),

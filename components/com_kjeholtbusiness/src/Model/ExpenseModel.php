@@ -65,6 +65,8 @@ class ExpenseModel extends FormModel
         $row->subproject_id = (int) ($data['subproject_id'] ?? 0);
         $row->date         = (string) ($data['date'] ?? Factory::getDate()->format('Y-m-d'));
         $row->amount       = (float) ($data['amount'] ?? 0);
+        $row->supplier     = (string) ($data['supplier'] ?? '');
+        $row->status       = (string) ($data['status'] ?? 'new');
         $row->created_by   = $userId;
 
         $id = (int) ($data['id'] ?? 0);

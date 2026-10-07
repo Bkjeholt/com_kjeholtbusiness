@@ -34,5 +34,16 @@
                type="text"
                label="COM_KJEHOLTBUSINESS_EXPENSES_AMOUNT"
                required="true" />
+        <field name="supplier"
+               type="text"
+               label="COM_KJEHOLTBUSINESS_EXPENSES_SUPPLIER"
+               size="40" />
+        <field name="status"
+               type="list"
+               label="COM_KJEHOLTBUSINESS_EXPENSES_STATUS"
+               default="new">
+            <option value="new">COM_KJEHOLTBUSINESS_EXPENSES_STATUS_NEW</option>
+            <option value="validated">COM_KJEHOLTBUSINESS_EXPENSES_STATUS_VALIDATED</option>
+        </field>
     </fieldset>
 </form>

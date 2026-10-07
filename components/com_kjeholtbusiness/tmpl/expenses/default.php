@@ -26,6 +26,8 @@ use Joomla\CMS\Router\Route;
                         <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_EXPENSES_PROJECT'); ?></th>
                         <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_EXPENSES_SUBPROJECT'); ?></th>
                         <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_EXPENSES_AMOUNT'); ?></th>
+                        <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_EXPENSES_SUPPLIER'); ?></th>
+                        <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_EXPENSES_STATUS'); ?></th>
                         <th scope="col"><?php echo Text::_('JACTION_EDIT'); ?></th>
                     </tr>
                 </thead>
@@ -37,6 +39,8 @@ use Joomla\CMS\Router\Route;
                             <td><?php echo $this->escape($item->project_name ?? '---'); ?></td>
                             <td><?php echo $this->escape($item->subproject_name ?? '---'); ?></td>
                             <td><?php echo number_format((float) $item->amount, 2, ',', ' '); ?></td>
+                            <td><?php echo $this->escape($item->supplier ?? '-'); ?></td>
+                            <td><?php echo $this->escape($item->status ?? 'new'); ?></td>
                             <td>
                                 <a class="btn btn-secondary btn-sm"
                                    href="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=expense&id=' . (int) $item->id); ?>">
