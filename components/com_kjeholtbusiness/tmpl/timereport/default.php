@@ -39,6 +39,7 @@ use Joomla\CMS\HTML\HTMLHelper;
             <thead>
                 <tr>
                     <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_START'); ?></th>
+                    <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_PROJECT'); ?></th>
                     <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_SUBPROJECT'); ?></th>
                     <th scope="col"><?php echo Text::_('JACTION_EDIT'); ?></th>
                 </tr>
@@ -47,7 +48,8 @@ use Joomla\CMS\HTML\HTMLHelper;
                 <?php foreach ($this->ongoing as $report) : ?>
                     <tr>
                         <td><?php echo HTMLHelper::_('date', $report->start_time, 'Y-m-d H:i'); ?></td>
-                        <td><?php echo (int) $report->subproject_id; ?></td>
+                        <td><?php echo $this->escape($report->project_name ?? '---'); ?></td>
+                        <td><?php echo $this->escape($report->subproject_name ?? '---'); ?></td>
                         <td>
                             <form action="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=timereport'); ?>"
                                   method="post" class="d-inline">

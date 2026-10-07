@@ -49,21 +49,36 @@ class HtmlView extends BaseHtmlView
                 'timereport_stop',
                 ['control' => 'jform']
             );
+
+            $prefill = ['end_time' => Factory::getDate()->toSql()];
+
+            if (!empty($this->ongoing)) {
+                $prefill['description'] = $this->ongoing[0]->description ?? '';
+            }
+
+            $this->form->bind($prefill);
         }
 
         $db      = Factory::getDbo();
         $userId  = (int) Factory::getUser()->id;
         $query = $db->getQuery(true)
             ->select([
-                $db->quoteName('id'),
-                $db->quoteName('name'),
-                $db->quoteName('start_time'),
-                $db->quoteName('subproject_id'),
+                $db->quoteName('tc.id'),
+                $db->quoteName('tc.name'),
+                $db->quoteName('tc.description'),
+                $db->quoteName('tc.start_time'),
+                $db->quoteName('tc.subproject_id'),
+                $db->quoteName('sp.name', 'subproject_name'),
+                $db->quoteName('p.name', 'project_name'),
             ])
-            ->from($db->quoteName('#__kjeholtbusiness_timecards'))
-            ->where($db->quoteName('created_by') . ' = ' . (int) $userId)
-            ->where($db->quoteName('status') . ' = ' . $db->quote('ongoing'))
-            ->order($db->quoteName('start_time') . ' DESC');
+            ->from($db->quoteName('#__kjeholtbusiness_timecards', 'tc'))
+            ->join('LEFT', $db->quoteName('#__kjeholtbusiness_subprojects', 'sp'),
+                $db->quoteName('sp.id') . ' = ' . $db->quoteName('tc.subproject_id'))
+            ->join('LEFT', $db->quoteName('#__kjeholtbusiness_projects', 'p'),
+                $db->quoteName('p.id') . ' = ' . $db->quoteName('sp.project_id'))
+            ->where($db->quoteName('tc.created_by') . ' = ' . (int) $userId)
+            ->where($db->quoteName('tc.status') . ' = ' . $db->quote('ongoing'))
+            ->order($db->quoteName('tc.start_time') . ' DESC');
         $this->ongoing = $db->setQuery($query)->loadObjectList();
 
         /* return */ parent::display($tpl);
