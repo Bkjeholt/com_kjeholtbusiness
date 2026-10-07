@@ -35,14 +35,9 @@
                label="COM_KJEHOLTBUSINESS_EXPENSES_AMOUNT_EXCL_VAT"
                required="true" />
         <field name="vat"
-               type="list"
+               type="text"
                label="COM_KJEHOLTBUSINESS_EXPENSES_VAT"
-               default="25">
-            <option value="25">25%</option>
-            <option value="12">12%</option>
-            <option value="6">6%</option>
-            <option value="0">0%</option>
-        </field>
+               default="0" />
         <field name="rounding"
                type="text"
                label="COM_KJEHOLTBUSINESS_EXPENSES_ROUNDING"

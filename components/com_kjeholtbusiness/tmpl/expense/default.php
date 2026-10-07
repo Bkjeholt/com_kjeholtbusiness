@@ -36,12 +36,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function recalc() {
         var excl = parseFloat(exclField.value.replace(',', '.'));
-        var vat  = parseFloat(vatField.value);
+        var vat  = parseFloat(vatField.value.replace(',', '.'));
 
         if (isNaN(excl)) excl = 0;
         if (isNaN(vat))  vat  = 0;
 
-        var raw  = Math.round(excl * (1 + vat / 100) * 100) / 100;
+        var raw  = Math.round((excl + vat) * 100) / 100;
         var incl = Math.round(raw);
         var rnd  = Math.round((incl - raw) * 100) / 100;
 
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     exclField.addEventListener('input', recalc);
-    vatField.addEventListener('change', recalc);
+    vatField.addEventListener('input', recalc);
     recalc();
 });
 </script>
