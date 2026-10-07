@@ -39,6 +39,22 @@ class HtmlView extends BaseHtmlView
         
         $this->item = $this->get('Item');
         $this->form = $this->get('Form');
+
+        $db      = Factory::getDbo();
+        $userId  = (int) Factory::getUser()->id;
+        $query = $db->getQuery(true)
+            ->select([
+                $db->quoteName('id'),
+                $db->quoteName('name'),
+                $db->quoteName('start_time'),
+                $db->quoteName('subproject_id'),
+            ])
+            ->from($db->quoteName('#__kjeholtbusiness_timecards'))
+            ->where($db->quoteName('created_by') . ' = ' . (int) $userId)
+            ->where($db->quoteName('status') . ' = ' . $db->quote('ongoing'))
+            ->order($db->quoteName('start_time') . ' DESC');
+        $this->ongoing = $db->setQuery($query)->loadObjectList();
+
         /* return */ parent::display($tpl);
     }
 }

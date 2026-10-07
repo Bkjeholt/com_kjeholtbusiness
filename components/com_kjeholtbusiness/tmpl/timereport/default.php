@@ -27,8 +27,46 @@ if ($postdata) {
 }
 
 
+use Joomla\CMS\Language\Text;
+
+use Joomla\CMS\HTML\HTMLHelper;
 ?>
-<h1>COM_KJEHOLTBUSINESS_TIMEREPORT_LIST_OF_ONGOING_HEADING</h1>
+<h1><?php echo Text::_('COM_KJEHOLTBUSINESS_TIMEREPORT_LIST_OF_ONGOING_HEADING'); ?></h1>
+
+<?php if (!empty($this->ongoing)) : ?>
+    <div class="com-kjeholtbusiness-ongoing-timereports">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_START'); ?></th>
+                    <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_SUBPROJECT'); ?></th>
+                    <th scope="col"><?php echo Text::_('JACTION_EDIT'); ?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($this->ongoing as $report) : ?>
+                    <tr>
+                        <td><?php echo HTMLHelper::_('date', $report->start_time, 'Y-m-d H:i'); ?></td>
+                        <td><?php echo (int) $report->subproject_id; ?></td>
+                        <td>
+                            <form action="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=timereport'); ?>"
+                                  method="post" class="d-inline">
+                                <input type="hidden" name="task" value="timereport.stop" />
+                                <input type="hidden" name="id" value="<?php echo (int) $report->id; ?>" />
+                                <?php echo HTMLHelper::_('form.token'); ?>
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    <?php echo Text::_('COM_KJEHOLTBUSINESS_TIMEREPORT_STOP'); ?>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+<?php else : ?>
+    <p><?php echo Text::_('COM_KJEHOLTBUSINESS_TIMEREPORT_NONE_ONGOING'); ?></p>
+<?php endif; ?>
 
     <?php // echo '<pre>ABC: <br/>' . htmlspecialchars($post, ENT_QUOTES) . '</pre>'; ?>
 

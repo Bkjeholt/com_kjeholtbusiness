@@ -7,6 +7,7 @@ use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Log\Log;
+use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\TimecardService;
 
 
 class TimereportstartController extends BaseController
@@ -55,6 +56,14 @@ class TimereportstartController extends BaseController
         }
         else
         {
+            $userId = (int) Factory::getUser()->id;
+
+            // End any previous ongoing report before starting a new one
+            TimecardService::endOngoing($userId);
+
+            // Auto-close reports still ongoing after 24 hours
+            TimecardService::autoCloseAfter24h($userId);
+
             // Spara en ny rad i #__kjeholtbusiness_timecards
             $db = Factory::getDbo();
             $row = new \stdClass();
