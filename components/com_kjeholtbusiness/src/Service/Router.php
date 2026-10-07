@@ -23,6 +23,8 @@ class Router extends RouterView
         $this->registerView(new RouterViewConfiguration('timereport'));
         $this->registerView(new RouterViewConfiguration('timereportstart'));
         $this->registerView(new RouterViewConfiguration('timecharts'));
+        $this->registerView(new RouterViewConfiguration('timereports'));
+        $this->registerView(new RouterViewConfiguration('timereportedit'));
 
         parent::__construct($application, $menu);
     }

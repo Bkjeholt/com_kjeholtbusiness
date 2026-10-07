@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fieldset name="timereportEditFieldset">
+        <field name="id"
+               type="hidden" />
+        <field name="name"
+               type="text"
+               label="COM_KJEHOLTBUSINESS_TIMEREPORTS_NAME"
+               required="true"
+               size="40" />
+        <field name="description"
+               type="textarea"
+               filter="safehtml"
+               label="COM_KJEHOLTBUSINESS_TIMEREPORTS_DESCRIPTION"
+               rows="5"
+               cols="40" />
+        <field name="start_time"
+               type="calendar"
+               label="COM_KJEHOLTBUSINESS_TIMEREPORTS_START"
+               format="%Y-%m-%d %H:%M:%S"
+               required="true" />
+        <field name="end_time"
+               type="calendar"
+               label="COM_KJEHOLTBUSINESS_TIMEREPORTS_END"
+               format="%Y-%m-%d %H:%M:%S"
+               class="readonly" />
+        <field name="adjustment"
+               type="number"
+               label="COM_KJEHOLTBUSINESS_TIMEREPORTS_ADJUSTMENT"
+               default="0" />
+        <field name="status"
+               type="list"
+               label="COM_KJEHOLTBUSINESS_TIMEREPORTS_STATUS"
+               default="ongoing">
+            <option value="ongoing">COM_KJEHOLTBUSINESS_TIMEREPORTS_STATUS_ONGOING</option>
+            <option value="ended">COM_KJEHOLTBUSINESS_TIMEREPORTS_STATUS_ENDED</option>
+        </field>
+    </fieldset>
+</form>
