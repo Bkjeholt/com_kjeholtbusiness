@@ -7,6 +7,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\Router\Route;
+use Joomla\Database\ParameterType;
 
 class TimereporteditController extends BaseController
 {
@@ -65,9 +66,9 @@ class TimereporteditController extends BaseController
             ->where($db->quoteName('id') . ' = :id')
             ->where($db->quoteName('created_by') . ' = :owner')
             ->where($db->quoteName('status') . ' = ' . $db->quote('ended'))
-            ->bind(':user_id', $userId, Joomla\Database\ParameterType::INTEGER)
-            ->bind(':id', $id, Joomla\Database\ParameterType::INTEGER)
-            ->bind(':owner', $userId, Joomla\Database\ParameterType::INTEGER);
+            ->bind(':user_id', $userId, ParameterType::INTEGER)
+            ->bind(':id', $id, ParameterType::INTEGER)
+            ->bind(':owner', $userId, ParameterType::INTEGER);
 
         $db->setQuery($query)->execute();
 
