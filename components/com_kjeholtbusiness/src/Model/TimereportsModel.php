@@ -14,6 +14,25 @@ class TimereportsModel extends ListModel
         parent::populateState($ordering, $direction);
     }
 
+    public static function calculateHours(?string $start, ?string $end, int $adjustment): ?float
+    {
+        if (empty($end)) {
+            return null;
+        }
+
+        $startTs = strtotime((string) $start);
+        $endTs   = strtotime((string) $end);
+
+        if ($startTs === false || $endTs === false || $endTs < $startTs) {
+            return null;
+        }
+
+        $minutes = ($endTs - $startTs) / 60 + $adjustment;
+        $hours   = $minutes / 60;
+
+        return ceil($hours * 4) / 4;
+    }
+
     protected function getListQuery()
     {
         $db     = $this->getDatabase();

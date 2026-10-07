@@ -21,6 +21,7 @@ use Joomla\CMS\HTML\HTMLHelper;
                         <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_START'); ?></th>
                         <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_END'); ?></th>
                         <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_ADJUSTMENT'); ?></th>
+                        <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_HOURS'); ?></th>
                         <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_STATUS'); ?></th>
                         <th scope="col"><?php echo Text::_('JACTION_EDIT'); ?></th>
                     </tr>
@@ -35,6 +36,14 @@ use Joomla\CMS\HTML\HTMLHelper;
                             <td><?php echo HTMLHelper::_('date', $item->start_time, 'Y-m-d H:i'); ?></td>
                             <td><?php echo $item->end_time ? HTMLHelper::_('date', $item->end_time, 'Y-m-d H:i') : '-'; ?></td>
                             <td><?php echo (int) $item->adjustment; ?></td>
+                            <td><?php
+                                $hours = \KjeholtEngineering\Component\KjeholtBusiness\Site\Model\TimereportsModel::calculateHours(
+                                    $item->start_time,
+                                    $item->end_time,
+                                    (int) $item->adjustment
+                                );
+                                echo $hours === null ? '-' : number_format($hours, 2, ',', ' ');
+                            ?></td>
                             <td><?php echo $this->escape($item->status); ?></td>
                             <td>
                                 <?php if ($isFrozen) : ?>
