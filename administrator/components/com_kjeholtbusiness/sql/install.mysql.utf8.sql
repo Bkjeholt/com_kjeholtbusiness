@@ -97,7 +97,7 @@ CREATE TABLE IF NOT EXISTS `#__kjeholtbusiness_timecards` (
   `start_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `end_time` TIMESTAMP NULL DEFAULT NULL,
   `adjustment` INT(11) NOT NULL DEFAULT 0,  -- Adjustment in minutes, can be positive or negative
-  `status` ENUM('ongoing','ended','froozen') DEFAULT 'ongoing',
+  `status` ENUM('ongoing','ended','validated','froozen') DEFAULT 'ongoing',
   `acl_view_id` INT(11) UNSIGNED DEFAULT 0,
   `acl_user_id` INT(11) UNSIGNED DEFAULT 0,
   `acl_admin_id` INT(11) UNSIGNED DEFAULT 0,
