@@ -25,11 +25,7 @@ use Joomla\CMS\Router\Route;
                         <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_EXPENSES_NAME'); ?></th>
                         <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_EXPENSES_PROJECT'); ?></th>
                         <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_EXPENSES_SUBPROJECT'); ?></th>
-                        <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_EXPENSES_AMOUNT_EXCL_VAT'); ?></th>
-                        <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_EXPENSES_VAT'); ?></th>
-                        <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_EXPENSES_ROUNDING'); ?></th>
                         <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_EXPENSES_AMOUNT'); ?></th>
-                        <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_EXPENSES_SUPPLIER'); ?></th>
                         <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_EXPENSES_STATUS'); ?></th>
                         <th scope="col"><?php echo Text::_('JACTION_EDIT'); ?></th>
                     </tr>
@@ -41,13 +37,7 @@ use Joomla\CMS\Router\Route;
                             <td><?php echo $this->escape($item->name); ?></td>
                             <td><?php echo $this->escape($item->project_name ?? '---'); ?></td>
                             <td><?php echo $this->escape($item->subproject_name ?? '---'); ?></td>
-                            <td><?php echo number_format((float) $item->amount_excl_vat, 2, ',', ' '); ?></td>
-                            <td><?php echo number_format((float) $item->vat, 2, ',', ' '); ?></td>
-                            <td><?php echo $item->apply_rounding
-    ? number_format((float) $item->rounding, 2, ',', ' ')
-    : '-'; ?></td>
                             <td><?php echo number_format((float) $item->amount, 2, ',', ' '); ?></td>
-                            <td><?php echo $this->escape($item->supplier ?? '-'); ?></td>
                             <td><?php echo $this->escape($item->status ?? 'new'); ?></td>
                             <td>
                                 <a class="btn btn-secondary btn-sm"
