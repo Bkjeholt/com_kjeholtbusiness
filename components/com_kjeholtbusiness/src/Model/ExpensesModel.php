@@ -30,6 +30,7 @@ class ExpensesModel extends ListModel
                 $db->quoteName('e.date'),
                 $db->quoteName('e.amount_excl_vat'),
                 $db->quoteName('e.vat'),
+                $db->quoteName('e.apply_rounding'),
                 $db->quoteName('e.rounding'),
                 $db->quoteName('e.amount'),
                 $db->quoteName('e.supplier'),

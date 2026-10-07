@@ -43,7 +43,9 @@ use Joomla\CMS\Router\Route;
                             <td><?php echo $this->escape($item->subproject_name ?? '---'); ?></td>
                             <td><?php echo number_format((float) $item->amount_excl_vat, 2, ',', ' '); ?></td>
                             <td><?php echo number_format((float) $item->vat, 2, ',', ' '); ?></td>
-                            <td><?php echo number_format((float) $item->rounding, 2, ',', ' '); ?></td>
+                            <td><?php echo $item->apply_rounding
+    ? number_format((float) $item->rounding, 2, ',', ' ')
+    : '-'; ?></td>
                             <td><?php echo number_format((float) $item->amount, 2, ',', ' '); ?></td>
                             <td><?php echo $this->escape($item->supplier ?? '-'); ?></td>
                             <td><?php echo $this->escape($item->status ?? 'new'); ?></td>

@@ -29,10 +29,17 @@ use Joomla\CMS\Router\Route;
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    var exclField = document.getElementById('jform_amount_excl_vat');
-    var vatField  = document.getElementById('jform_vat');
+    var exclField  = document.getElementById('jform_amount_excl_vat');
+    var vatField   = document.getElementById('jform_vat');
+    var applyField  = document.querySelector('input[name="jform[apply_rounding]"]:checked');
+    var applyFields = document.querySelectorAll('input[name="jform[apply_rounding]"]');
     var roundField = document.getElementById('jform_rounding');
-    var inclField = document.getElementById('jform_amount');
+    var inclField  = document.getElementById('jform_amount');
+
+    function applyRounding() {
+        var checked = document.querySelector('input[name="jform[apply_rounding]"]:checked');
+        return checked && checked.value === '1';
+    }
 
     function recalc() {
         var excl = parseFloat(exclField.value.replace(',', '.'));
@@ -42,15 +49,23 @@ document.addEventListener('DOMContentLoaded', function () {
         if (isNaN(vat))  vat  = 0;
 
         var raw  = Math.round((excl + vat) * 100) / 100;
-        var incl = Math.round(raw);
-        var rnd  = Math.round((incl - raw) * 100) / 100;
+        var incl, rnd;
 
-        roundField.value = (incl ? (rnd >= 0 ? '+' : '') + rnd.toFixed(2) : '');
-        inclField.value  = incl ? incl.toFixed(2) : '';
+        if (applyRounding()) {
+            incl = Math.round(raw);
+            rnd  = Math.round((incl - raw) * 100) / 100;
+            roundField.value = (incl ? (rnd >= 0 ? '+' : '') + rnd.toFixed(2) : '');
+        } else {
+            incl = raw;
+            roundField.value = '';
+        }
+
+        inclField.value = incl ? incl.toFixed(2) : '';
     }
 
     exclField.addEventListener('input', recalc);
     vatField.addEventListener('input', recalc);
+    applyFields.forEach(function (f) { f.addEventListener('change', recalc); });
     recalc();
 });
 </script>

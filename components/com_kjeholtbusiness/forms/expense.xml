@@ -38,6 +38,14 @@
                type="text"
                label="COM_KJEHOLTBUSINESS_EXPENSES_VAT"
                default="0" />
+        <field name="apply_rounding"
+               type="radio"
+               label="COM_KJEHOLTBUSINESS_EXPENSES_APPLY_ROUNDING"
+               default="0"
+               class="btn-group">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
         <field name="rounding"
                type="text"
                label="COM_KJEHOLTBUSINESS_EXPENSES_ROUNDING"
