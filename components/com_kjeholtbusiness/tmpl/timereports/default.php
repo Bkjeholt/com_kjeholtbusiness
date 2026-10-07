@@ -23,6 +23,7 @@ use Joomla\CMS\HTML\HTMLHelper;
                         <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_HOURS'); ?></th>
                         <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_STATUS'); ?></th>
                         <th scope="col"><?php echo Text::_('JACTION_EDIT'); ?></th>
+                        <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_VALIDATE'); ?></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -51,6 +52,21 @@ use Joomla\CMS\HTML\HTMLHelper;
                                        href="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=timereportedit&id=' . (int) $item->id); ?>">
                                         <?php echo Text::_('JACTION_EDIT'); ?>
                                     </a>
+                                <?php endif; ?>
+                            </td>
+                            <td>
+                                <?php if ($item->status === 'ended') : ?>
+                                    <form action="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=timereports'); ?>"
+                                          method="post" class="d-inline">
+                                        <input type="hidden" name="task" value="timereportedit.validate" />
+                                        <input type="hidden" name="id" value="<?php echo (int) $item->id; ?>" />
+                                        <?php echo HTMLHelper::_('form.token'); ?>
+                                        <button type="submit" class="btn btn-success btn-sm">
+                                            <?php echo Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_VALIDATE'); ?>
+                                        </button>
+                                    </form>
+                                <?php elseif ($item->status === 'validated') : ?>
+                                    <span class="badge bg-success"><?php echo Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_STATUS_VALIDATED'); ?></span>
                                 <?php endif; ?>
                             </td>
                         </tr>
