@@ -3,20 +3,13 @@ namespace KjeholtEngineering\Component\KjeholtBusiness\Site\Controller;
 
 defined('_JEXEC') or die;
 
-use Joomla\CMS\Application\CMSApplicationInterface;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
-use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\CMS\Router\Route;
-use Joomla\Input\Input;
 
 class TimereporteditController extends BaseController
 {
-    public function __construct(MVCFactoryInterface $factory, CMSApplicationInterface $app, Input $input)
-    {
-        parent::__construct($factory, $app, $input);
-    }
 
     public function save($key = null, $urlVar = null)
     {
