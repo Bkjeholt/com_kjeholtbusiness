@@ -184,6 +184,7 @@ class Com_KjeholtbusinessInstallerScript
             array('grp' => 'Admin', 'profiles' => array('SuperAdmin')),
             array('grp' => 'Company', 'profiles' => array('Admin', 'Viewer')),
             array('grp' => 'Project', 'profiles' => array('Admin', 'User', 'Viewer')),
+            array('grp' => 'TimeReport', 'profiles' => array('Admin', 'User', 'Viewer')),
             array('grp' => 'Accounting', 'profiles' => array('Admin', 'User', 'Viewer'))
         );
         
