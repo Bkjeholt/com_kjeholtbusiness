@@ -3,6 +3,7 @@ namespace KjeholtEngineering\Component\KjeholtBusiness\Site\View\TimeReport;
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Form\Form;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Log\Log;
@@ -42,10 +43,11 @@ class HtmlView extends BaseHtmlView
 
         $layout = $app->input->getCmd('layout');
         if ($layout === 'stop') {
-            $this->form = $this->loadForm(
+            Form::addFormPath(JPATH_SITE . '/components/com_kjeholtbusiness/forms');
+            $this->form = Form::getInstance(
                 'com_kjeholtbusiness.timereportstop',
                 'timereport_stop',
-                ['control' => 'jform', 'load_data' => false]
+                ['control' => 'jform']
             );
         }
 
