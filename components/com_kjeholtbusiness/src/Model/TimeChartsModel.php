@@ -42,7 +42,10 @@ class TimeChartsModel extends ListModel
                 $db->quoteName('#__kjeholtbusiness_projects', 'p'),
                 $db->quoteName('p.id') . ' = ' . $db->quoteName('sp.project_id')
             )
-            ->where($db->quoteName('p.company_id') . ' = :company_id')
+            ->where(
+                '(' . $db->quoteName('p.company_id') . ' = :company_id'
+                . ' OR ' . $db->quoteName('tc.subproject_id') . ' = 0)'
+            )
             ->bind(':company_id', $companyId, ParameterType::INTEGER)
             ->order($db->quoteName('tc.start_time') . ' DESC');
 
