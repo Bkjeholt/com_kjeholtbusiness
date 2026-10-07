@@ -18,7 +18,7 @@ class HtmlView extends BaseHtmlView
         $model = $this->getModel();
 
         $this->item    = $model->getItem();
-        $this->isFrozen = $model->isFrozen($this->item);
+        $this->isFrozen = $model->isLocked($this->item);
         $this->form    = $model->getForm();
 
         if (!$this->item) {

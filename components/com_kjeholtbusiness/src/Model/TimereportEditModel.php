@@ -46,6 +46,15 @@ class TimereportEditModel extends FormModel
         return isset($item->status) && $item->status === 'froozen';
     }
 
+    /**
+     * A report is locked when it can no longer be modified:
+     * frozen or already validated.
+     */
+    public function isLocked(object $item): bool
+    {
+        return $this->isFrozen($item) || (isset($item->status) && $item->status === 'validated');
+    }
+
     public function getForm($data = [], $loadData = true)
     {
         $form = $this->loadForm(
@@ -60,7 +69,7 @@ class TimereportEditModel extends FormModel
 
         $item = $this->getItem();
 
-        if ($item && $this->isFrozen($item)) {
+        if ($item && $this->isLocked($item)) {
             $form->setFieldAttribute('description', 'readonly', 'true');
             $form->setFieldAttribute('start_time', 'readonly', 'true');
             $form->setFieldAttribute('end_time', 'readonly', 'true');
@@ -86,8 +95,8 @@ class TimereportEditModel extends FormModel
             return false;
         }
 
-        if ($this->isFrozen($item)) {
-            $this->setError('COM_KJEHOLTBUSINESS_TIMEREPORTS_ERROR_FROZEN');
+        if ($this->isLocked($item)) {
+            $this->setError('COM_KJEHOLTBUSINESS_TIMEREPORTS_ERROR_LOCKED');
 
             return false;
         }

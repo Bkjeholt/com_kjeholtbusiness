@@ -45,8 +45,12 @@ use Joomla\CMS\HTML\HTMLHelper;
                             ?></td>
                             <td><?php echo $this->escape($item->status); ?></td>
                             <td>
-                                <?php if ($isFrozen) : ?>
-                                    <span class="badge bg-secondary"><?php echo Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_FROZEN'); ?></span>
+                                <?php if ($isFrozen || $item->status === 'validated') : ?>
+                                    <?php if ($isFrozen) : ?>
+                                        <span class="badge bg-secondary"><?php echo Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_FROZEN'); ?></span>
+                                    <?php else : ?>
+                                        <span class="badge bg-success"><?php echo Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_STATUS_VALIDATED'); ?></span>
+                                    <?php endif; ?>
                                 <?php else : ?>
                                     <a class="btn btn-secondary btn-sm"
                                        href="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=timereportedit&id=' . (int) $item->id); ?>">

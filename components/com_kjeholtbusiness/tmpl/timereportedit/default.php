@@ -10,7 +10,7 @@ use Joomla\CMS\Router\Route;
 
     <?php if ($this->isFrozen) : ?>
         <div class="alert alert-info">
-            <?php echo Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_ERROR_FROZEN'); ?>
+            <?php echo Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_ERROR_LOCKED'); ?>
         </div>
     <?php endif; ?>
 
