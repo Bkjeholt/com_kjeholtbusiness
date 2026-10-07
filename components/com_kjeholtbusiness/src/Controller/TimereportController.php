@@ -27,6 +27,8 @@ class TimereportController extends BaseController
         
         $data = new \stdClass();
         $data->name = isset($commonData['name']) ? $commonData['name'] : 'odefinierat uppdrag';
+        $data->created_by = (int) Factory::getUser()->id;
+        $data->created_at = Factory::getDate()->toSql();
         $data->description = isset($commonData['description']) ? $commonData['description'] : 'Tidrapporten är kopplad till deluppdraget med id=' . $commonData['subproject_id'] . '.';
         $data->subproject_id = isset($commonData['subproject_id']) ? (int)$commonData['subproject_id'] : 0;
         if ($commonData->detail_selection == '1') {
