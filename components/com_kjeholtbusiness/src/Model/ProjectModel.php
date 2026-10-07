@@ -145,7 +145,7 @@ class ProjectModel extends FormModel
         
         $query
         ->select($db->quoteName(['type', 'value']))
-        ->from($db->quoteName('#__kjeholtbusiness_expencies', 'a'))
+        ->from($db->quoteName('#__kjeholtbusiness_expenses', 'a'))
         ->where($db->quoteName('subproject_id') . ' = :subproject_id')
         ->order($db->quoteName('id') . ' ASC')
         ->bind(':subproject_id', $subProjectId);

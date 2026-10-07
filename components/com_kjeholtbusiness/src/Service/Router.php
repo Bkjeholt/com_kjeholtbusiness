@@ -18,8 +18,6 @@ class Router extends RouterView
         $this->registerView(new RouterViewConfiguration('project'));
         $this->registerView(new RouterViewConfiguration('subprojects'));
         $this->registerView(new RouterViewConfiguration('subproject'));
-        $this->registerView(new RouterViewConfiguration('expancies'));
-        $this->registerView(new RouterViewConfiguration('expancy'));
         $this->registerView(new RouterViewConfiguration('timereport'));
         $this->registerView(new RouterViewConfiguration('timereportstart'));
         $this->registerView(new RouterViewConfiguration('timecharts'));
