@@ -64,7 +64,18 @@ class ExpenseModel extends FormModel
         $row->description  = (string) ($data['description'] ?? '');
         $row->subproject_id = (int) ($data['subproject_id'] ?? 0);
         $row->date         = (string) ($data['date'] ?? Factory::getDate()->format('Y-m-d'));
-        $row->amount       = (float) ($data['amount'] ?? 0);
+
+        // VAT calculation: amount incl VAT is rounded to whole kronor
+        // (Swedish retail practice); `rounding` records the öresavrundning.
+        $exclVat = (float) ($data['amount_excl_vat'] ?? 0);
+        $vatRate = (float) ($data['vat'] ?? 25);
+        $rawIncl = round($exclVat * (1 + $vatRate / 100), 2);
+        $inclVat = (float) round($rawIncl);
+        $row->amount_excl_vat = $exclVat;
+        $row->vat             = $vatRate;
+        $row->rounding        = round($inclVat - $rawIncl, 2);
+        $row->amount          = $inclVat;
+
         $row->supplier     = (string) ($data['supplier'] ?? '');
         $row->status       = (string) ($data['status'] ?? 'new');
         $row->created_by   = $userId;
