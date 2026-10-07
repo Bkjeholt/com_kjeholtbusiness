@@ -40,6 +40,15 @@ class HtmlView extends BaseHtmlView
         $this->item = $this->get('Item');
         $this->form = $this->get('Form');
 
+        $layout = $app->input->getCmd('layout');
+        if ($layout === 'stop') {
+            $this->form = $this->loadForm(
+                'com_kjeholtbusiness.timereportstop',
+                'timereport_stop',
+                ['control' => 'jform', 'load_data' => false]
+            );
+        }
+
         $db      = Factory::getDbo();
         $userId  = (int) Factory::getUser()->id;
         $query = $db->getQuery(true)

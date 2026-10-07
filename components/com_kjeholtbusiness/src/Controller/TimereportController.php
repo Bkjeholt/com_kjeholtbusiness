@@ -139,6 +139,42 @@ class TimereportController extends BaseController
 
     }
 
+    public function endSession($key = null, $urlVar = null)
+    {
+        $this->checkToken();
+
+        $app   = Factory::getApplication();
+        $db    = Factory::getDbo();
+        $user  = Factory::getUser();
+
+        $endTime = $app->input->post->getString('jform', [])['end_time'] ?? Factory::getDate()->toSql();
+        $endTime = trim((string) $endTime) ?: Factory::getDate()->toSql();
+        $description = trim((string) ($app->input->post->get('jform', [], 'array')['description'] ?? ''));
+
+        // Apply the editable description to the ongoing report(s) before ending
+        if ($description !== '') {
+            $query = $db->getQuery(true)
+                ->update($db->quoteName('#__kjeholtbusiness_timecards'))
+                ->set($db->quoteName('description') . ' = ' . $db->quote($description))
+                ->where($db->quoteName('created_by') . ' = ' . (int) $user->id)
+                ->where($db->quoteName('status') . ' = ' . $db->quote('ongoing'));
+            $db->setQuery($query)->execute();
+        }
+
+        $ended = TimecardService::endOngoing((int) $user->id, $endTime);
+
+        if ($ended > 0) {
+            $app->enqueueMessage(
+                Text::plural('COM_KJEHOLTBUSINESS_TIMEREPORT_N_ENDED', $ended),
+                'message'
+            );
+        } else {
+            $app->enqueueMessage(Text::_('COM_KJEHOLTBUSINESS_TIMEREPORT_NONE_ONGOING'), 'notice');
+        }
+
+        $this->setRedirect(Route::_('index.php?option=com_kjeholtbusiness&view=timereports', false));
+    }
+
     public function stop($key = null, $urlVar = null)
     {
         $this->checkToken();
