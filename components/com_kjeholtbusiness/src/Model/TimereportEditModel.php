@@ -61,7 +61,6 @@ class TimereportEditModel extends FormModel
         $item = $this->getItem();
 
         if ($item && $this->isFrozen($item)) {
-            $form->setFieldAttribute('name', 'readonly', 'true');
             $form->setFieldAttribute('description', 'readonly', 'true');
             $form->setFieldAttribute('start_time', 'readonly', 'true');
             $form->setFieldAttribute('end_time', 'readonly', 'true');
@@ -97,7 +96,6 @@ class TimereportEditModel extends FormModel
 
         $updated = new \stdClass();
         $updated->id          = (int) $item->id;
-        $updated->name        = (string) ($data['name'] ?? $item->name);
         $updated->description = (string) ($data['description'] ?? $item->description);
         $updated->start_time  = (string) ($data['start_time'] ?? $item->start_time);
         $updated->end_time    = isset($data['end_time']) && $data['end_time'] !== '' ? (string) $data['end_time'] : $item->end_time;

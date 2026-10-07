@@ -15,7 +15,6 @@ use Joomla\CMS\HTML\HTMLHelper;
             <table class="table table-striped" id="timereportsList">
                 <thead>
                     <tr>
-                        <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_NAME'); ?></th>
                         <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_PROJECT'); ?></th>
                         <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_SUBPROJECT'); ?></th>
                         <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_START'); ?></th>
@@ -30,7 +29,6 @@ use Joomla\CMS\HTML\HTMLHelper;
                     <?php foreach ($this->items as $i => $item) : ?>
                         <?php $isFrozen = ($item->status === 'froozen'); ?>
                         <tr>
-                            <td><?php echo $this->escape($item->name); ?></td>
                             <td><?php echo $this->escape($item->project_name ?? '-'); ?></td>
                             <td><?php echo $this->escape($item->subproject_name ?? '-'); ?></td>
                             <td><?php echo HTMLHelper::_('date', $item->start_time, 'Y-m-d H:i'); ?></td>
