@@ -18,6 +18,7 @@ use Joomla\CMS\HTML\HTMLHelper;
                                     <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_PROJECTS_NAME'); ?></th>
                                     <th scope="col" style="width:10%"><?php echo Text::_('COM_KJEHOLTBUSINESS_PROJECTS_STATUS'); ?></th>
                                     <th scope="col" style="width:15%"><?php echo Text::_('COM_KJEHOLTBUSINESS_PROJECTS_START_DATE'); ?></th>
+                                    <th scope="col" style="width:10%"><?php echo Text::_('COM_KJEHOLTBUSINESS_PROJECTSUMMARY_TITLE'); ?></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -27,6 +28,7 @@ use Joomla\CMS\HTML\HTMLHelper;
                                         <td><a href="<?php echo Route::_('index.php?option=com_kjeholtbusiness&task=project.edit&id=' . $item->id); ?>"><?php echo $this->escape($item->name); ?></a></td>
                                         <td><?php echo Text::_('COM_KJEHOLTBUSINESS_PROJECT_STATUS_' . strtoupper($item->status)); ?></td>
                                         <td><?php echo $item->start_date; ?></td>
+                                        <td><a href="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=projectsummary&id=' . $item->id); ?>"><?php echo Text::_('COM_KJEHOLTBUSINESS_PROJECTSUMMARY_TITLE'); ?></a></td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
