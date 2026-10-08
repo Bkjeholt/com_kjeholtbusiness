@@ -25,9 +25,7 @@ use Joomla\CMS\HTML\HTMLHelper;
                         <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_STATUS'); ?></th>
                         <th scope="col"><?php echo Text::_('JACTION_EDIT'); ?></th>
                         <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_VALIDATE'); ?></th>
-                        <?php if (TimereportAcl::mayDeleteAny()) : ?>
                         <th scope="col"><?php echo Text::_('JACTION_DELETE'); ?></th>
-                        <?php endif; ?>
                     </tr>
                 </thead>
                 <tbody>
@@ -77,8 +75,8 @@ use Joomla\CMS\HTML\HTMLHelper;
                                     <span class="badge bg-success"><?php echo Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_STATUS_VALIDATED'); ?></span>
                                 <?php endif; ?>
                             </td>
-                            <?php if (TimereportAcl::mayDeleteAny()) : ?>
                             <td>
+                                <?php if (TimereportAcl::canDelete($item)) : ?>
                                 <form action="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=timereports'); ?>"
                                       method="post" class="d-inline"
                                       onsubmit="return confirm('<?php echo Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_CONFIRM_DELETE'); ?>');">
@@ -89,8 +87,8 @@ use Joomla\CMS\HTML\HTMLHelper;
                                         <?php echo Text::_('JACTION_DELETE'); ?>
                                     </button>
                                 </form>
+                                <?php endif; ?>
                             </td>
-                            <?php endif; ?>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

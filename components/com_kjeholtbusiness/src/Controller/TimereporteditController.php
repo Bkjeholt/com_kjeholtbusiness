@@ -101,7 +101,9 @@ class TimereporteditController extends BaseController
             ->bind(':id', $id, ParameterType::INTEGER);
 
         if (!TimereportAcl::mayDeleteAny()) {
+            // Regular users: only their own, non-validated, non-frozen reports
             $query->where($db->quoteName('created_by') . ' = :owner')
+                ->where($db->quoteName('status') . ' IN (' . $db->quote('ongoing') . ', ' . $db->quote('ended') . ')')
                 ->bind(':owner', $userId, ParameterType::INTEGER);
         }
 

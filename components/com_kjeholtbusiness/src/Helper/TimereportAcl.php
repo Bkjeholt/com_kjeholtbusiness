@@ -49,6 +49,11 @@ class TimereportAcl
             return true;
         }
 
+        // Users may delete their own reports unless validated or frozen
+        if (isset($item->status) && \in_array($item->status, ['validated', 'froozen'], true)) {
+            return false;
+        }
+
         return (int) $item->created_by === (int) $user->id;
     }
 
