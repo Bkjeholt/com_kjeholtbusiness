@@ -7,6 +7,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\MVC\Model\FormModel;
 use Joomla\Database\ParameterType;
+use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\TimereportAcl;
 
 class TimereportEditModel extends FormModel
 {
@@ -32,9 +33,12 @@ class TimereportEditModel extends FormModel
             ->select('*')
             ->from($db->quoteName('#__kjeholtbusiness_timecards'))
             ->where($db->quoteName('id') . ' = :id')
-            ->where($db->quoteName('created_by') . ' = :user_id')
-            ->bind(':id', $id, ParameterType::INTEGER)
-            ->bind(':user_id', $userId, ParameterType::INTEGER);
+            ->bind(':id', $id, ParameterType::INTEGER);
+
+        if (!TimereportAcl::seesAll()) {
+            $query->where($db->quoteName('created_by') . ' = :user_id')
+                ->bind(':user_id', $userId, ParameterType::INTEGER);
+        }
 
         $this->item = $db->setQuery($query)->loadObject();
 
@@ -89,8 +93,8 @@ class TimereportEditModel extends FormModel
     {
         $item = $this->getItem((int) ($data['id'] ?? 0));
 
-        if (!$item) {
-            $this->setError('Time report not found or not owned by the current user.');
+        if (!$item || !TimereportAcl::canEdit($item)) {
+            $this->setError('COM_KJEHOLTBUSINESS_TIMEREPORTS_ERROR_NOT_FOUND');
 
             return false;
         }

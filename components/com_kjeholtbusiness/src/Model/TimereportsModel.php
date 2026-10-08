@@ -6,6 +6,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Database\ParameterType;
+use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\TimereportAcl;
 
 class TimereportsModel extends ListModel
 {
@@ -40,6 +41,11 @@ class TimereportsModel extends ListModel
 
         $query = $db->getQuery(true);
 
+        if (!TimereportAcl::seesAll()) {
+            $query->where($db->quoteName('tc.created_by') . ' = :user_id')
+                ->bind(':user_id', $userId, ParameterType::INTEGER);
+        }
+
         $query->select(
             [
                 $db->quoteName('tc.id'),
@@ -66,8 +72,6 @@ class TimereportsModel extends ListModel
                 $db->quoteName('#__kjeholtbusiness_projects', 'p'),
                 $db->quoteName('p.id') . ' = ' . $db->quoteName('sp.project_id')
             )
-            ->where($db->quoteName('tc.created_by') . ' = :user_id')
-            ->bind(':user_id', $userId, ParameterType::INTEGER)
             ->order($db->quoteName('tc.start_time') . ' DESC');
 
         return $query;

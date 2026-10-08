@@ -8,6 +8,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\Router\Route;
 use Joomla\Database\ParameterType;
+use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\TimereportAcl;
 
 class TimereporteditController extends BaseController
 {
@@ -64,11 +65,15 @@ class TimereporteditController extends BaseController
             ->set($db->quoteName('status') . ' = ' . $db->quote('validated'))
             ->set($db->quoteName('modified_by') . ' = :user_id')
             ->where($db->quoteName('id') . ' = :id')
-            ->where($db->quoteName('created_by') . ' = :owner')
-            ->where($db->quoteName('status') . ' = ' . $db->quote('ended'))
-            ->bind(':user_id', $userId, ParameterType::INTEGER)
-            ->bind(':id', $id, ParameterType::INTEGER)
-            ->bind(':owner', $userId, ParameterType::INTEGER);
+            ->where($db->quoteName('status') . ' = ' . $db->quote('ended'));
+
+        if (!TimereportAcl::seesAll()) {
+            $query->where($db->quoteName('created_by') . ' = :owner')
+                ->bind(':owner', $userId, ParameterType::INTEGER);
+        }
+
+        $query->bind(':user_id', $userId, ParameterType::INTEGER)
+            ->bind(':id', $id, ParameterType::INTEGER);
 
         $db->setQuery($query)->execute();
 
