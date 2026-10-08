@@ -20,7 +20,7 @@
             <folder>forms</folder>
             <folder>sql</folder>
             <folder>tmpl</folder>
-<!--        <folder>language</folder>  --> 
+            <folder>language</folder>
             <file>script.php</file>
         </files>
     </administration>
@@ -30,7 +30,7 @@
         <folder>services</folder>
         <folder>src</folder>
         <folder>forms</folder>
-<!--        <folder>language</folder>  --> 
+        <folder>language</folder>
         <folder>tmpl</folder>
     </files>
 
