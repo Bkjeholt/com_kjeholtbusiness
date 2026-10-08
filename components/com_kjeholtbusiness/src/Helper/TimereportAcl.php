@@ -41,6 +41,22 @@ class TimereportAcl
         return (bool) Factory::getUser()->authorise('timereport.create', 'com_kjeholtbusiness');
     }
 
+    public static function canDelete(object $item): bool
+    {
+        $user = Factory::getUser();
+
+        if ($user->authorise('timereport.delete', 'com_kjeholtbusiness')) {
+            return true;
+        }
+
+        return (int) $item->created_by === (int) $user->id;
+    }
+
+    public static function mayDeleteAny(): bool
+    {
+        return (bool) Factory::getUser()->authorise('timereport.delete', 'com_kjeholtbusiness');
+    }
+
     /**
      * True when the user may see every user's reports (for list scoping).
      */

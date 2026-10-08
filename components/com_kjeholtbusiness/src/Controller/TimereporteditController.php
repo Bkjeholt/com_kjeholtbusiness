@@ -85,4 +85,38 @@ class TimereporteditController extends BaseController
 
         $this->setRedirect(Route::_('index.php?option=com_kjeholtbusiness&view=timereports', false));
     }
+
+    public function delete()
+    {
+        $this->checkToken();
+
+        $app    = Factory::getApplication();
+        $userId = (int) Factory::getUser()->id;
+        $id     = (int) $app->input->getInt('id', 0);
+
+        $db     = Factory::getDbo();
+        $query  = $db->getQuery(true)
+            ->delete($db->quoteName('#__kjeholtbusiness_timecards'))
+            ->where($db->quoteName('id') . ' = :id')
+            ->bind(':id', $id, ParameterType::INTEGER);
+
+        if (!TimereportAcl::mayDeleteAny()) {
+            $query->where($db->quoteName('created_by') . ' = :owner')
+                ->bind(':owner', $userId, ParameterType::INTEGER);
+        }
+
+        try {
+            $db->setQuery($query)->execute();
+
+            if ($db->getAffectedRows() > 0) {
+                $app->enqueueMessage(Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_DELETED'), 'message');
+            } else {
+                $app->enqueueMessage(Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_ERROR_NOT_FOUND'), 'warning');
+            }
+        } catch (\Throwable $e) {
+            $app->enqueueMessage(Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_ERROR_DELETE'), 'error');
+        }
+
+        $this->setRedirect(Route::_('index.php?option=com_kjeholtbusiness&view=timereports', false));
+    }
 }

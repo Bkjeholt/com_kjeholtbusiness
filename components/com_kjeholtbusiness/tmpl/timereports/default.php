@@ -3,6 +3,7 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
+use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\TimereportAcl;
 use Joomla\CMS\HTML\HTMLHelper;
 ?>
 <div class="com-kjeholtbusiness-timereports">
@@ -24,6 +25,9 @@ use Joomla\CMS\HTML\HTMLHelper;
                         <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_STATUS'); ?></th>
                         <th scope="col"><?php echo Text::_('JACTION_EDIT'); ?></th>
                         <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_VALIDATE'); ?></th>
+                        <?php if (TimereportAcl::mayDeleteAny()) : ?>
+                        <th scope="col"><?php echo Text::_('JACTION_DELETE'); ?></th>
+                        <?php endif; ?>
                     </tr>
                 </thead>
                 <tbody>
@@ -73,6 +77,20 @@ use Joomla\CMS\HTML\HTMLHelper;
                                     <span class="badge bg-success"><?php echo Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_STATUS_VALIDATED'); ?></span>
                                 <?php endif; ?>
                             </td>
+                            <?php if (TimereportAcl::mayDeleteAny()) : ?>
+                            <td>
+                                <form action="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=timereports'); ?>"
+                                      method="post" class="d-inline"
+                                      onsubmit="return confirm('<?php echo Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_CONFIRM_DELETE'); ?>');">
+                                    <input type="hidden" name="task" value="timereportedit.delete" />
+                                    <input type="hidden" name="id" value="<?php echo (int) $item->id; ?>" />
+                                    <?php echo HTMLHelper::_('form.token'); ?>
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <?php echo Text::_('JACTION_DELETE'); ?>
+                                    </button>
+                                </form>
+                            </td>
+                            <?php endif; ?>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
