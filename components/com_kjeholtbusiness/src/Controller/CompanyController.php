@@ -20,13 +20,10 @@ class CompanyController extends BaseController
 
         $model = $this->getModel('Company');
 
-        $companyId = (int) ($this->input->post->getInt('jform', [])['id'] ?? 0);
+        $jform      = $this->input->post->get('jform', [], 'array');
+        $companyId  = (int) ($jform['id'] ?? 0);
 
-        if ($companyId > 0) {
-            $company = $model->getItem($companyId);
-        } else {
-            $company = null;
-        }
+        $company = $companyId > 0 ? $model->getItem($companyId) : null;
 
         if (!CompanyAcl::canEditCompany($company) && !CompanyAcl::isSuiteSuperAdmin()) {
             throw new \Exception(Text::_('JERROR_ALERTNOAUTHOR'), 403);
@@ -34,13 +31,14 @@ class CompanyController extends BaseController
 
         $form = $model->getForm(null, false);
 
+        $data = $jform;
+
         if (!$form) {
             $app->enqueueMessage($model->getError(), 'error');
             $this->setRedirect(Route::_('index.php?option=com_kjeholtbusiness&view=company', false));
             return false;
         }
 
-        $data      = $this->input->post->get('jform', [], 'array');
         $validData = $model->validate($form, $data);
 
         if ($validData === false) {
