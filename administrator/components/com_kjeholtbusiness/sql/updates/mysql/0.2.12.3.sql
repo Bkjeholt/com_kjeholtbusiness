@@ -1,6 +1,6 @@
 -- -----------------------------------------------
 -- Joomla! SQL Update File
--- Version 0.2.12.2
+-- Version 0.2.12.3
 -- -----------------------------------------------
 -- Logbook table (audit trail for important events)
 CREATE TABLE IF NOT EXISTS `#__kjeholtbusiness_logbook` (
