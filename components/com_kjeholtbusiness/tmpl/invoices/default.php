@@ -13,6 +13,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
+use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\BssAcl;
 ?>
 <?php $statusFilter = (string) Factory::getApplication()->getUserState('com_kjeholtbusiness.invoices.status', ''); ?>
 <div class="kjeholtbusiness-invoices">
@@ -31,7 +32,7 @@ use Joomla\CMS\Router\Route;
         <?php endforeach; ?>
     </div>
 
-    <?php if (Factory::getUser()->authorise('invoice.create', 'com_kjeholtbusiness')) : ?>
+    <?php if (BssAcl::hasAccessAny('invoice:edit')) : ?>
         <a class="btn btn-primary mb-3" href="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=invoice&layout=edit'); ?>">
             <?php echo Text::_('COM_KJEHOLTBUSINESS_INVOICES_NEW'); ?>
         </a>
@@ -74,7 +75,7 @@ use Joomla\CMS\Router\Route;
                                href="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=invoice&layout=print&id=' . (int) $item->id); ?>">
                                 <?php echo Text::_('COM_KJEHOLTBUSINESS_INVOICES_PRINT'); ?>
                             </a>
-                            <?php if ($item->status === 'draft' && Factory::getUser()->authorise('invoice.edit', 'com_kjeholtbusiness')) : ?>
+                            <?php if ($item->status === 'draft' && BssAcl::hasAccessAny('invoice:edit')) : ?>
                                 <form action="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=invoices'); ?>"
                                       method="post" class="d-inline ms-1">
                                     <input type="hidden" name="task" value="invoice.markSent" />
