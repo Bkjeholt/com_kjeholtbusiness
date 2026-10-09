@@ -8,6 +8,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
+use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\BssAcl;
 
 class ProjectController extends FormController
 {
@@ -66,7 +67,7 @@ class ProjectController extends FormController
         
         $this->checkToken();
         
-        if (!Factory::getUser()->authorise('project.create', 'com_kjeholtbusiness')) {
+        if (!BssAcl::hasAccessAny('project:edit')) {
             throw new \Exception(Text::_('JERROR_ALERTNOAUTHOR'), 403);
         }
         
