@@ -28,8 +28,15 @@ class CompaniesModel extends BaseDatabaseModel
             ]
         )
             ->from($db->quoteName('#__kjeholtbusiness_companies'))
-            ->where($db->quoteName('deleted') . ' = 0')
             ->order($db->quoteName('name') . ' ASC');
+
+        // Only filter on the deleted flag when the column exists
+        // (tables created by older versions of the component lack it)
+        $columns = $db->getTableColumns('#__kjeholtbusiness_companies', false);
+
+        if (\array_key_exists('deleted', $columns)) {
+            $query->where($db->quoteName('deleted') . ' = 0');
+        }
 
         $db->setQuery($query);
 
