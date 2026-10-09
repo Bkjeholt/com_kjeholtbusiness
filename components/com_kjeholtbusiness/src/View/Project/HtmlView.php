@@ -44,6 +44,11 @@ class HtmlView extends BaseHtmlView
                 Log::add('ProjectView->default', Log::DEBUG, 'com_kjeholtbusiness');
                 $this->item = $this->get('Item');
                 $this->form = $this->get('Form');
+                if ($layout === 'edit'
+                    && !\KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\ProjectAcl::canEditProject($this->item)) {
+                    throw new \Exception('JERROR_ALERTNOAUTHOR', 403);
+                }
+
                 ;
             break;
         }
