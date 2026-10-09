@@ -25,14 +25,14 @@
            type="text" 
            filter="integer" 
            default="900" 
-           label="Överenskommen timkostnad inkl moms" 
+           label="COM_KJEHOLTBUSINESS_SUBPROJECT_FIELD_HOURLY_RATE_LABEL" 
            description="COM_KJEHOLTBUSINESS_SUBPROJECT_FIELD_HOURLY_RATE_DESC" />
     <field name="estimated_amount_of_hours" 
            type="text" 
            filter="integer" 
            default="0" 
-           label="Uppskattad mängd timmar" 
-           description="Uppskattat tid för deluppdraget kommunicerad med kund, sätts till 0 om ingen tid är diskuterad" />
+           label="COM_KJEHOLTBUSINESS_SUBPROJECT_FIELD_ESTIMATED_HOURS_LABEL" 
+           description="COM_KJEHOLTBUSINESS_SUBPROJECT_FIELD_ESTIMATED_HOURS_DESC" />
     <field name="status" type="hidden" />
 </form>
 

@@ -25,7 +25,7 @@ use Joomla\CMS\Router\Route;
                                 </a>
                             </td>
                             <td><?php echo Text::_('COM_KJEHOLTBUSINESS_SUBPROJECT_STATUS_' . strtoupper($item->status)); ?></td>
-                            <td><?php echo $item->start_date; ?></td>
+                            <td><?php echo $this->escape($item->start_date); ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

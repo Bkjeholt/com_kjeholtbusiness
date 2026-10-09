@@ -36,7 +36,7 @@ use Joomla\CMS\Log\Log;
                                         <th scope="row"><?php echo $item->id; ?></th>
                                         <td><a href="<?php echo Route::_('index.php?option=com_kjeholtbusiness&task=project.edit&id=' . $item->id); ?>"><?php echo $this->escape($item->name); ?></a></td>
                                         <td><?php echo Text::_('COM_KJEHOLTBUSINESS_PROJECT_STATUS_' . strtoupper($item->status)); ?></td>
-                                        <td><?php echo $item->start_date; ?></td>
+                                        <td><?php echo $this->escape($item->start_date); ?></td>
                                         <td><a href="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=projectsummary&id=' . $item->id); ?>"><?php echo Text::_('COM_KJEHOLTBUSINESS_PROJECTSUMMARY_TITLE'); ?></a></td>
 <!--                                         <th scope="row"><?php echo $item->id; ?></th>  -->
                                         <td><a href="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=project&layout=show&projectid=' . $item["id"]); ?>"><?php echo $this->escape($item["name"]); ?></a></td>

@@ -22,7 +22,6 @@
             <folder>sql</folder>
             <folder>tmpl</folder>
             <folder>language</folder>
-            <file>script.php</file>
         </files>
     </administration>
 
