@@ -10,6 +10,7 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Factory;
@@ -74,6 +75,18 @@ use Joomla\CMS\Factory;
                                href="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=invoice&layout=print&id=' . (int) $item->id); ?>">
                                 <?php echo Text::_('COM_KJEHOLTBUSINESS_INVOICES_PRINT'); ?>
                             </a>
+                            <?php if ($item->status === 'draft' && Factory::getUser()->authorise('invoice.edit', 'com_kjeholtbusiness')) : ?>
+                                <form action="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=invoices'); ?>"
+                                      method="post" class="d-inline ms-1">
+                                    <input type="hidden" name="task" value="invoice.markSent" />
+                                    <input type="hidden" name="id" value="<?php echo (int) $item->id; ?>" />
+                                    <?php echo HTMLHelper::_('form.token'); ?>
+                                    <button type="submit" class="btn btn-sm btn-success"
+                                            onclick="return confirm('<?php echo Text::_('COM_KJEHOLTBUSINESS_INVOICES_CONFIRM_SEND'); ?>');">
+                                        <?php echo Text::_('COM_KJEHOLTBUSINESS_INVOICES_MARK_SENT'); ?>
+                                    </button>
+                                </form>
+                            <?php endif; ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>
