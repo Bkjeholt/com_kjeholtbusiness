@@ -12,10 +12,10 @@ namespace KjeholtEngineering\Component\KjeholtBusiness\Site\Model;
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\MVC\Model\ItemModel;
+use Joomla\CMS\MVC\Model\FormModel;
 use Joomla\Database\ParameterType;
 
-class SubprojectModel extends ItemModel
+class SubprojectModel extends FormModel
 {
     private $item;
 
