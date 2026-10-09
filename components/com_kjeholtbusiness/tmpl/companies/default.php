@@ -11,9 +11,16 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
+use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\CompanyAcl;
 ?>
 <div class="kjeholtbusiness-companies">
     <h1><?php echo Text::_('COM_KJEHOLTBUSINESS_COMPANIES_TITLE'); ?></h1>
+
+    <?php if (CompanyAcl::isSuiteSuperAdmin()) : ?>
+        <a class="btn btn-primary mb-3" href="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=company&layout=edit'); ?>">
+            <?php echo Text::_('COM_KJEHOLTBUSINESS_COMPANIES_NEW'); ?>
+        </a>
+    <?php endif; ?>
 
     <div class="table-responsive">
         <table class="table table-striped">
