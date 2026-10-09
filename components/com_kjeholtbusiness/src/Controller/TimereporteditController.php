@@ -9,6 +9,7 @@ use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\Router\Route;
 use Joomla\Database\ParameterType;
 use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\TimereportAcl;
+use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\Logbook;
 
 class TimereporteditController extends BaseController
 {
@@ -78,6 +79,10 @@ class TimereporteditController extends BaseController
         $db->setQuery($query)->execute();
 
         if ($db->getAffectedRows() > 0) {
+            Logbook::log(
+                'timereport.validated',
+                sprintf('Time report #%d changed state from ended to validated.', $id)
+            );
             $app->enqueueMessage(Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_VALIDATED'), 'message');
         } else {
             $app->enqueueMessage(Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_ERROR_VALIDATE'), 'warning');
@@ -111,6 +116,10 @@ class TimereporteditController extends BaseController
         $db->setQuery($query)->execute();
 
         if ($db->getAffectedRows() > 0) {
+            Logbook::log(
+                'timereport.unvalidated',
+                sprintf('Time report #%d changed state from validated to ended.', $id)
+            );
             $app->enqueueMessage(Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_UNVALIDATED'), 'message');
         } else {
             $app->enqueueMessage(Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_ERROR_UNVALIDATE'), 'warning');
