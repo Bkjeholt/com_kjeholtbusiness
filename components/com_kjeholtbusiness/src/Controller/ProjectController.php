@@ -6,6 +6,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 
 class ProjectController extends FormController
@@ -64,6 +65,10 @@ class ProjectController extends FormController
         Log::add('ProjectController: submit() called', Log::DEBUG, 'com_kjeholtbusiness');
         
         $this->checkToken();
+        
+        if (!Factory::getUser()->authorise('project.create', 'com_kjeholtbusiness')) {
+            throw new \Exception(Text::_('JERROR_ALERTNOAUTHOR'), 403);
+        }
         
         $app = Factory::getApplication();
         

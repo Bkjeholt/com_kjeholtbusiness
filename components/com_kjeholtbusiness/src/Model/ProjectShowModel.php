@@ -32,7 +32,7 @@ class ProjectShowModel extends BaseDatabaseModel
         
         $query
             ->select($db->quoteName('a.*'))
-            ->from($db->quoteName('#__kjeholtbusiness_time_reports', 'a'))
+            ->from($db->quoteName('#__kjeholtbusiness_timecards', 'a'))
             ->where($db->quoteName('subproject_id') . ' = :subproject_id')
             ->order($db->quoteName('id') . ' ASC')
             ->bind(':subproject_id', $subProjectId);
@@ -67,7 +67,7 @@ class ProjectShowModel extends BaseDatabaseModel
         $query = $db->getQuery(true);
         
         $query
-            ->select($db->quoteName(['type', 'value']))
+            ->select($db->quoteName(['name', 'amount']))
             ->from($db->quoteName('#__kjeholtbusiness_expenses', 'a'))
             ->where($db->quoteName('subproject_id') . ' = :subproject_id')
             ->order($db->quoteName('id') . ' ASC')

@@ -68,32 +68,19 @@ class ProjectModel extends FormModel
         // Check the session for previously entered form data.
         
         $data = Factory::getApplication()->getUserState(
-            'com_kjeholtbusiness.project_create',  // a unique name to identify the data in the session
-            array("id" => null,
-                  "name" => "Uppdrag för att testa formuläret",
-                  "property_name" => "Värmdö Södersunda 1:74",
-                  "project_status" => "preliminary",
-                  "start_date" => Factory::getDate()->format('Y-m-d'),
-                  "company_id" => $companyId,
-                  "subproject_selector" => "1",
-                  "subproject_subforms" =>
-                    array( "subproject_subforms0" => array( "id" => null,
-                                                             "project_id" => null,
-                                                             "name" => "Projektering, projektledning, bygglovshandlingar samt ansökan",
-                                                             "start_date" => Factory::getDate()->format('Y-m-d'),
-                                                             "hourly_rate" => "900",
-                                                             "end_date" => null,
-                                                             "estimated_amount_of hours" => 0,
-                                                             "subproject_status" => "preliminary" ),
-                           "subproject_subforms1" => array( "id" => null,
-                                                             "project_id" => null,
-                                                             "name" => "Bygg och snickeri",
-                                                             "start_date" => Factory::getDate()->format('Y-m-d'),
-                                                             "end_date" => null,
-                                                             "estimated_amount_of hours" => 0,
-                                                             "hourly_rate" => "750",
-                                                             "subproject_status" => "preliminary" ) ) )
+            'com_kjeholtbusiness.project_create',
+            [
+                "id" => null,
+                "name" => null,
+                "property_name" => null,
+                "project_status" => "preliminary",
+                "start_date" => Factory::getDate()->format('Y-m-d'),
+                "company_id" => $companyId,
+                "subproject_selector" => "1",
+                "subproject_subforms" => [],
+            ]
         );
+
         return $data;
     }
 
@@ -108,7 +95,7 @@ class ProjectModel extends FormModel
         
         $query
         ->select($db->quoteName('a.*'))
-        ->from($db->quoteName('#__kjeholtbusiness_time_reports', 'a'))
+        ->from($db->quoteName('#__kjeholtbusiness_timecards', 'a'))
         ->where($db->quoteName('subproject_id') . ' = :subproject_id')
         ->order($db->quoteName('id') . ' ASC')
         ->bind(':subproject_id', $subProjectId);
