@@ -29,7 +29,6 @@ if ($postdata) {
 
 use Joomla\CMS\Language\Text;
 
-use Joomla\CMS\HTML\HTMLHelper;
 ?>
 <h1><?php echo Text::_('COM_KJEHOLTBUSINESS_TIMEREPORT_LIST_OF_ONGOING_HEADING'); ?></h1>
 
