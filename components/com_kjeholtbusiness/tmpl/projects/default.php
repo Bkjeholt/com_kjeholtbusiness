@@ -48,17 +48,7 @@ use Joomla\CMS\Log\Log;
                                     	<td> Beskrivning </td>
 										<td colspan="3"><?php echo $item["description"]; ?></td>
 									</tr>
-									<?php foreach ($item['subprojects'] as $subProjectItem) : ?>
-									<tr>
-									    
-										<td> Delprojekt </td>
-										<td colspan="3">
-											<a href="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=subproject&layout=show&subprojectid=' . $subProjectItem["id"]); ?>"><?php echo $this->escape($subProjectItem["name"]); ?></a><br/>
-											<?php echo $subProjectItem["description"]; ?><br/>
-											<?php echo $subProjectItem["status"]?>
-									    </td>
-									</tr>
-									<?php endforeach; ?>
+									
                                 <?php endforeach; ?>
                             </tbody>
                         </table>

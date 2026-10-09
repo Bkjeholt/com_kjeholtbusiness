@@ -11,7 +11,9 @@ namespace KjeholtEngineering\Component\KjeholtBusiness\Site\View\Subproject;
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\ProjectAcl;
 
 class HtmlView extends BaseHtmlView
 {
@@ -28,6 +30,11 @@ class HtmlView extends BaseHtmlView
         $this->timecards = $this->get('Timecards');
         $this->expenses = $this->get('Expenses');
         $this->totals   = $this->get('Totals');
+
+        if ($this->getLayout() === 'edit'
+            && !ProjectAcl::canEditSubproject($this->item)) {
+            throw new \Exception(Text::_('JERROR_ALERTNOAUTHOR'), 403);
+        }
 
         return parent::display($tpl);
     }
