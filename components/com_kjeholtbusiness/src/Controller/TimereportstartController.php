@@ -58,11 +58,11 @@ class TimereportstartController extends BaseController
         {
             $userId = (int) Factory::getUser()->id;
 
-            // End any previous ongoing report before starting a new one
-            TimecardService::endOngoing($userId);
-
-            // Auto-close reports still ongoing after 24 hours
+            // Auto-close stale reports first, capping them at 23:59 after start
             TimecardService::autoCloseAfter24h($userId);
+
+            // End any remaining ongoing report before starting a new one
+            TimecardService::endOngoing($userId);
 
             // Spara en ny rad i #__kjeholtbusiness_timecards
             $db = Factory::getDbo();
