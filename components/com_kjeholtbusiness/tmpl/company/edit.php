@@ -14,7 +14,9 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 ?>
 <div class="kjeholtbusiness-company">
-    <h1><?php echo Text::_('COM_KJEHOLTBUSINESS_COMPANY_EDIT_TITLE'); ?></h1>
+    <h1><?php echo empty($this->item->id)
+        ? Text::_('COM_KJEHOLTBUSINESS_COMPANY_NEW_TITLE')
+        : Text::_('COM_KJEHOLTBUSINESS_COMPANY_EDIT_TITLE'); ?></h1>
 
     <form action="<?php echo Route::_('index.php?option=com_kjeholtbusiness&task=company.save'); ?>"
           method="post" name="adminForm" id="company-form" class="form-validate">
