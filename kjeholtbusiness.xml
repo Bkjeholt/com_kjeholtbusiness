@@ -96,11 +96,17 @@
             <action name="project.delete" title="COM_KJEHOLTBUSINESS_ACTION_DELETE_PROJECT" description="COM_KJEHOLTBUSINESS_ACTION_DELETE_PROJECT_DESC"/>
             <action name="project.view" title="COM_KJEHOLTBUSINESS_ACTION_VIEW_PROJECT" description="COM_KJEHOLTBUSINESS_ACTION_VIEW_PROJECT_DESC"/>
         </section>
+        <section name="subproject">
+            <action name="subproject.create" title="COM_KJEHOLTBUSINESS_ACTION_CREATE_SUBPROJECT" description="COM_KJEHOLTBUSINESS_ACTION_CREATE_SUBPROJECT_DESC"/>
+            <action name="subproject.edit" title="COM_KJEHOLTBUSINESS_ACTION_EDIT_SUBPROJECT" description="COM_KJEHOLTBUSINESS_ACTION_EDIT_SUBPROJECT_DESC"/>
+            <action name="subproject.delete" title="COM_KJEHOLTBUSINESS_ACTION_DELETE_SUBPROJECT" description="COM_KJEHOLTBUSINESS_ACTION_DELETE_SUBPROJECT_DESC"/>
+            <action name="subproject.view" title="COM_KJEHOLTBUSINESS_ACTION_VIEW_SUBPROJECT" description="COM_KJEHOLTBUSINESS_ACTION_VIEW_SUBPROJECT_DESC"/>
+        </section>
         <section name="expense">
             <action name="expense.create" title="COM_KJEHOLTBUSINESS_ACTION_CREATE_EXPENSE" description="COM_KJEHOLTBUSINESS_ACTION_CREATE_EXPENSE_DESC"/>
-            <action name="expense.edit" title="COM_KJEHOLTBUSINESS_ACTION_EDIT_EXPENSE" description="COM_KJEHOLTBUSINESS_ACTION_EDIT_EXPENCSE_DESC"/>
+            <action name="expense.edit" title="COM_KJEHOLTBUSINESS_ACTION_EDIT_EXPENSE" description="COM_KJEHOLTBUSINESS_ACTION_EDIT_EXPENSE_DESC"/>
             <action name="expense.delete" title="COM_KJEHOLTBUSINESS_ACTION_DELETE_EXPENSE" description="COM_KJEHOLTBUSINESS_ACTION_DELETE_EXPENSE_DESC"/>
-            <action name="expense.view" title="COM_KJEHOLTBUSINESS_ACTION_VIEW_EXPENSE" description="COM_KJEHOLTBUSINESS_ACTION_VIEW_EXPENCSE_DESC"/>
+            <action name="expense.view" title="COM_KJEHOLTBUSINESS_ACTION_VIEW_EXPENSE" description="COM_KJEHOLTBUSINESS_ACTION_VIEW_EXPENSE_DESC"/>
         </section>
         <section name="timereport">
 			<action name="timereport.create" title="COM_KJEHOLTBUSINESS_ACTION_CREATE_TIMEREPORT" description="COM_KJEHOLTBUSINESS_ACTION_CREATE_TIMEREPORT_DESC"/>

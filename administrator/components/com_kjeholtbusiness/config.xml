@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+    <fieldset name="permissions" label="JCONFIG_PERMISSIONS_LABEL" description="JCONFIG_PERMISSIONS_DESC">
+        <field name="rules" type="rules" label="JCONFIG_PERMISSIONS_LABEL" validate="rules" filter="rules">
+            <action name="core.admin" title="JACTION_ADMIN" />
+            <action name="core.manage" title="JACTION_MANAGE" />
+            <action name="core.create" title="JACTION_CREATE" />
+            <action name="core.delete" title="JACTION_DELETE" />
+            <action name="core.edit" title="JACTION_EDIT" />
+            <action name="core.edit.state" title="JACTION_EDITSTATE" />
+            <action name="core.edit.own" title="JACTION_EDITOWN" />
+            <action name="project.create" title="COM_KJEHOLTBUSINESS_ACTION_CREATE_PROJECT" />
+            <action name="project.edit" title="COM_KJEHOLTBUSINESS_ACTION_EDIT_PROJECT" />
+            <action name="project.delete" title="COM_KJEHOLTBUSINESS_ACTION_DELETE_PROJECT" />
+            <action name="project.view" title="COM_KJEHOLTBUSINESS_ACTION_VIEW_PROJECT" />
+            <action name="subproject.create" title="COM_KJEHOLTBUSINESS_ACTION_CREATE_SUBPROJECT" />
+            <action name="subproject.edit" title="COM_KJEHOLTBUSINESS_ACTION_EDIT_SUBPROJECT" />
+            <action name="subproject.delete" title="COM_KJEHOLTBUSINESS_ACTION_DELETE_SUBPROJECT" />
+            <action name="subproject.view" title="COM_KJEHOLTBUSINESS_ACTION_VIEW_SUBPROJECT" />
+            <action name="expense.create" title="COM_KJEHOLTBUSINESS_ACTION_CREATE_EXPENSE" />
+            <action name="expense.edit" title="COM_KJEHOLTBUSINESS_ACTION_EDIT_EXPENSE" />
+            <action name="expense.delete" title="COM_KJEHOLTBUSINESS_ACTION_DELETE_EXPENSE" />
+            <action name="expense.view" title="COM_KJEHOLTBUSINESS_ACTION_VIEW_EXPENSE" />
+            <action name="timereport.create" title="COM_KJEHOLTBUSINESS_ACTION_CREATE_TIMEREPORT" />
+            <action name="timereport.edit" title="COM_KJEHOLTBUSINESS_ACTION_EDIT_TIMEREPORT" />
+            <action name="timereport.delete" title="COM_KJEHOLTBUSINESS_ACTION_DELETE_TIMEREPORT" />
+            <action name="timereport.view" title="COM_KJEHOLTBUSINESS_ACTION_VIEW_TIMEREPORT" />
+            <action name="invoice.create" title="COM_KJEHOLTBUSINESS_ACTION_CREATE_INVOICE" />
+            <action name="invoice.edit" title="COM_KJEHOLTBUSINESS_ACTION_EDIT_INVOICE" />
+            <action name="invoice.delete" title="COM_KJEHOLTBUSINESS_ACTION_DELETE_INVOICE" />
+            <action name="invoice.view" title="COM_KJEHOLTBUSINESS_ACTION_VIEW_INVOICE" />
+        </field>
+    </fieldset>
+</config>
