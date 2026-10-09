@@ -62,6 +62,11 @@ $user = Factory::getUser();
                                 <?php echo Text::_('COM_KJEHOLTBUSINESS_SUBPROJECTS_TITLE'); ?>
                             </a>
                         </li>
+                        <li class="list-group-item">
+                            <a href="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=customers'); ?>">
+                                <?php echo Text::_('COM_KJEHOLTBUSINESS_CUSTOMERS_TITLE'); ?>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
