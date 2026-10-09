@@ -9,7 +9,6 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Table\Table;
 
-Log::add('Installationsscriptet laddat', Log::INFO, 'com_kjeholtbusiness');
 
 class Com_KjeholtbusinessInstallerScript
 {
@@ -208,7 +207,7 @@ class Com_KjeholtbusinessInstallerScript
             
             $infoAclId = $this->createACL($aclPrefix . ' - Info', $infoUserGroupId);
             
-            Log::add('ACL "' . $aclPrefix . ' - Info' . '" är nu skapad/hittad i ACL med id=' . $aclId, Log::DEBUG, 'com_kjeholtbusiness');
+            Log::add('ACL "' . $aclPrefix . ' - Info' . '" är nu skapad/hittad i ACL med id=' . $infoAclId, Log::DEBUG, 'com_kjeholtbusiness');
             
             foreach ($userProfileGroup['profiles'] as $profile) {
                 $groupId = $this->createUserGroup($userGroupPrefix . ' - ' . $profile, $childGroupId);
