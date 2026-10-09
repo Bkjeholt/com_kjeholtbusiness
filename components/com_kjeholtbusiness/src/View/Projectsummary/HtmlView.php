@@ -11,6 +11,8 @@ namespace KjeholtEngineering\Component\KjeholtBusiness\Site\View\Projectsummary;
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 
 class HtmlView extends BaseHtmlView
@@ -21,6 +23,14 @@ class HtmlView extends BaseHtmlView
 
     public function display($tpl = null)
     {
+        $user    = Factory::getUser();
+        $projectId = (int) Factory::getApplication()->input->getInt('id', 0);
+
+        if (!$user->authorise('project.view', 'com_kjeholtbusiness.project.' . $projectId)
+            && !$user->authorise('project.view', 'com_kjeholtbusiness')) {
+            throw new \Exception(Text::_('JERROR_ALERTNOAUTHOR'), 403);
+        }
+
         $this->item       = $this->get('Item');
         $this->subprojects = $this->get('Subprojects');
         $this->totals     = $this->get('Totals');

@@ -14,6 +14,10 @@ class ExpenseController extends BaseController
     {
         $this->checkToken();
 
+        if (!Factory::getUser()->authorise('expense.create', 'com_kjeholtbusiness')) {
+            throw new \Exception(Text::_('JERROR_ALERTNOAUTHOR'), 403);
+        }
+
         $app   = Factory::getApplication();
         $model = $this->getModel('Expense');
         $form  = $model->getForm(null, false);
@@ -28,22 +32,18 @@ class ExpenseController extends BaseController
                     'warning'
                 );
             }
-
             $this->setRedirect(Route::_('index.php?option=com_kjeholtbusiness&view=expense', false));
-
             return false;
         }
 
         if (!$model->save($validData)) {
             $app->enqueueMessage($model->getError(), 'error');
             $this->setRedirect(Route::_('index.php?option=com_kjeholtbusiness&view=expense', false));
-
             return false;
         }
 
         $app->enqueueMessage(Text::_('COM_KJEHOLTBUSINESS_EXPENSES_SAVED'), 'message');
         $this->setRedirect(Route::_('index.php?option=com_kjeholtbusiness&view=expenses', false));
-
         return true;
     }
 }
