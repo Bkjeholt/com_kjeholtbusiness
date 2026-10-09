@@ -9,9 +9,9 @@
 
 defined('_JEXEC') or die;
 
-use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
+use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\CompanyAcl;
 ?>
 <div class="kjeholtbusiness-company">
     <h1><?php echo Text::_('COM_KJEHOLTBUSINESS_COMPANY_TITLE'); ?></h1>
@@ -64,7 +64,7 @@ use Joomla\CMS\Router\Route;
         </div>
     <?php endif; ?>
 
-    <?php if (!empty($this->item) && Factory::getUser()->authorise('core.edit', 'com_kjeholtbusiness')) : ?>
+    <?php if (!empty($this->item) && CompanyAcl::canEditCompany($this->item)) : ?>
         <a class="btn btn-primary" href="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=company&layout=edit&id=' . (int) $this->item->id); ?>">
             <?php echo Text::_('JACTION_EDIT'); ?>
         </a>

@@ -7,6 +7,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\Router\Route;
+use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\CompanyAcl;
 use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\Logbook;
 
 class CompanyController extends BaseController
@@ -17,12 +18,21 @@ class CompanyController extends BaseController
 
         $app = Factory::getApplication();
 
-        if (!Factory::getUser()->authorise('core.edit', 'com_kjeholtbusiness')) {
+        $model = $this->getModel('Company');
+
+        $companyId = (int) ($this->input->post->getInt('jform', [])['id'] ?? 0);
+
+        if ($companyId > 0) {
+            $company = $model->getItem($companyId);
+        } else {
+            $company = null;
+        }
+
+        if (!CompanyAcl::canEditCompany($company) && !CompanyAcl::isSuiteSuperAdmin()) {
             throw new \Exception(Text::_('JERROR_ALERTNOAUTHOR'), 403);
         }
 
-        $model = $this->getModel('Company');
-        $form  = $model->getForm(null, false);
+        $form = $model->getForm(null, false);
 
         if (!$form) {
             $app->enqueueMessage($model->getError(), 'error');
