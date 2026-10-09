@@ -83,21 +83,15 @@ class CompanyModel extends FormModel
         $userId = (int) Factory::getUser()->id;
         $id     = (int) ($data['id'] ?? 0);
 
-        if (!$id) {
-            $this->setError('No company id provided.');
-            return false;
-        }
+        $existing = $id ? $this->getItem($id) : null;
 
-        $existing = $this->getItem($id);
-
-        if (!$existing) {
+        if ($id && !$existing) {
             $this->setError('Company not found.');
             return false;
         }
 
         $row = new \stdClass();
-        $row->id          = $id;
-        $row->name        = (string) ($data['name'] ?? $existing->name);
+        $row->name        = (string) ($data['name'] ?? ($existing->name ?? ''));
         $row->org_number  = (string) ($data['org_number'] ?? '');
         $row->address     = (string) ($data['address'] ?? '');
         $row->postal_code = (string) ($data['postal_code'] ?? '');
@@ -111,10 +105,62 @@ class CompanyModel extends FormModel
         $row->modified_by = $userId;
 
         try {
-            return $db->updateObject('#__kjeholtbusiness_companies', $row, 'id');
+            if ($id) {
+                $row->id = $id;
+                $db->updateObject('#__kjeholtbusiness_companies', $row, 'id');
+            } else {
+                $row->created_by = $userId;
+                $db->insertObject('#__kjeholtbusiness_companies', $row, 'id');
+                $id = (int) $row->id;
+
+                // Create the company's user groups (UG: KjeEng-BSS:<Company>:*)
+                $this->createCompanyUserGroups((string) $row->name);
+            }
+
+            return true;
         } catch (\Exception $e) {
             $this->setError($e->getMessage());
             return false;
         }
+    }
+
+    /**
+     * Create the UG: KjeEng-BSS:<CompanyName> group hierarchy for a new company.
+     */
+    private function createCompanyUserGroups(string $companyName): void
+    {
+        $db    = $this->getDatabase();
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('id'))
+            ->from($db->quoteName('#__usergroups'))
+            ->where($db->quoteName('title') . ' = :title')
+            ->bind(':title', 'UG: KjeEng-BSS');
+
+        $bssRootId = (int) $db->setQuery($query)->loadResult();
+
+        if (!$bssRootId) {
+            return;
+        }
+
+        // Company group under the BSS root
+        $companyGroup        = new \stdClass();
+        $companyGroup->title = 'UG: KjeEng-BSS:' . $companyName;
+        $companyGroup->parent_id = $bssRootId;
+        $db->insertObject('#__usergroups', $companyGroup);
+        $companyGroupId = (int) $companyGroup->id = $db->insertid();
+
+        $profiles = ['SuperAdmin', 'Admin', 'Economy', 'Employee', 'Visitor'];
+
+        foreach ($profiles as $profile) {
+            $profileGroup            = new \stdClass();
+            $profileGroup->parent_id = $companyGroupId;
+            $profileGroup->title     = 'UG: KjeEng-BSS:' . $companyName . ':' . $profile;
+            $db->insertObject('#__usergroups', $profileGroup);
+        }
+
+        // Rebuild the nested-set tree so lft/rgt stay consistent
+        \Joomla\CMS\Access\Access::clearCache();
+        $table = \Joomla\CMS\Table\Table::getInstance('Usergroup');
+        $table->rebuild();
     }
 }

@@ -61,9 +61,16 @@ class CompanyController extends BaseController
 
         $app->setUserState('com_kjeholtbusiness.company.edit.data', null);
 
+        $isNew = ((int) ($validData['id'] ?? 0)) === 0;
+
         Logbook::log(
-            'company.updated',
-            sprintf('Company #%d (%s) was updated.', (int) $validData['id'], $validData['name'] ?? '')
+            $isNew ? 'company.created' : 'company.updated',
+            sprintf(
+                'Company %s (%s) was %s.',
+                $isNew ? 'new' : '#' . (int) $validData['id'],
+                $validData['name'] ?? '',
+                $isNew ? 'created' : 'updated'
+            )
         );
 
         $app->enqueueMessage(Text::_('COM_KJEHOLTBUSINESS_COMPANY_SAVED'), 'message');
