@@ -109,11 +109,49 @@ class TimecardService
 
         foreach ($stale as $report) {
             $end = Factory::getDate($report->start_time)->modify('+23 hours +59 minutes')->toSql();
-            self::endOngoing($userId, $end);
+            self::closeReport($report, $end, $userId);
             $count++;
         }
 
         return $count;
+    }
+
+    /**
+     * Close a single timecard report at the given end time,
+     * applying the midnight split when the range spans two dates.
+     */
+    private static function closeReport(object $report, string $end, int $userId): void
+    {
+        $db    = Factory::getDbo();
+        $parts = self::splitOnMidnight($report->start_time, $end);
+
+        if (\count($parts) > 1) {
+            $first              = new \stdClass();
+            $first->id          = (int) $report->id;
+            $first->end_time    = $parts[0]['end'];
+            $first->status      = 'ended';
+            $first->modified_by = $userId;
+            $db->updateObject('#__kjeholtbusiness_timecards', $first, 'id');
+
+            $second               = new \stdClass();
+            $second->name          = $report->name;
+            $second->description   = $report->description;
+            $second->subproject_id = (int) $report->subproject_id;
+            $second->start_time    = $parts[1]['start'];
+            $second->end_time      = $parts[1]['end'];
+            $second->adjustment    = 0;
+            $second->status        = 'ended';
+            $second->created_by    = $userId;
+            $second->created_at    = $parts[1]['start'];
+            $db->insertObject('#__kjeholtbusiness_timecards', $second);
+        } else {
+            $row              = new \stdClass();
+            $row->id          = (int) $report->id;
+            $row->end_time    = $end;
+            $row->status      = 'ended';
+            $row->modified_by = $userId;
+            $db->updateObject('#__kjeholtbusiness_timecards', $row, 'id');
+        }
     }
 
     /**
