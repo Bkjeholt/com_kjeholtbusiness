@@ -46,9 +46,10 @@ use Joomla\CMS\Router\Route;
                             <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_SUBPROJECTS_NAME'); ?></th>
                             <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_SUBPROJECTS_STATUS'); ?></th>
                             <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_SUBPROJECTS_START_DATE'); ?></th>
-                            <th scope="col" class="text-end"><?php echo Text::_('COM_KJEHOLTBUSINESS_PROJECTSUMMARY_HOURLY_RATE'); ?></th>
                             <th scope="col" class="text-end"><?php echo Text::_('COM_KJEHOLTBUSINESS_PROJECTSUMMARY_SPENT_HOURS'); ?></th>
+                            <th scope="col" class="text-end"><?php echo Text::_('COM_KJEHOLTBUSINESS_PROJECTSUMMARY_TOTAL_TIME_COST'); ?></th>
                             <th scope="col" class="text-end"><?php echo Text::_('COM_KJEHOLTBUSINESS_PROJECTSUMMARY_SPENT_COSTS'); ?></th>
+                            <th scope="col" class="text-end"><?php echo Text::_('COM_KJEHOLTBUSINESS_PROJECTSUMMARY_TOTAL_COST'); ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -61,9 +62,10 @@ use Joomla\CMS\Router\Route;
                                 </td>
                                 <td><?php echo Text::_('COM_KJEHOLTBUSINESS_SUBPROJECT_STATUS_' . strtoupper($subproject->status)); ?></td>
                                 <td><?php echo $subproject->start_date; ?></td>
-                                <td class="text-end"><?php echo number_format((float) $subproject->hourly_rate, 2, ',', ' '); ?></td>
                                 <td class="text-end"><?php echo number_format((float) $subproject->spent_hours, 2, ',', ' '); ?></td>
+                                <td class="text-end"><?php echo number_format((float) $subproject->time_cost, 2, ',', ' '); ?></td>
                                 <td class="text-end"><?php echo number_format((float) $subproject->spent_costs, 2, ',', ' '); ?></td>
+                                <td class="text-end"><?php echo number_format((float) $subproject->total_cost, 2, ',', ' '); ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
@@ -81,7 +83,7 @@ use Joomla\CMS\Router\Route;
                 <dt><?php echo Text::_('COM_KJEHOLTBUSINESS_PROJECTSUMMARY_TOTAL_COSTS'); ?></dt>
                 <dd><?php echo number_format((float) $this->totals->total_costs, 2, ',', ' '); ?></dd>
                 <dt><?php echo Text::_('COM_KJEHOLTBUSINESS_PROJECTSUMMARY_GRAND_TOTAL'); ?></dt>
-                <dd><?php echo number_format((float) $this->totals->total_time_cost + (float) $this->totals->total_costs, 2, ',', ' '); ?></dd>
+                <dd><?php echo number_format((float) $this->totals->grand_total, 2, ',', ' '); ?></dd>
             </dl>
         </div>
 
