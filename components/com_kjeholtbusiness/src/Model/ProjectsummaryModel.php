@@ -11,18 +11,40 @@ namespace KjeholtEngineering\Component\KjeholtBusiness\Site\Model;
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ItemModel;
+use Joomla\Database\ParameterType;
 
 class ProjectsummaryModel extends ItemModel
 {
-    public function getTable($type = 'Project', $prefix = 'Table', $config = [])
-    {
-        return parent::getTable($type, $prefix, $config);
-    }
-
     public function getItem($pk = null)
     {
-        return parent::getItem($pk);
+        $pk = (int) ($pk ?: Factory::getApplication()->input->getInt('id', 0));
+
+        if (empty($pk)) {
+            return null;
+        }
+
+        $cacheId = $this->getState('projectsummary.id');
+
+        if ($cacheId == $pk && $this->item !== null) {
+            return $this->item;
+        }
+
+        $db    = $this->getDatabase();
+        $query = $db->getQuery(true);
+
+        $query->select('a.*')
+            ->from($db->quoteName('#__kjeholtbusiness_projects', 'a'))
+            ->where($db->quoteName('a.id') . ' = :id')
+            ->bind(':id', $pk, ParameterType::INTEGER);
+
+        $db->setQuery($query);
+
+        $this->item = $db->loadObject();
+        $this->setState('projectsummary.id', $pk);
+
+        return $this->item;
     }
 
     public function getSubprojects($pk = null)
