@@ -31,7 +31,8 @@ class CompanyAcl
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__usergroups'))
             ->where($db->quoteName('title') . ' = :title')
-            ->bind(':title', 'UG: KjeEng-BSS:SuperAdmin');
+            $suiteSuperAdminTitle = 'UG: KjeEng-BSS:SuperAdmin';
+        $query->bind(':title', $suiteSuperAdminTitle);
 
         $groupId = (int) $db->setQuery($query)->loadResult();
 
