@@ -7,6 +7,7 @@ use Joomla\CMS\Form\Form;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Log\Log;
+use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\TimecardService;
 
 class HtmlView extends BaseHtmlView
 {
@@ -17,6 +18,9 @@ class HtmlView extends BaseHtmlView
     {
         $app = Factory::getApplication();
         $task = $app->input->getCmd('task');
+
+        // Auto-close stale reports (ongoing > 24h) before listing ongoing ones
+        TimecardService::autoCloseAfter24h((int) Factory::getUser()->id);
         
         // För felsökning/loggning
         Log::add('Aktiv task i TimeReport/HtmlView: ' . $task, Log::DEBUG, 'com_kjeholtbusiness');
