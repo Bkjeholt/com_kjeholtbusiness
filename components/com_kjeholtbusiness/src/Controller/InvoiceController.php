@@ -7,6 +7,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\Router\Route;
+use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\BssAcl;
 use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\Logbook;
 
 class InvoiceController extends BaseController
@@ -17,7 +18,7 @@ class InvoiceController extends BaseController
 
         $app = Factory::getApplication();
 
-        if (!Factory::getUser()->authorise('invoice.edit', 'com_kjeholtbusiness')) {
+        if (!BssAcl::hasAccessAny('invoice:edit')) {
             throw new \Exception(Text::_('JERROR_ALERTNOAUTHOR'), 403);
         }
 
@@ -109,8 +110,7 @@ class InvoiceController extends BaseController
 
         $jform = $this->input->post->get('jform', [], 'array');
 
-        if (!Factory::getUser()->authorise('invoice.create', 'com_kjeholtbusiness')
-            && !Factory::getUser()->authorise('invoice.edit', 'com_kjeholtbusiness')) {
+        if (!BssAcl::hasAccessAny('invoice:edit')) {
             throw new \Exception(Text::_('JERROR_ALERTNOAUTHOR'), 403);
         }
 

@@ -6,68 +6,68 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 
 /**
- * Permission helper for time reports.
+ * Timereport ACL based on the KjeEng-BSS access levels.
  *
- * The timereport.* ACL actions are defined in the component manifest.
- * Users holding timereport.edit / timereport.view may act on any report;
- * otherwise only on reports they created themselves (edit.own semantics).
+ * timereport:edit - UG <Company>:Admin, :Employee (+ company/ suite SuperAdmin)
+ * timereport:view - UG <Company>:Admin, :Employee, :Visitor
  */
 class TimereportAcl
 {
     public static function canEdit(object $item): bool
     {
-        $user = Factory::getUser();
-
-        if ($user->authorise('timereport.edit', 'com_kjeholtbusiness')) {
+        if (self::mayEditAny()) {
             return true;
         }
 
-        return (int) $item->created_by === (int) $user->id;
+        return (int) $item->created_by === (int) Factory::getUser()->id;
     }
 
     public static function canView(object $item): bool
     {
-        $user = Factory::getUser();
-
-        if ($user->authorise('timereport.view', 'com_kjeholtbusiness')) {
+        if (self::mayViewAny()) {
             return true;
         }
 
-        return (int) $item->created_by === (int) $user->id;
+        return (int) $item->created_by === (int) Factory::getUser()->id;
     }
 
     public static function canCreate(): bool
     {
-        return (bool) Factory::getUser()->authorise('timereport.create', 'com_kjeholtbusiness');
+        $user = Factory::getUser();
+
+        if ($user->guest) {
+            return false;
+        }
+
+        return BssAcl::hasAccessAny('timereport:edit');
     }
 
     public static function canDelete(object $item): bool
     {
-        $user = Factory::getUser();
-
-        if ($user->authorise('timereport.delete', 'com_kjeholtbusiness')) {
+        if (self::mayDeleteAny()) {
             return true;
         }
 
-        // Users may delete their own reports unless validated or frozen
         if (isset($item->status) && \in_array($item->status, ['validated', 'froozen'], true)) {
             return false;
         }
 
-        return (int) $item->created_by === (int) $user->id;
+        return (int) $item->created_by === (int) Factory::getUser()->id;
     }
 
     public static function mayDeleteAny(): bool
     {
-        return (bool) Factory::getUser()->authorise('timereport.delete', 'com_kjeholtbusiness');
+        return BssAcl::hasAccessAny('timereport:edit');
     }
 
-    /**
-     * Admin action: may revert a validated report back to ended.
-     */
-    public static function canUnvalidate(): bool
+    public static function mayEditAny(): bool
     {
-        return (bool) Factory::getUser()->authorise('timereport.unvalidate', 'com_kjeholtbusiness');
+        return BssAcl::hasAccessAny('timereport:edit');
+    }
+
+    public static function mayViewAny(): bool
+    {
+        return BssAcl::hasAccessAny('timereport:view');
     }
 
     /**
@@ -75,6 +75,15 @@ class TimereportAcl
      */
     public static function seesAll(): bool
     {
-        return (bool) Factory::getUser()->authorise('timereport.view', 'com_kjeholtbusiness');
+        return self::mayViewAny();
+    }
+
+    /**
+     * Admin action: may revert a validated report back to ended.
+     * (timereport:edit level)
+     */
+    public static function canUnvalidate(): bool
+    {
+        return BssAcl::hasAccessAny('timereport:edit');
     }
 }

@@ -7,6 +7,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\Router\Route;
+use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\BssAcl;
 
 class ExpenseController extends BaseController
 {
@@ -14,7 +15,7 @@ class ExpenseController extends BaseController
     {
         $this->checkToken();
 
-        if (!Factory::getUser()->authorise('expense.create', 'com_kjeholtbusiness')) {
+        if (!BssAcl::hasAccessAny('expense:edit')) {
             throw new \Exception(Text::_('JERROR_ALERTNOAUTHOR'), 403);
         }
 

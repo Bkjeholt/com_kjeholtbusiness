@@ -6,17 +6,19 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 
 /**
- * Company ACL helper.
+ * Company ACL based on the KjeEng-BSS access levels (view levels).
  *
- * Maps actions to the KjeBus usergroups:
- *  - Create/modify any company:   "UG: KjeEng-BSS:SuperAdmin"
- *  - List all companies:          "UG: KjeEng-BSS:SuperAdmin"
- *  - Modify own company:          "UG: KjeEng-BSS:<Company>:Admin"
- *  - Show own company information "UG: KjeEng-BSS:<Company>:Visitor"
+ * Matrix (per company, plus suite SuperAdmin implicitly):
+ *  - Admin       : UG <Company>:Admin + :Economy
+ *  - view        : UG <Company>:Admin
+ *  - project:*   : see BssAcl
+ *  - timereport:*: see BssAcl
+ *  - expense:*   : see BssAcl
+ *  - invoice:*   : see BssAcl
  */
 class CompanyAcl
 {
-    private static function userInGroup(string $title): bool
+    private static function isSuiteSuperAdmin(): bool
     {
         $user = Factory::getUser();
 
@@ -29,36 +31,20 @@ class CompanyAcl
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__usergroups'))
             ->where($db->quoteName('title') . ' = :title')
-            ->bind(':title', $title);
+            ->bind(':title', 'UG: KjeEng-BSS:SuperAdmin');
 
-        $groupId = $db->setQuery($query)->loadResult();
+        $groupId = (int) $db->setQuery($query)->loadResult();
 
         if (!$groupId) {
             return false;
         }
 
-        return \in_array((int) $groupId, \array_map('intval', $user->getAuthorisedGroups()), true);
+        return \in_array($groupId, \array_map('intval', $user->getAuthorisedGroups()), true);
     }
 
     /**
-     * May create new companies and modify any existing company.
-     */
-    public static function isSuiteSuperAdmin(): bool
-    {
-        return self::userInGroup('UG: KjeEng-BSS:SuperAdmin');
-    }
-
-    /**
-     * May get a list of all companies.
-     */
-    public static function mayListAllCompanies(): bool
-    {
-        return self::isSuiteSuperAdmin()
-            || self::userInGroup('UG: KjeEng-BSS:SuperAdmin');
-    }
-
-    /**
-     * May modify the given company (own company admin or suite super admin).
+     * Suite SuperAdmins may create companies and modify any company.
+     * Company Admins (level "Admin") may modify their own company.
      */
     public static function canEditCompany(?object $company): bool
     {
@@ -70,11 +56,20 @@ class CompanyAcl
             return false;
         }
 
-        return self::userInGroup('UG: KjeEng-BSS:' . $company->name . ':Admin');
+        return BssAcl::hasAccess($company->name, 'Admin');
     }
 
     /**
-     * May see information about the given company.
+     * Suite SuperAdmins may list all companies.
+     */
+    public static function mayListAllCompanies(): bool
+    {
+        return self::isSuiteSuperAdmin();
+    }
+
+    /**
+     * Who may see a company's information: suite SuperAdmin, or the
+     * company "view" level (Admin profile).
      */
     public static function canViewCompany(?object $company): bool
     {
@@ -86,6 +81,6 @@ class CompanyAcl
             return false;
         }
 
-        return self::userInGroup('UG: KjeEng-BSS:' . $company->name . ':Visitor');
+        return BssAcl::hasAccess($company->name, 'view');
     }
 }

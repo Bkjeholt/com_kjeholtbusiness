@@ -187,13 +187,21 @@ class CompanyModel extends FormModel
         $companyGroupId = (int) $companyGroup->id = $db->insertid();
 
         $profiles = ['SuperAdmin', 'Admin', 'Economy', 'Employee', 'Visitor'];
+        $profileGroupIds = [];
 
         foreach ($profiles as $profile) {
             $profileGroup            = new \stdClass();
             $profileGroup->parent_id = $companyGroupId;
             $profileGroup->title     = 'UG: KjeEng-BSS:' . $companyName . ':' . $profile;
             $db->insertObject('#__usergroups', $profileGroup);
+            $profileGroupIds[$profile] = (int) $db->insertid();
         }
+
+        // Create the access levels (ACL: KjeEng-BSS:<Company>:<Level>)
+        \KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\BssAcl::createCompanyLevels(
+            $companyName,
+            $profileGroupIds
+        );
 
         // Rebuild the nested-set tree so lft/rgt stay consistent
         \Joomla\CMS\Access\Access::clearCache();

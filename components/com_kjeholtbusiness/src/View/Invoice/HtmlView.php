@@ -5,7 +5,7 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
-use Joomla\CMS\Factory;
+use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\BssAcl;
 
 class HtmlView extends BaseHtmlView
 {
@@ -15,11 +15,7 @@ class HtmlView extends BaseHtmlView
 
     public function display($tpl = null)
     {
-        $user = Factory::getUser();
-
-        if (!$user->authorise('invoice.view', 'com_kjeholtbusiness')
-            && !$user->authorise('invoice.create', 'com_kjeholtbusiness')
-            && !$user->authorise('invoice.edit', 'com_kjeholtbusiness')) {
+        if (!BssAcl::hasAccessAny('invoice:edit') && !BssAcl::hasAccessAny('expense:view')) {
             throw new \Exception(Text::_('JERROR_ALERTNOAUTHOR'), 403);
         }
 
