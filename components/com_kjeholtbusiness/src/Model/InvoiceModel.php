@@ -219,10 +219,10 @@ class InvoiceModel extends FormModel
         )
             ->from($db->quoteName('#__kjeholtbusiness_subprojects', 'sp'))
             ->join('LEFT', $db->quoteName('#__kjeholtbusiness_timecards', 'tc'), $db->quoteName('tc.subproject_id') . ' = ' . $db->quoteName('sp.id') . ' AND ' . $validatedCards)
-            ->where($db->quoteName('sp.id') . ' IN (' . \implode(',', \array_fill(0, \count($subprojectIds), '?')) . ')')
+            ->where($db->quoteName('sp.id') . ' IN (' . \implode(',', \array_map('intval', $subprojectIds)) . ')')
             ->group($db->quoteName('sp.id'));
 
-        $db->setQuery($query, 0, 0);
+        $db->setQuery($query);
         $rows = $db->loadObjectList();
 
         $total = 0.0;

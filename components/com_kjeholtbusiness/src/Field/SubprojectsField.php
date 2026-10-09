@@ -21,21 +21,24 @@ class SubprojectsField extends ListField
 
         $query->select(
             [
-                $db->quoteName('sp.id'),
-                'CONCAT(' . $db->quoteName('p.name') . ', ' . $db->quote(' : ') . ', ' . $db->quoteName('sp.name') . ') AS ' . $db->quoteName('text'),
+                $db->quoteName('sp.id', 'value'),
+                'CONCAT(COALESCE(' . $db->quoteName('p.name') . ', ' . $db->quote('') . '), ' . $db->quote(' : ') . ', ' . $db->quoteName('sp.name') . ') AS ' . $db->quoteName('text'),
             ]
         )
             ->from($db->quoteName('#__kjeholtbusiness_subprojects', 'sp'))
             ->join('LEFT', $db->quoteName('#__kjeholtbusiness_projects', 'p'), $db->quoteName('p.id') . ' = ' . $db->quoteName('sp.project_id'))
             ->order($db->quoteName('p.name') . ' ASC, ' . $db->quoteName('sp.name') . ' ASC');
 
-        $db->setQuery($query);
-        $rows = $db->loadObjectList();
+        try {
+            $rows = $db->setQuery($query)->loadObjectList() ?: [];
+        } catch (\Exception $e) {
+            return parent::getOptions();
+        }
 
         $options = [];
 
         foreach ($rows as $row) {
-            $options[] = (object) ['value' => $row->id, 'text' => $row->text];
+            $options[] = (object) ['value' => (int) $row->value, 'text' => $row->text];
         }
 
         return \array_merge(parent::getOptions(), $options);
