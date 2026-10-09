@@ -5,9 +5,15 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Log\Log;
+use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\BssAcl;
 
 ?>
 <div class="com-kjeholtbusiness-projects">
+    <?php if (BssAcl::hasAccessAny('project:edit')) : ?>
+        <a class="btn btn-primary mb-3" href="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=project&layout=create'); ?>">
+            <?php echo Text::_('COM_KJEHOLTBUSINESS_PROJECTS_NEW'); ?>
+        </a>
+    <?php endif; ?>
     <form action="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=projects'); ?>" method="post" name="adminForm" id="adminForm">
         <div class="row">
             <div class="col-md-12">
