@@ -170,8 +170,9 @@ class CompanyModel extends FormModel
         $query = $db->getQuery(true)
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__usergroups'))
-            ->where($db->quoteName('title') . ' = :title')
-            $bssRootTitle = 'UG: KjeEng-BSS';
+            ->where($db->quoteName('title') . ' = :title');
+
+        $bssRootTitle = 'UG: KjeEng-BSS';
         $query->bind(':title', $bssRootTitle);
 
         $bssRootId = (int) $db->setQuery($query)->loadResult();

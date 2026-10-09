@@ -80,8 +80,9 @@ class BssAcl
         $query = $db->getQuery(true)
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__viewlevels'))
-            ->where($db->quoteName('title') . ' LIKE :title')
-            $title = 'ACL: KjeEng-BSS:%:' . $level;
+            ->where($db->quoteName('title') . ' LIKE :title');
+
+        $title = 'ACL: KjeEng-BSS:%:' . $level;
         $query->bind(':title', $title);
 
         $levelIds = \array_map('intval', $db->setQuery($query)->loadColumn() ?: []);
@@ -165,8 +166,9 @@ class BssAcl
         $query = $db->getQuery(true)
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__usergroups'))
-            ->where($db->quoteName('title') . ' = :title')
-            $suiteSuperAdminTitle = 'UG: KjeEng-BSS:SuperAdmin';
+            ->where($db->quoteName('title') . ' = :title');
+
+        $suiteSuperAdminTitle = 'UG: KjeEng-BSS:SuperAdmin';
         $query->bind(':title', $suiteSuperAdminTitle);
 
         return (int) $db->setQuery($query)->loadResult();
