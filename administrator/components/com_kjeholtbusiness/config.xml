@@ -25,6 +25,7 @@
             <action name="timereport.edit" title="COM_KJEHOLTBUSINESS_ACTION_EDIT_TIMEREPORT" />
             <action name="timereport.delete" title="COM_KJEHOLTBUSINESS_ACTION_DELETE_TIMEREPORT" />
             <action name="timereport.view" title="COM_KJEHOLTBUSINESS_ACTION_VIEW_TIMEREPORT" />
+            <action name="timereport.unvalidate" title="COM_KJEHOLTBUSINESS_ACTION_UNVALIDATE_TIMEREPORT" />
             <action name="invoice.create" title="COM_KJEHOLTBUSINESS_ACTION_CREATE_INVOICE" />
             <action name="invoice.edit" title="COM_KJEHOLTBUSINESS_ACTION_EDIT_INVOICE" />
             <action name="invoice.delete" title="COM_KJEHOLTBUSINESS_ACTION_DELETE_INVOICE" />
