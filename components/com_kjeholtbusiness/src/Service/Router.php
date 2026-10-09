@@ -28,6 +28,8 @@ class Router extends RouterView
         $this->registerView(new RouterViewConfiguration('logbook'));
         $this->registerView(new RouterViewConfiguration('company'));
         $this->registerView(new RouterViewConfiguration('companies'));
+        $this->registerView(new RouterViewConfiguration('invoice'));
+        $this->registerView(new RouterViewConfiguration('invoices'));
         $this->registerView(new RouterViewConfiguration('expenses'));
         $this->registerView(new RouterViewConfiguration('expense'));
 
