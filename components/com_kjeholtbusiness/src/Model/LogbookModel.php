@@ -31,8 +31,9 @@ class LogbookModel extends BaseDatabaseModel
             ->order($db->quoteName('l.event_time') . ' DESC');
 
         if (!LogbookAcl::isCompanyAdmin()) {
+            $userId = (int) Factory::getUser()->id;
             $query->where($db->quoteName('l.user_id') . ' = :user_id')
-                ->bind(':user_id', (int) Factory::getUser()->id, ParameterType::INTEGER);
+                ->bind(':user_id', $userId, ParameterType::INTEGER);
         }
 
         $db->setQuery($query, 0, 200);
