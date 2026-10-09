@@ -31,9 +31,12 @@ class HtmlView extends BaseHtmlView
             throw new \Exception(Text::_('JERROR_ALERTNOAUTHOR'), 403);
         }
 
-        $this->item       = $this->get('Item');
+        $model = $this->getModel();
+        $model->setState('projectsummary.id', $projectId);
+
+        $this->item        = $this->get('Item');
         $this->subprojects = $this->get('Subprojects');
-        $this->totals     = $this->get('Totals');
+        $this->totals      = $this->get('Totals');
 
         return parent::display($tpl);
     }
