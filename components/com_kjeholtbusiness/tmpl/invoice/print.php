@@ -55,23 +55,32 @@ use Joomla\CMS\Factory;
         <thead>
             <tr>
                 <th><?php echo Text::_('COM_KJEHOLTBUSINESS_INVOICES_SUBPROJECTS'); ?></th>
+                <th><?php echo Text::_('COM_KJEHOLTBUSINESS_INVOICES_ROW_TYPE'); ?></th>
                 <th class="text-end"><?php echo Text::_('COM_KJEHOLTBUSINESS_PROJECTSUMMARY_SPENT_HOURS'); ?></th>
                 <th class="text-end"><?php echo Text::_('COM_KJEHOLTBUSINESS_SUBPROJECT_FIELD_HOURLY_RATE_LABEL'); ?></th>
-                <th class="text-end"><?php echo Text::_('COM_KJEHOLTBUSINESS_PROJECTSUMMARY_TOTAL_TIME_COST'); ?></th>
-                <th class="text-end"><?php echo Text::_('COM_KJEHOLTBUSINESS_PROJECTSUMMARY_SPENT_COSTS'); ?></th>
-                <th class="text-end"><?php echo Text::_('COM_KJEHOLTBUSINESS_PROJECTSUMMARY_TOTAL_COST'); ?></th>
+                <th class="text-end"><?php echo Text::_('COM_KJEHOLTBUSINESS_INVOICES_AMOUNT'); ?></th>
             </tr>
         </thead>
         <tbody>
             <?php foreach ($this->lines as $line) : ?>
+                <?php if ((float) $line->time_cost != 0.0) : ?>
                 <tr>
                     <td><?php echo $this->escape($line->name); ?></td>
+                    <td><?php echo Text::_('COM_KJEHOLTBUSINESS_INVOICES_ROW_TIME'); ?></td>
                     <td class="text-end"><?php echo number_format((float) $line->hours, 2, ',', ' '); ?></td>
                     <td class="text-end"><?php echo number_format((float) $line->hourly_rate, 2, ',', ' '); ?></td>
                     <td class="text-end"><?php echo number_format((float) $line->time_cost, 2, ',', ' '); ?></td>
-                    <td class="text-end"><?php echo number_format((float) $line->expense_amount, 2, ',', ' '); ?></td>
-                    <td class="text-end"><?php echo number_format((float) $line->line_total, 2, ',', ' '); ?></td>
                 </tr>
+                <?php endif; ?>
+                <?php if ((float) $line->expense_amount != 0.0) : ?>
+                <tr>
+                    <td><?php echo $this->escape($line->name); ?></td>
+                    <td><?php echo Text::_('COM_KJEHOLTBUSINESS_INVOICES_ROW_EXPENSES'); ?></td>
+                    <td class="text-end"></td>
+                    <td class="text-end"></td>
+                    <td class="text-end"><?php echo number_format((float) $line->expense_amount, 2, ',', ' '); ?></td>
+                </tr>
+                <?php endif; ?>
             <?php endforeach; ?>
         </tbody>
     </table>
