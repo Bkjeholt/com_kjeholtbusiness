@@ -149,10 +149,24 @@ class TimereporteditController extends BaseController
                 ->bind(':owner', $userId, ParameterType::INTEGER);
         }
 
+        // Fetch the report before deletion so the log entry can describe it
+        $fetchQuery = $db->getQuery(true)
+            ->select([$db->quoteName('status')])
+            ->from($db->quoteName('#__kjeholtbusiness_timecards'))
+            ->where($db->quoteName('id') . ' = :fetch_id')
+            ->bind(':fetch_id', $id, ParameterType::INTEGER);
+        $beforeDelete = $db->setQuery($fetchQuery)->loadObject();
+
         try {
             $db->setQuery($query)->execute();
 
             if ($db->getAffectedRows() > 0) {
+                if ($beforeDelete) {
+                    Logbook::log(
+                        'timereport.deleted',
+                        sprintf('Time report #%d with status %s was deleted.', $id, $beforeDelete->status)
+                    );
+                }
                 $app->enqueueMessage(Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_DELETED'), 'message');
             } else {
                 $app->enqueueMessage(Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_ERROR_NOT_FOUND'), 'warning');
