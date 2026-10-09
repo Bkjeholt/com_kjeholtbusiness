@@ -18,7 +18,7 @@ use Joomla\CMS\Factory;
  */
 class CompanyAcl
 {
-    private static function isSuiteSuperAdmin(): bool
+    public static function isSuiteSuperAdmin(): bool
     {
         $user = Factory::getUser();
 
