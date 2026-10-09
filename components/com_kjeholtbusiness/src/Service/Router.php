@@ -27,6 +27,7 @@ class Router extends RouterView
         $this->registerView(new RouterViewConfiguration('timereportedit'));
         $this->registerView(new RouterViewConfiguration('logbook'));
         $this->registerView(new RouterViewConfiguration('company'));
+        $this->registerView(new RouterViewConfiguration('companies'));
         $this->registerView(new RouterViewConfiguration('expenses'));
         $this->registerView(new RouterViewConfiguration('expense'));
 
