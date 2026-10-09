@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fieldset name="companyFieldset">
+        <field name="id" type="hidden" />
+        <field name="name" type="text" label="COM_KJEHOLTBUSINESS_COMPANY_NAME" required="true" size="40" />
+        <field name="org_number" type="text" label="COM_KJEHOLTBUSINESS_COMPANY_ORG_NUMBER" size="20" />
+        <field name="address" type="text" label="COM_KJEHOLTBUSINESS_COMPANY_ADDRESS" size="40" />
+        <field name="postal_code" type="text" label="COM_KJEHOLTBUSINESS_COMPANY_POSTAL_CODE" size="10" />
+        <field name="city" type="text" label="COM_KJEHOLTBUSINESS_COMPANY_CITY" size="30" />
+        <field name="phone" type="text" label="COM_KJEHOLTBUSINESS_COMPANY_PHONE" size="20" />
+        <field name="website" type="url" label="COM_KJEHOLTBUSINESS_COMPANY_WEBSITE" size="40" />
+        <field name="email" type="email" label="COM_KJEHOLTBUSINESS_COMPANY_EMAIL" size="40" />
+        <field name="bank_name" type="text" label="COM_KJEHOLTBUSINESS_COMPANY_BANK_NAME" size="40" />
+        <field name="bankgiro" type="text" label="COM_KJEHOLTBUSINESS_COMPANY_BANKGIRO" size="20" />
+        <field name="iban" type="text" label="COM_KJEHOLTBUSINESS_COMPANY_IBAN" size="30" />
+    </fieldset>
+</form>
