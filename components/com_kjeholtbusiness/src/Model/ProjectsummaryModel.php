@@ -19,7 +19,7 @@ class ProjectsummaryModel extends ItemModel
 {
     public function getItem($pk = null)
     {
-        $pk = (int) ($pk ?: Factory::getApplication()->input->getInt('id', 0));
+        $pk = (int) ($pk ?: $this->getState('projectsummary.id') ?: Factory::getApplication()->input->getInt('id', 0));
 
         if (empty($pk)) {
             return null;

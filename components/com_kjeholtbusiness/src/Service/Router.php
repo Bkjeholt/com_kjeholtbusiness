@@ -15,6 +15,8 @@ class Router extends RouterView
         $this->registerView(new RouterViewConfiguration('display'));
         $this->registerView(new RouterViewConfiguration('kjeholtbusiness'));
         $this->registerView(new RouterViewConfiguration('projects'));
+        $this->registerView(new RouterViewConfiguration('projectsummary'));
+        $this->registerView(new RouterViewConfiguration('projectshow'));
         $this->registerView(new RouterViewConfiguration('project'));
         $this->registerView(new RouterViewConfiguration('subprojects'));
         $this->registerView(new RouterViewConfiguration('subproject'));
