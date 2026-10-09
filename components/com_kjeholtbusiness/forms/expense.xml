@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fieldset name="expenseFieldset">
+        <field name="id"
+               type="hidden" />
+        <field name="name"
+               type="text"
+               label="COM_KJEHOLTBUSINESS_EXPENSES_NAME"
+               required="true"
+               size="40" />
+        <field name="description"
+               type="textarea"
+               filter="safehtml"
+               label="COM_KJEHOLTBUSINESS_EXPENSES_DESCRIPTION"
+               rows="5"
+               cols="40" />
+        <field name="subproject_id"
+               type="sql"
+               label="COM_KJEHOLTBUSINESS_EXPENSES_SUBPROJECT"
+               query="SELECT 0 AS id, '---' AS title
+                      UNION ALL
+                      SELECT sp.id AS id, CONCAT(p.name, ' : ', sp.name) AS title
+                      FROM #__kjeholtbusiness_subprojects AS sp
+                      JOIN #__kjeholtbusiness_projects AS p ON p.id = sp.project_id
+                      ORDER BY id"
+               key_field="id"
+               value_field="title" />
+        <field name="date"
+               type="calendar"
+               label="COM_KJEHOLTBUSINESS_EXPENSES_DATE"
+               format="%Y-%m-%d"
+               required="true" />
+        <field name="amount"
+               type="text"
+               label="COM_KJEHOLTBUSINESS_EXPENSES_AMOUNT"
+               required="true" />
+        <field name="status"
+               type="list"
+               label="COM_KJEHOLTBUSINESS_EXPENSES_STATUS"
+               default="new">
+            <option value="new">COM_KJEHOLTBUSINESS_EXPENSES_STATUS_NEW</option>
+            <option value="validated">COM_KJEHOLTBUSINESS_EXPENSES_STATUS_VALIDATED</option>
+        </field>
+    </fieldset>
+</form>

@@ -19,4 +19,3 @@ INSERT INTO `#__kjeholtbusiness_expencies` (`name`, `description`, `subproject_i
 ('Development Hours', 'Initial development hours for Subproject Alpha 1', 1, '2024-01-16', 'hours', 8.5, 42, 42),
 ('Material Costs', 'Materials purchased for Subproject Alpha 1', 1, '2024-01-17', 'costs', 250.00, 42, 42),
 ('Consultation Hours', 'Consultation hours for Subproject Alpha 2', 2, '2024-02-02', 'hours', 5.0, 42, 42);
-

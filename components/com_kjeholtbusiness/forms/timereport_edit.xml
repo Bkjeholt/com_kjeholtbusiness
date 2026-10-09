@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fieldset name="timereportEditFieldset">
+        <field name="id"
+               type="hidden" />
+        <field name="description"
+               type="textarea"
+               filter="safehtml"
+               label="COM_KJEHOLTBUSINESS_TIMEREPORTS_DESCRIPTION"
+               rows="5"
+               cols="40" />
+        <field name="subproject_id"
+               type="sql"
+               label="COM_KJEHOLTBUSINESS_TIMEREPORTS_SUBPROJECT"
+               query="SELECT 0 AS id, '---' AS title
+                      UNION ALL
+                      SELECT sp.id AS id, CONCAT(p.name, ' : ', sp.name) AS title
+                      FROM #__kjeholtbusiness_subprojects AS sp
+                      JOIN #__kjeholtbusiness_projects AS p ON p.id = sp.project_id
+                      ORDER BY id"
+               key_field="id"
+               value_field="title" />
+        <field name="start_time"
+               type="calendar"
+               label="COM_KJEHOLTBUSINESS_TIMEREPORTS_START"
+               format="%Y-%m-%d %H:%M:%S"
+               required="true" />
+        <field name="end_time"
+               type="calendar"
+               label="COM_KJEHOLTBUSINESS_TIMEREPORTS_END"
+               format="%Y-%m-%d %H:%M:%S"
+               class="readonly" />
+        <field name="adjustment"
+               type="number"
+               label="COM_KJEHOLTBUSINESS_TIMEREPORTS_ADJUSTMENT"
+               default="0" />
+        <field name="status"
+               type="list"
+               label="COM_KJEHOLTBUSINESS_TIMEREPORTS_STATUS"
+               default="ongoing">
+            <option value="ongoing">COM_KJEHOLTBUSINESS_TIMEREPORTS_STATUS_ONGOING</option>
+            <option value="ended">COM_KJEHOLTBUSINESS_TIMEREPORTS_STATUS_ENDED</option>
+        </field>
+    </fieldset>
+</form>

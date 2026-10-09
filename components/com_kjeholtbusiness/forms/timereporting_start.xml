@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+ <form addfieldprefix="KjeholtEngineering\Component\KjeholtBusiness\Site\Field" 
+       name="timeReportingStartFormName">
+    <fieldset name="startTimeReportingFieldset" 
+              label="mainFieldsetLabel" 
+              description="mainFieldsetDescription">
+       <field name="timereporting_id" 
+              type="hidden" />
+       <field name="subproject_id"
+              type="sql" 
+              query="SELECT id, title FROM kjeholtbusiness_TempSubProjects"
+              key_field="id"
+              value_field="title"/>
+       <field name="name" 
+              type="text" 
+              label="COM_KJEHOLTBUSINESS_TIMEREPORTING_FIELD_NAME_LABEL" 
+              description="COM_KJEHOLTBUSINESS_TIMEREPORTING_FIELD_NAME_DESC" 
+              required="true" 
+              size="40" />
+       <field name="description" 
+              type="editor" 
+              filter="safehtml"
+              label="COM_KJEHOLTBUSINESS_TIMEREPORTING_FIELD_DESC_LABEL" 
+              description="COM_KJEHOLTBUSINESS_TIMEREPORTING_FIELD_DESC_DESC" 
+              rows="5" 
+              cols="40" />
+       <field name="detail_selection" 
+              type="radio"
+              default="1" 
+              label="COM_KJEHOLTBUSINESS_START_TIMEREPORTING_RADIO_FIELD_LABEL" 
+              description="COM_KJEHOLTBUSINESS_START_TIMEREPORTING_RADIO_FIELD_DESC">
+       	   <option value="1">COM_KJEHOLTBUSINESS_START_TIMEREPORTING_RADIO_FIELD_OPTION_DEFAULT</option> 
+       	   <option value="2">COM_KJEHOLTBUSINESS_START_TIMEREPORTING_RADIO_FIELD_OPTION_DETAILS</option> 
+       </field>
+       
+       <field 
+       		name="details_subform" 
+            type="subform" 
+            min="1"
+            formsource="components/com_kjeholtbusiness/forms/timereporting_details_subform.xml"
+            multiple="true"
+            label="COM_KJEHOLTBUSINESS_START_TIMEREPORTING_REASON_FIELD_LABEL" 
+            description="COM_KJEHOLTBUSINESS_START_TIMEREPORTING_REASON_FIELD_DESC" 
+            showon="detail_selection:2" /> 
+    </fieldset>
+ </form>

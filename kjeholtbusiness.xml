@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component" version="5.0" method="upgrade">
     <name>COM_KJEHOLTBUSINESS</name>
-    <creationDate>2026-02-19</creationDate>
+    <creationDate>2026-10-07</creationDate>
     <author>Kjeholt Engineering and Services AB</author>
     <authorEmail>info@kjeholt.se</authorEmail>
-    <authorUrl>www.kjeholt.se</authorUrl>
+    <authorUrl>engineering.kjeholt.se</authorUrl>
     <copyright>Copyright (C) 2026 Kjeholt Engineering and Services AB. All rights reserved.</copyright>
-    <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
-    <version>0.1.1</version>
+    <license>GNU General Public License version 2 or later</license>
+    <version>0.2.10.7</version>
     <description>COM_KJEHOLTBUSINESS_XML_DESCRIPTION</description>
     <namespace path="src">KjeholtEngineering\Component\KjeholtBusiness</namespace>
     <scriptfile>script.php</scriptfile>
@@ -15,6 +15,7 @@
     <!-- Administratörsfiler -->
     <administration>
         <files folder="administrator/components/com_kjeholtbusiness">
+            <file>kjeholtbusiness.php</file>
             <folder>services</folder>
             <folder>src</folder>
             <folder>forms</folder>
@@ -27,6 +28,7 @@
 
     <!-- Webbplatsfiler -->
     <files folder="components/com_kjeholtbusiness">
+        <file>kjeholtbusiness.php</file>
         <folder>services</folder>
         <folder>src</folder>
         <folder>forms</folder>
@@ -35,8 +37,10 @@
     </files>
 
     <!-- Språkfiler -->
-    <!-- 
+<!--      
     <languages folder="language">
+        <language tag="en-GB">com_kjeholtbusiness.ini</language>
+        <language tag="en-GB">com_kjeholtbusiness.sys.ini</language>
         <language tag="sv-SE">com_kjeholtbusiness.ini</language>
         <language tag="sv-SE">com_kjeholtbusiness.sys.ini</language>
     </languages>
@@ -49,25 +53,33 @@
         <folder>templates</folder>
     </media>
     
-    <!-- Databasinstallation -->
+    <!-- Database handling -->
     <install>
         <sql>
-            <file driver="mysql" charset="utf8mb4">sql/install.mysql.utf8.sql</file>
+            <file driver="mysql" charset="utf8mb4">sql/install.mysql.utf8.sql</file> 
+<!--             <file driver="mysql" charset="utf8mb4">sql/test.sql</file> -->
         </sql>
     </install>
-
-    <!-- Databasavinstallation -->
     <uninstall>
         <sql>
             <file driver="mysql" charset="utf8mb4">sql/uninstall.mysql.utf8.sql</file>
         </sql>
     </uninstall>
+	<update>
+ 		<schemas>
+  			<schemapath type="mysql">sql/updates/mysql</schemapath>
+ 		</schemas>
+</update>
 
     <!-- Menytyper för webbplatsen -->
     <menu>
         Kjeholt Business Dashboard
     </menu>
-
+<!--  
+    <updateservers>
+		<server type="collection" name="Update server for the Kjeholt Business support Suite">http://joomla.kjeholt.se/updates/extension.xml</server>
+	</updateservers>
+-->
     <!-- Åtkomstkontroll -->
     <access>
         <section name="component">
@@ -85,17 +97,23 @@
             <action name="project.delete" title="COM_KJEHOLTBUSINESS_ACTION_DELETE_PROJECT" description="COM_KJEHOLTBUSINESS_ACTION_DELETE_PROJECT_DESC"/>
             <action name="project.view" title="COM_KJEHOLTBUSINESS_ACTION_VIEW_PROJECT" description="COM_KJEHOLTBUSINESS_ACTION_VIEW_PROJECT_DESC"/>
         </section>
-        <section name="subproject">
-            <action name="subproject.create" title="COM_KJEHOLTBUSINESS_ACTION_CREATE_SUBPROJECT" description="COM_KJEHOLTBUSINESS_ACTION_CREATE_SUBPROJECT_DESC"/>
-            <action name="subproject.edit" title="COM_KJEHOLTBUSINESS_ACTION_EDIT_SUBPROJECT" description="COM_KJEHOLTBUSINESS_ACTION_EDIT_SUBPROJECT_DESC"/>
-            <action name="subproject.delete" title="COM_KJEHOLTBUSINESS_ACTION_DELETE_SUBPROJECT" description="COM_KJEHOLTBUSINESS_ACTION_DELETE_SUBPROJECT_DESC"/>
-            <action name="subproject.view" title="COM_KJEHOLTBUSINESS_ACTION_VIEW_SUBPROJECT" description="COM_KJEHOLTBUSINESS_ACTION_VIEW_SUBPROJECT_DESC"/>
+        <section name="expense">
+            <action name="expense.create" title="COM_KJEHOLTBUSINESS_ACTION_CREATE_EXPENSE" description="COM_KJEHOLTBUSINESS_ACTION_CREATE_EXPENSE_DESC"/>
+            <action name="expense.edit" title="COM_KJEHOLTBUSINESS_ACTION_EDIT_EXPENSE" description="COM_KJEHOLTBUSINESS_ACTION_EDIT_EXPENCSE_DESC"/>
+            <action name="expense.delete" title="COM_KJEHOLTBUSINESS_ACTION_DELETE_EXPENSE" description="COM_KJEHOLTBUSINESS_ACTION_DELETE_EXPENSE_DESC"/>
+            <action name="expense.view" title="COM_KJEHOLTBUSINESS_ACTION_VIEW_EXPENSE" description="COM_KJEHOLTBUSINESS_ACTION_VIEW_EXPENCSE_DESC"/>
         </section>
-        <section name="expency">
-            <action name="expency.create" title="COM_KJEHOLTBUSINESS_ACTION_CREATE_EXPENCY" description="COM_KJEHOLTBUSINESS_ACTION_CREATE_EXPENCY_DESC"/>
-            <action name="expency.edit" title="COM_KJEHOLTBUSINESS_ACTION_EDIT_EXPENCY" description="COM_KJEHOLTBUSINESS_ACTION_EDIT_EXPENCY_DESC"/>
-            <action name="expency.delete" title="COM_KJEHOLTBUSINESS_ACTION_DELETE_EXPENCY" description="COM_KJEHOLTBUSINESS_ACTION_DELETE_EXPENCY_DESC"/>
-            <action name="expency.view" title="COM_KJEHOLTBUSINESS_ACTION_VIEW_EXPENCY" description="COM_KJEHOLTBUSINESS_ACTION_VIEW_EXPENCY_DESC"/>
+        <section name="timereport">
+			<action name="timereport.create" title="COM_KJEHOLTBUSINESS_ACTION_CREATE_TIMEREPORT" description="COM_KJEHOLTBUSINESS_ACTION_CREATE_TIMEREPORT_DESC"/>
+			<action name="timereport.edit" title="COM_KJEHOLTBUSINESS_ACTION_EDIT_TIMEREPORT" description="COM_KJEHOLTBUSINESS_ACTION_EDIT_TIMEREPORT_DESC"/>
+			<action name="timereport.delete" title="COM_KJEHOLTBUSINESS_ACTION_DELETE_TIMEREPORT" description="COM_KJEHOLTBUSINESS_ACTION_DELETE_TIMEREPORT_DESC"/>
+			<action name="timereport.view" title="COM_KJEHOLTBUSINESS_ACTION_VIEW_TIMEREPORT" description="COM_KJEHOLTBUSINESS_ACTION_VIEW_TIMEREPORT_DESC"/>
+        </section>
+        <section name="invoice">
+			<action name="invoice.create" title="COM_KJEHOLTBUSINESS_ACTION_CREATE_INVOICE" description="COM_KJEHOLTBUSINESS_ACTION_CREATE_INVOICE_DESC"/>
+			<action name="invoice.edit" title="COM_KJEHOLTBUSINESS_ACTION_EDIT_INVOICE" description="COM_KJEHOLTBUSINESS_ACTION_EDIT_INVOICE_DESC"/>
+			<action name="invoice.delete" title="COM_KJEHOLTBUSINESS_ACTION_DELETE_INVOICE" description="COM_KJEHOLTBUSINESS_ACTION_DELETE_INVOICE_DESC"/>
+			<action name="invoice.view" title="COM_KJEHOLTBUSINESS_ACTION_VIEW_INVOICE" description="COM_KJEHOLTBUSINESS_ACTION_VIEW_INVOICE_DESC"/>
         </section>
     </access>
 

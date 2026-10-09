@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fieldset name="stopTimeReportFieldset">
+        <field name="id"
+               type="hidden" />
+        <field name="end_time"
+               type="calendar"
+               label="COM_KJEHOLTBUSINESS_TIMEREPORTS_END"
+               format="%Y-%m-%d %H:%M:%S"
+               required="true" />
+        <field name="description"
+               type="textarea"
+               filter="safehtml"
+               label="COM_KJEHOLTBUSINESS_TIMEREPORTS_DESCRIPTION"
+               rows="5"
+               cols="40" />
+    </fieldset>
+</form>

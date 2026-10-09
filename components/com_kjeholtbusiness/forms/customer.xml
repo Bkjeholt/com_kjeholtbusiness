@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+
+    <fieldset name="customer" 
+              label="Customer" 
+              description="Customer details">
+
+        <fields name="customerFieldset" 
+                  label="COM_KJEHOLTBUSINESS_CUSTOMER_FIELDSET_LABEL" 
+                  description="COM_KJEHOLTBUSINESS_CUSTOMER_FIELDSET_DESC">
+            <field name="customer_id"
+                   type="hidden"  
+                   label="COM_KJEHOLTBUSINESS_CUSTOMER_FIELD_CUSTOMER_ID_LABEL" 
+                   description="COM_KJEHOLTBUSINESS_CUSTOMER_FIELD_CUSTOMER_ID_DESC" />
+            <field name="customer_company_id"
+                   type="hidden" />      
+            <field name="customer_selection" 
+                   type="radio" 
+                   label="COM_KJEHOLTBUSINESS_PROJECT_FIELD_CUSTOMER_SELECTION_LABEL" 
+                   description="COM_KJEHOLTBUSINESS_PROJECT_CUSTOMER_SELECTION_DESC" 
+                   default="existing" >
+<!-- 
+                <option value="existing">COM_KJEHOLTBUSINESS_PROJECT_CUSTOMER_SELECTION_EXIST</option>
+                <option value="new">COM_KJEHOLTBUSINESS_PROJECT_CUSTOMER_SELECTION_NEW</option> 
+            </field>
+            <fields name="existingCustomerFieldset" 
+                      label="existingCustomerFieldsetLabel" 
+                      description="existingCustomerFieldsetDescription" 
+                      showon="customer_selection:existing">
+                <field name="customer_id"
+                       type="sql" 
+                       showon="customer_selection:existing"/>
+            </fields> 
+            <fields name="newCustomerFieldset" 
+                      label="newCustomerFieldsetLabel" 
+                      description="newCustomerFieldsetDescription" 
+                      showon="customer_selection:new">      
+                <field name="customer_name"
+                       type="text" />       
+                <field name="customer_address"
+                       type="editor" 
+                       filter="safehtml" 
+                       buttons="false" /> 
+                <field name="customer_telephone"
+                       type="text"
+                       label="COM_KJEHOLTBUSINESS_PROJECT_CUSTOMER_TELEPHONE_LABEL" 
+                       description="COM_KJEHOLTBUSINESS_PROJECT_CUSTOMER_TELEPHONE_DESC" /> 
+                <field name="new_customer_id"
+                       type="hidden" />
+                
+            </fields>
+        </fields>
+    </fieldset>
+
+    <fieldset name="customer" 
+              label="Customer" 
+              description="Customer details">
+ -->
+        <field name="name" type="text" label="Name" required="true" size="40" />
+        <field name="email" type="email" label="Email" required="true" size="40" class="validate-email" />
+        <field name="telephone" type="telephone" label="Telephone number" size="40" validate="tel" />
+    </fieldset>
+</form>
