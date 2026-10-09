@@ -28,6 +28,7 @@ class CompaniesModel extends BaseDatabaseModel
             ]
         )
             ->from($db->quoteName('#__kjeholtbusiness_companies'))
+            ->where($db->quoteName('deleted') . ' = 0')
             ->order($db->quoteName('name') . ' ASC');
 
         $db->setQuery($query);
