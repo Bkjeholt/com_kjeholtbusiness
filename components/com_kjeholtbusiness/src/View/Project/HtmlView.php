@@ -49,6 +49,11 @@ class HtmlView extends BaseHtmlView
                     throw new \Exception('JERROR_ALERTNOAUTHOR', 403);
                 }
 
+                if ($layout === 'edit'
+                    && !\KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\ProjectAcl::canEditProject($this->item)) {
+                    throw new \Exception('JERROR_ALERTNOAUTHOR', 403);
+                }
+
                 ;
             break;
         }
