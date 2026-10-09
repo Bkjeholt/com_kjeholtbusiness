@@ -171,7 +171,8 @@ class CompanyModel extends FormModel
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__usergroups'))
             ->where($db->quoteName('title') . ' = :title')
-            ->bind(':title', 'UG: KjeEng-BSS');
+            $bssRootTitle = 'UG: KjeEng-BSS';
+        $query->bind(':title', $bssRootTitle);
 
         $bssRootId = (int) $db->setQuery($query)->loadResult();
 
