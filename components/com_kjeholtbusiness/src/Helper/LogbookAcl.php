@@ -8,7 +8,7 @@ use Joomla\CMS\Factory;
 /**
  * ACL helper for the logbook.
  *
- * Company admins (members of a "UG: <company> - CompanyAdmin" user group)
+ * Company admins (members of a "UG: KjeEng-BSS:<company>:Admin" user group)
  * may view and comment all entries; regular users only see and may
  * comment their own entries.
  */
@@ -16,7 +16,7 @@ class LogbookAcl
 {
     /**
      * True when the current user is a company admin
-     * (member of any "UG: <company> - CompanyAdmin" group).
+     * (member of any "UG: KjeEng-BSS:<company>:Admin" group).
      */
     public static function isCompanyAdmin(): bool
     {
@@ -36,7 +36,7 @@ class LogbookAcl
         $query = $db->getQuery(true)
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__usergroups'))
-            ->where($db->quoteName('title') . ' LIKE ' . $db->quote('UG: % - CompanyAdmin'));
+            ->where($db->quoteName('title') . ' LIKE ' . $db->quote('UG: KjeEng-BSS:%:Admin'));
 
         $adminGroupIds = $db->setQuery($query)->loadColumn();
 

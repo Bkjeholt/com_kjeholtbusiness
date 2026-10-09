@@ -9,10 +9,10 @@ use Joomla\CMS\Factory;
  * Company ACL helper.
  *
  * Maps actions to the KjeBus usergroups:
- *  - Create/modify any company:   "KjeBus: Business Support Suite:Admin - SuperAdmin"
- *  - List all companies:          "KjeBus: Business Support Suite:Admin - Info"
- *  - Modify own company:          "KjeBus: <Company>:Company - Admin"
- *  - Show own company information "KjeBus: <Company>:Company - View"
+ *  - Create/modify any company:   "UG: KjeEng-BSS:SuperAdmin"
+ *  - List all companies:          "UG: KjeEng-BSS:SuperAdmin"
+ *  - Modify own company:          "UG: KjeEng-BSS:<Company>:Admin"
+ *  - Show own company information "UG: KjeEng-BSS:<Company>:Visitor"
  */
 class CompanyAcl
 {
@@ -45,7 +45,7 @@ class CompanyAcl
      */
     public static function isSuiteSuperAdmin(): bool
     {
-        return self::userInGroup('KjeBus: Business Support Suite:Admin - SuperAdmin');
+        return self::userInGroup('UG: KjeEng-BSS:SuperAdmin');
     }
 
     /**
@@ -54,7 +54,7 @@ class CompanyAcl
     public static function mayListAllCompanies(): bool
     {
         return self::isSuiteSuperAdmin()
-            || self::userInGroup('KjeBus: Business Support Suite:Admin - Info');
+            || self::userInGroup('UG: KjeEng-BSS:SuperAdmin');
     }
 
     /**
@@ -70,7 +70,7 @@ class CompanyAcl
             return false;
         }
 
-        return self::userInGroup('KjeBus: ' . $company->name . ':Company - Admin');
+        return self::userInGroup('UG: KjeEng-BSS:' . $company->name . ':Admin');
     }
 
     /**
@@ -86,6 +86,6 @@ class CompanyAcl
             return false;
         }
 
-        return self::userInGroup('KjeBus: ' . $company->name . ':Company - View');
+        return self::userInGroup('UG: KjeEng-BSS:' . $company->name . ':Visitor');
     }
 }

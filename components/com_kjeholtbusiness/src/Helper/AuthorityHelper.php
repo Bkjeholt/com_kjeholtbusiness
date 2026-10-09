@@ -18,7 +18,7 @@ class AuthorityHelper {
             $query = $db->getQuery(true)
                 ->select($db->quoteName('title'))
                 ->from($db->quoteName('#__viewlevels'))
-                ->where($db->quoteName('title') . ' LIKE ' . $db->quote('KjeBus: ' . $companyId . '%'));
+                ->where($db->quoteName('title') . ' LIKE ' . $db->quote('UG: KjeEng-BSS' . $companyId . '%'));
             $db->setQuery($query);
             return $db->loadColumn();
         }
@@ -85,7 +85,7 @@ class AuthorityHelper {
             
             Log::add('(Admin) AuthorityHelper->createUG: Skapa en UserGroup', Log::DEBUG, 'com_kjeholtbusiness');
                        
-            $parentGroupId = $this->_createUG('UG: Kjeholt Business Support Suite', 1);
+            $parentGroupId = $this->_createUG('UG: KjeEng-BSS', 1);
             
             Log::add('AuthorityHelper->createUG: UserGroup UG: "Kjeholt Business Support Suite" skapad/hittad med id=' . $parentGroupId, Log::DEBUG, 'com_kjeholtbusiness');
 

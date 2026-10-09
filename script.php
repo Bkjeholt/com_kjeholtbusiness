@@ -159,76 +159,35 @@ class Com_KjeholtbusinessInstallerScript
             }
         }
 
+// ------------------------------------------------------------------
+        // User groups (UG) - KjeEng-BSS scheme
+        //
+        //   UG: KjeEng-BSS:SuperAdmin
+        //   UG: KjeEng-BSS:<CompanyName>:SuperAdmin
+        //   UG: KjeEng-BSS:<CompanyName>:Admin
+        //   UG: KjeEng-BSS:<CompanyName>:Economy
+        //   UG: KjeEng-BSS:<CompanyName>:Employee
+        //   UG: KjeEng-BSS:<CompanyName>:Visitor
+        // ------------------------------------------------------------------
         $companyName = 'Företaget Test AB';
-                
-        Log::add('Skapa en UserGroup', Log::DEBUG, 'com_kjeholtbusiness');
 
-        $parentUserGroupId = $this->createUserGroup('KjeBus: Business Support Suite', 1);
+        $bssRootId = $this->createUserGroup('UG: KjeEng-BSS', 1);
+        Log::add('UserGroup "UG: KjeEng-BSS" skapad/hittad med id=' . $bssRootId, Log::DEBUG, 'com_kjeholtbusiness');
 
-        Log::add('UserGroup "KjeBus: Business Support Suite" skapad/hittad med id=' . $parentUserGroupId, Log::DEBUG, 'com_kjeholtbusiness');
-        
-        $childGroupId = $this->createUserGroup('KjeBus: ' . $companyName, $parentUserGroupId);
+        $suiteSuperAdminId = $this->createUserGroup('UG: KjeEng-BSS:SuperAdmin', $bssRootId);
+        Log::add('UserGroup "UG: KjeEng-BSS:SuperAdmin" skapad/hittad med id=' . $suiteSuperAdminId, Log::DEBUG, 'com_kjeholtbusiness');
+
+        $companyGroupId = $this->createUserGroup('UG: KjeEng-BSS:' . $companyName, $bssRootId);
         $companyId = $this->createCompany($companyName);
-        
-        Log::add('UserGroup "KjeBus: ' . $companyName . '" är nu skapad/hittad i UserGroup med id=' . $childGroupId, Log::DEBUG, 'com_kjeholtbusiness');
-        
-        // Skapa en uppsättning av UG fö de olika användarprofilerna
-        
-/*        $userProfiles = array('SuperAdmin',
-            'CompanyAdmin','CompanyViewer',
-            'ProjectAdmin', 'ProjectUser','ProjectViewer',
-            'AccountingAdmin','AccountingUser','AccountingViewer');
-  */      
-        $userProfileGroups = array(
-            array('grp' => 'Admin', 'profiles' => array('SuperAdmin')),
-            array('grp' => 'Company', 'profiles' => array('Admin', 'Viewer')),
-            array('grp' => 'Project', 'profiles' => array('Admin', 'User', 'Viewer')),
-            array('grp' => 'TimeReport', 'profiles' => array('Admin', 'User', 'Viewer')),
-            array('grp' => 'Accounting', 'profiles' => array('Admin', 'User', 'Viewer'))
-        );
-        
-/*        $userProfileGroups = [{'grp':'Admin', 'profiles': ['SuperAdmin']},
-                              {'grp':'Company', 'profiles': ['Admin','Viewer']},
-                              {'grp':'Project', 'profiles': ['Admin', 'User','Viewer']},
-                              {'grp':'Accounting', 'profiles': ['Admin','User','Viewer']}];
-*/
-        foreach ($userProfileGroups as $userProfileGroup) {
-            if ($userProfileGroup['grp'] == 'Admin') {
-                $userGroupPrefix = 'KjeBus: Business Support Suite:Admin';
-                $aclPrefix = 'KjeBus: Business Support Suite:Admin';
-            } else {
-                $userGroupPrefix = 'KjeBus: ' . $companyName . ':' . $userProfileGroup['grp'];
-                $aclPrefix = 'KjeBus: ' . $companyName . ':' . $userProfileGroup['grp'];
-            }
-            
-            $infoUserGroupId = $this->createUserGroup($userGroupPrefix . ' - Info', $childGroupId);
-            
-            Log::add('UserGroup "' . $userGroupPrefix . ' - Info'. '" är nu skapad/hittad i UserGroup med id=' . $infoUserGroupId, Log::DEBUG, 'com_kjeholtbusiness');
-            
-            $infoAclId = $this->createACL($aclPrefix . ' - Info', $infoUserGroupId);
-            
-            Log::add('ACL "' . $aclPrefix . ' - Info' . '" är nu skapad/hittad i ACL med id=' . $infoAclId, Log::DEBUG, 'com_kjeholtbusiness');
-            
-            foreach ($userProfileGroup['profiles'] as $profile) {
-                $groupId = $this->createUserGroup($userGroupPrefix . ' - ' . $profile, $childGroupId);
-                Log::add('UserGroup "' . $userGroupPrefix . ' - ' . $profile . '" är nu skapad/hittad i UserGroup med id=' . $groupId, Log::DEBUG, 'com_kjeholtbusiness');
-                
-                $aclId = $this->createACL($aclPrefix . ' - ' . $profile, $groupId);
-                Log::add('ACL "' . $aclPrefix . ' - ' . $profile . '" är nu skapad/hittad i ACL med id=' . $aclId, Log::DEBUG, 'com_kjeholtbusiness');
-            }
+        Log::add('UserGroup "UG: KjeEng-BSS:' . $companyName . '" skapad/hittad med id=' . $companyGroupId, Log::DEBUG, 'com_kjeholtbusiness');
+
+        $companyProfiles = ['SuperAdmin', 'Admin', 'Economy', 'Employee', 'Visitor'];
+
+        foreach ($companyProfiles as $profile) {
+            $groupId = $this->createUserGroup('UG: KjeEng-BSS:' . $companyName . ':' . $profile, $companyGroupId);
+            Log::add('UserGroup "UG: KjeEng-BSS:' . $companyName . ':' . $profile . '" skapad/hittad med id=' . $groupId, Log::DEBUG, 'com_kjeholtbusiness');
         }
-/*        
-        foreach ($userProfiles as $profile) {
-            $groupId = $this->createUserGroup('UG: ' . $companyName . ' - ' . $profile, $childGroupId);
-            Log::add('UserGroup "' . 'UG: ' . $companyName . ' - ' . $profile . '" är nu skapad/hittad i UserGroup med id=' . $groupId, Log::DEBUG, 'com_kjeholtbusiness');
-            
-            $aclId = $this->createACL('ACL: ' . $companyName . ' - ' . $profile, $groupId);
-            Log::add('ACL "' . 'ACL: ' . $companyName . ' - ' . $profile . '" är nu skapad/hittad i ACL med id=' . $aclId, Log::DEBUG, 'com_kjeholtbusiness');
-        }
-  */      
-    
-        
-        
+
         Log::add('Installationen slutförd.', Log::DEBUG, 'com_kjeholtbusiness');
         $app->enqueueMessage('Installationen av com_kjeholtbusiness slutförd.', 'message');
     }

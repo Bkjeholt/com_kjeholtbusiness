@@ -10,7 +10,7 @@ use Joomla\CMS\Factory;
  *
  * A user may modify a project or its subprojects when they:
  *  - created the record (owner), or
- *  - are member of the "<Company>:Project - Admin" usergroup for the
+ *  - are member of the "UG: KjeEng-BSS:<Company>:Admin" usergroup for the
  *    company owning the project.
  */
 class ProjectAcl
@@ -63,7 +63,7 @@ class ProjectAcl
             return true;
         }
 
-        return self::userInGroupLike('%:Project - Admin');
+        return self::userInGroupLike('UG: KjeEng-BSS:%:Admin');
     }
 
     /**
@@ -98,6 +98,6 @@ class ProjectAcl
             }
         }
 
-        return self::userInGroupLike('%:Project - Admin');
+        return self::userInGroupLike('UG: KjeEng-BSS:%:Admin');
     }
 }
