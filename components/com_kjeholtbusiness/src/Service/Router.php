@@ -13,6 +13,7 @@ class Router extends RouterView
     public function __construct(CMSApplicationInterface $application, AbstractMenu $menu)
     {
         $this->registerView(new RouterViewConfiguration('display'));
+        $this->registerView(new RouterViewConfiguration('dashboard'));
         $this->registerView(new RouterViewConfiguration('kjeholtbusiness'));
         $this->registerView(new RouterViewConfiguration('projects'));
         $this->registerView(new RouterViewConfiguration('projectsummary'));
