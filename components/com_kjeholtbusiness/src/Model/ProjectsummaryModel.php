@@ -17,18 +17,14 @@ use Joomla\Database\ParameterType;
 
 class ProjectsummaryModel extends ItemModel
 {
+    private $item;
+
     public function getItem($pk = null)
     {
         $pk = (int) ($pk ?: $this->getState('projectsummary.id') ?: Factory::getApplication()->input->getInt('id', 0));
 
         if (empty($pk)) {
             return null;
-        }
-
-        $cacheId = $this->getState('projectsummary.id');
-
-        if ($cacheId == $pk && $this->item !== null) {
-            return $this->item;
         }
 
         $db    = $this->getDatabase();
@@ -58,6 +54,9 @@ class ProjectsummaryModel extends ItemModel
         $db    = $this->getDatabase();
         $query = $db->getQuery(true);
 
+        $validatedCards = $db->quoteName('tc.status') . ' IN (' . $db->quote('validated') . ', ' . $db->quote('froozen') . ')';
+        $validatedExp   = $db->quoteName('e.status') . ' IN (' . $db->quote('validated') . ', ' . $db->quote('froozen') . ')';
+
         $query->select(
             [
                 $db->quoteName('s.id'),
@@ -67,77 +66,56 @@ class ProjectsummaryModel extends ItemModel
                 $db->quoteName('s.hourly_rate'),
                 $db->quoteName('s.estimated_amount_of_hours'),
                 $db->quoteName('s.status'),
-                'COALESCE(SUM(CASE WHEN ' . $db->quoteName('e.status') . ' IN (' . $db->quote('new') . ',' . $db->quote('validated') . ') THEN ' . $db->quoteName('e.amount') . ' ELSE 0 END), 0) AS ' . $db->quoteName('spent_costs'),
-                '(SELECT COALESCE(SUM(TIMESTAMPDIFF(MINUTE, tc.start_time, COALESCE(tc.end_time, NOW())) + tc.adjustment), 0) / 60 FROM #__kjeholtbusiness_timecards AS tc WHERE tc.subproject_id = ' . $db->quoteName('s.id') . ' AND tc.status IN (' . $db->quote('ended') . ',' . $db->quote('validated') . ')) AS ' . $db->quoteName('spent_hours'),
+                '(SELECT COALESCE(SUM(TIMESTAMPDIFF(MINUTE, tc.start_time, tc.end_time) + tc.adjustment), 0) / 60'
+                    . ' FROM #__kjeholtbusiness_timecards AS tc'
+                    . ' WHERE tc.subproject_id = ' . $db->quoteName('s.id')
+                    . ' AND ' . $validatedCards . ') AS ' . $db->quoteName('spent_hours'),
+                '(SELECT COALESCE(SUM(e.amount), 0)'
+                    . ' FROM #__kjeholtbusiness_expenses AS e'
+                    . ' WHERE e.subproject_id = ' . $db->quoteName('s.id')
+                    . ' AND ' . $validatedExp . ') AS ' . $db->quoteName('spent_costs'),
             ]
         )
             ->from($db->quoteName('#__kjeholtbusiness_subprojects', 's'))
-            ->join(
-                'LEFT',
-                $db->quoteName('#__kjeholtbusiness_expenses', 'e'),
-                $db->quoteName('e.subproject_id') . ' = ' . $db->quoteName('s.id')
-            )
-            ->where($db->quoteName('s.project_id') . ' = ' . $pk)
-            ->group(
-                [
-                    $db->quoteName('s.id'),
-                    $db->quoteName('s.name'),
-                    $db->quoteName('s.description'),
-                    $db->quoteName('s.start_date'),
-                    $db->quoteName('s.hourly_rate'),
-                    $db->quoteName('s.estimated_amount_of_hours'),
-                    $db->quoteName('s.status'),
-                ]
-            )
+            ->where($db->quoteName('s.project_id') . ' = :project_id')
+            ->bind(':project_id', $pk, ParameterType::INTEGER)
             ->order($db->quoteName('s.id') . ' ASC');
 
         $db->setQuery($query);
 
-        return $db->loadObjectList() ?: [];
+        $subprojects = $db->loadObjectList() ?: [];
+
+        foreach ($subprojects as $subproject) {
+            $subproject->spent_hours = (float) $subproject->spent_hours;
+            $subproject->spent_costs = (float) $subproject->spent_costs;
+            $subproject->time_cost   = round($subproject->spent_hours * (float) $subproject->hourly_rate, 2);
+            $subproject->total_cost  = round($subproject->time_cost + $subproject->spent_costs, 2);
+        }
+
+        return $subprojects;
     }
 
     public function getTotals($pk = null)
     {
-        $pk = (int) ($pk ?: $this->getState('projectsummary.id'));
+        $subprojects = $this->getSubprojects($pk);
 
-        $empty = (object) ['total_hours' => 0, 'total_costs' => 0, 'total_time_cost' => 0];
+        $totals = (object) [
+            'total_hours'     => 0.0,
+            'total_costs'     => 0.0,
+            'total_time_cost' => 0.0,
+            'grand_total'     => 0.0,
+        ];
 
-        if (empty($pk)) {
-            return $empty;
+        foreach ($subprojects as $subproject) {
+            $totals->total_hours     += $subproject->spent_hours;
+            $totals->total_costs     += $subproject->spent_costs;
+            $totals->total_time_cost += $subproject->time_cost;
         }
 
-        $db    = $this->getDatabase();
-        $query = $db->getQuery(true);
-
-        $query->select(
-            [
-                'COALESCE(SUM(CASE WHEN ' . $db->quoteName('c.status') . ' IN (' . $db->quote('ended') . ',' . $db->quote('validated') . ') THEN TIMESTAMPDIFF(MINUTE, ' . $db->quoteName('c.start_time') . ', COALESCE(' . $db->quoteName('c.end_time') . ', NOW())) + ' . $db->quoteName('c.adjustment') . ' ELSE 0 END), 0) AS ' . $db->quoteName('total_minutes'),
-                'COALESCE(SUM(CASE WHEN ' . $db->quoteName('e.status') . ' IN (' . $db->quote('new') . ',' . $db->quote('validated') . ') THEN ' . $db->quoteName('e.amount') . ' ELSE 0 END), 0) AS ' . $db->quoteName('total_costs'),
-                'COALESCE(SUM(CASE WHEN ' . $db->quoteName('c.status') . ' IN (' . $db->quote('ended') . ',' . $db->quote('validated') . ') THEN ((TIMESTAMPDIFF(MINUTE, ' . $db->quoteName('c.start_time') . ', COALESCE(' . $db->quoteName('c.end_time') . ', NOW())) + ' . $db->quoteName('c.adjustment') . ') * ' . $db->quoteName('s.hourly_rate') . ' / 60) ELSE 0 END), 0) AS ' . $db->quoteName('total_time_cost'),
-            ]
-        )
-            ->from($db->quoteName('#__kjeholtbusiness_subprojects', 's'))
-            ->join(
-                'LEFT',
-                $db->quoteName('#__kjeholtbusiness_timecards', 'c'),
-                $db->quoteName('c.subproject_id') . ' = ' . $db->quoteName('s.id')
-            )
-            ->join(
-                'LEFT',
-                $db->quoteName('#__kjeholtbusiness_expenses', 'e'),
-                $db->quoteName('e.subproject_id') . ' = ' . $db->quoteName('s.id')
-            )
-            ->where($db->quoteName('s.project_id') . ' = ' . $pk);
-
-        $db->setQuery($query);
-
-        $totals = $db->loadObject();
-
-        if (!$totals) {
-            return $empty;
-        }
-
-        $totals->total_hours = round($totals->total_minutes / 60, 2);
+        $totals->total_hours     = round($totals->total_hours, 2);
+        $totals->total_costs     = round($totals->total_costs, 2);
+        $totals->total_time_cost = round($totals->total_time_cost, 2);
+        $totals->grand_total     = round($totals->total_time_cost + $totals->total_costs, 2);
 
         return $totals;
     }
