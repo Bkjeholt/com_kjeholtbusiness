@@ -206,8 +206,10 @@ class CompanyModel extends FormModel
         );
 
         // Rebuild the nested-set tree so lft/rgt stay consistent
-        \Joomla\CMS\Access\Access::clearCache();
         $table = \Joomla\CMS\Table\Table::getInstance('Usergroup');
         $table->rebuild();
+
+        // Flush the cached access rules so new groups take effect immediately
+        \Joomla\CMS\Access\Access::clearStatics();
     }
 }
