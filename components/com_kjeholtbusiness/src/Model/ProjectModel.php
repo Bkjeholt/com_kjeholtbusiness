@@ -267,9 +267,25 @@ class ProjectModel extends FormModel
                 
                 break;
             default:
-                Log::add('ProjectModel->item default', Log::DEBUG, 'com_kjeholtbusiness');
-                
-                ;
+                $projectId = (int) Factory::getApplication()->input->getInt('id', 0);
+
+                if (!$projectId) {
+                    Log::add('ProjectModel->item default no id provided', Log::DEBUG, 'com_kjeholtbusiness');
+                    return null;
+                }
+
+                $query = $db->getQuery(true);
+                $query
+                    ->select('a.*')
+                    ->from($db->quoteName('#__kjeholtbusiness_projects', 'a'))
+                    ->where($db->quoteName('a.id') . ' = :id')
+                    ->bind(':id', $projectId, \Joomla\Database\ParameterType::INTEGER);
+
+                $db->setQuery($query);
+                $projectResultObject = $db->loadObject();
+                Log::add('ProjectModel->item default projectId=' . $projectId, Log::DEBUG, 'com_kjeholtbusiness');
+
+                return $projectResultObject;
             break;
         }
 
