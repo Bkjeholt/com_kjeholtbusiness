@@ -9,6 +9,7 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\CompanyAcl;
@@ -31,6 +32,7 @@ use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\CompanyAcl;
                     <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_COMPANY_CITY'); ?></th>
                     <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_COMPANY_EMAIL'); ?></th>
                     <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_COMPANY_PHONE'); ?></th>
+                    <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>
@@ -45,10 +47,24 @@ use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\CompanyAcl;
                         <td><?php echo $this->escape($item->city ?? ''); ?></td>
                         <td><?php echo $this->escape($item->email ?? ''); ?></td>
                         <td><?php echo $this->escape($item->phone ?? ''); ?></td>
+                        <td>
+                            <?php if (CompanyAcl::isSuiteSuperAdmin()) : ?>
+                                <form action="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=companies'); ?>"
+                                      method="post" class="d-inline"
+                                      onsubmit="return confirm('<?php echo Text::_('COM_KJEHOLTBUSINESS_COMPANY_CONFIRM_DELETE'); ?>');">
+                                    <input type="hidden" name="task" value="company.delete" />
+                                    <input type="hidden" name="id" value="<?php echo (int) $item->id; ?>" />
+                                    <?php echo HTMLHelper::_('form.token'); ?>
+                                    <button type="submit" class="btn btn-sm btn-danger">
+                                        <?php echo Text::_('JACTION_DELETE'); ?>
+                                    </button>
+                                </form>
+                            <?php endif; ?>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
                 <?php if (empty($this->items)) : ?>
-                    <tr><td colspan="5"><?php echo Text::_('COM_KJEHOLTBUSINESS_COMPANIES_EMPTY'); ?></td></tr>
+                    <tr><td colspan="6"><?php echo Text::_('COM_KJEHOLTBUSINESS_COMPANIES_EMPTY'); ?></td></tr>
                 <?php endif; ?>
             </tbody>
         </table>
