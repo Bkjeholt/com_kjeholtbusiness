@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fieldset name="invoiceFieldset">
+        <field name="id" type="hidden" />
+        <field name="invoice_number" type="text" label="COM_KJEHOLTBUSINESS_INVOICES_NUMBER" size="20" />
+        <field name="customer_id" type="sql" label="COM_KJEHOLTBUSINESS_INVOICES_CUSTOMER"
+               query="SELECT id, name FROM #__kjeholtbusiness_customers ORDER BY name"
+               key_field="id" value_field="name" required="true" />
+        <field name="project_id" type="sql" label="COM_KJEHOLTBUSINESS_INVOICES_PROJECT"
+               query="SELECT id, name FROM #__kjeholtbusiness_projects ORDER BY name"
+               key_field="id" value_field="name" required="true" />
+        <field name="date" type="calendar" label="COM_KJEHOLTBUSINESS_INVOICES_DATE" format="%Y-%m-%d" />
+        <field name="due_date" type="calendar" label="COM_KJEHOLTBUSINESS_INVOICES_DUE_DATE" format="%Y-%m-%d" />
+        <field name="subprojects" type="subprojects" multiple="true"
+               label="COM_KJEHOLTBUSINESS_INVOICES_SUBPROJECTS" />
+        <field name="rot_reduction" type="radio" label="COM_KJEHOLTBUSINESS_INVOICES_ROT" default="no" filter="word">
+            <option value="no">JNO</option>
+            <option value="yes">JYES</option>
+        </field>
+        <field name="rot_percentage" type="text" label="COM_KJEHOLTBUSINESS_INVOICES_ROT_PERCENTAGE" default="30" filter="float" />
+        <field name="rut_reduction" type="radio" label="COM_KJEHOLTBUSINESS_INVOICES_RUT" default="no" filter="word">
+            <option value="no">JNO</option>
+            <option value="yes">JYES</option>
+        </field>
+        <field name="rut_percentage" type="text" label="COM_KJEHOLTBUSINESS_INVOICES_RUT_PERCENTAGE" default="50" filter="float" />
+    </fieldset>
+</form>
