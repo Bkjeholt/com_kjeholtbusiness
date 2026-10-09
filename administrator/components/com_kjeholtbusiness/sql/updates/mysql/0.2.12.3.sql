@@ -67,3 +67,6 @@ ALTER TABLE `#__kjeholtbusiness_customers`
   ADD COLUMN `ssn` VARCHAR(20) DEFAULT NULL AFTER `org_number`,
   ADD COLUMN `property_name` VARCHAR(255) DEFAULT NULL AFTER `city`,
   ADD COLUMN `property_address` VARCHAR(255) DEFAULT NULL AFTER `property_name`;
+
+ALTER TABLE `#__kjeholtbusiness_companies`
+  ADD COLUMN `deleted` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0 AFTER `iban`;

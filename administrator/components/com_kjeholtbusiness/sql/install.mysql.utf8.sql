@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS `#__kjeholtbusiness_companies` (
   `bank_name` VARCHAR(255) DEFAULT NULL,
   `bankgiro` VARCHAR(50) DEFAULT NULL,
   `iban` VARCHAR(50) DEFAULT NULL,
+  `deleted` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
   `description` TEXT,
   `acl_view_id` INT(11) UNSIGNED DEFAULT 0,
   `acl_user_id` INT(11) UNSIGNED DEFAULT 0,
