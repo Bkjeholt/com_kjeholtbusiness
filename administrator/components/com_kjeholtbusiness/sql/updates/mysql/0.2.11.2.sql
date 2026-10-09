@@ -17,3 +17,8 @@ CREATE TABLE IF NOT EXISTS `#__kjeholtbusiness_logbook` (
   KEY `idx_logbook_event_time` (`event_time`),
   KEY `idx_logbook_user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE `#__kjeholtbusiness_companies`
+  ADD COLUMN `bank_name` VARCHAR(255) DEFAULT NULL AFTER `website`,
+  ADD COLUMN `bankgiro` VARCHAR(50) DEFAULT NULL AFTER `bank_name`,
+  ADD COLUMN `iban` VARCHAR(50) DEFAULT NULL AFTER `bankgiro`;
