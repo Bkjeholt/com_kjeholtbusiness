@@ -73,6 +73,17 @@ use Joomla\CMS\HTML\HTMLHelper;
                                     </form>
                                 <?php elseif ($item->status === 'validated') : ?>
                                     <span class="badge bg-success"><?php echo Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_STATUS_VALIDATED'); ?></span>
+                                    <?php if (TimereportAcl::canUnvalidate()) : ?>
+                                    <form action="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=timereports'); ?>"
+                                          method="post" class="d-inline ms-1">
+                                        <input type="hidden" name="task" value="timereportedit.unvalidate" />
+                                        <input type="hidden" name="id" value="<?php echo (int) $item->id; ?>" />
+                                        <?php echo HTMLHelper::_('form.token'); ?>
+                                        <button type="submit" class="btn btn-warning btn-sm">
+                                            <?php echo Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_UNVALIDATE'); ?>
+                                        </button>
+                                    </form>
+                                    <?php endif; ?>
                                 <?php endif; ?>
                             </td>
                             <td>

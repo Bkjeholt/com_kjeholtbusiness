@@ -63,6 +63,14 @@ class TimereportAcl
     }
 
     /**
+     * Admin action: may revert a validated report back to ended.
+     */
+    public static function canUnvalidate(): bool
+    {
+        return (bool) Factory::getUser()->authorise('timereport.unvalidate', 'com_kjeholtbusiness');
+    }
+
+    /**
      * True when the user may see every user's reports (for list scoping).
      */
     public static function seesAll(): bool

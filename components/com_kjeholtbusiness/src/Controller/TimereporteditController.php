@@ -86,6 +86,39 @@ class TimereporteditController extends BaseController
         $this->setRedirect(Route::_('index.php?option=com_kjeholtbusiness&view=timereports', false));
     }
 
+    public function unvalidate()
+    {
+        $this->checkToken();
+
+        if (!TimereportAcl::canUnvalidate()) {
+            throw new \Exception(Text::_('JERROR_ALERTNOAUTHOR'), 403);
+        }
+
+        $app    = Factory::getApplication();
+        $userId = (int) Factory::getUser()->id;
+        $id     = (int) $app->input->getInt('id', 0);
+
+        $db    = Factory::getDbo();
+        $query = $db->getQuery(true)
+            ->update($db->quoteName('#__kjeholtbusiness_timecards'))
+            ->set($db->quoteName('status') . ' = ' . $db->quote('ended'))
+            ->set($db->quoteName('modified_by') . ' = :user_id')
+            ->where($db->quoteName('id') . ' = :id')
+            ->where($db->quoteName('status') . ' = ' . $db->quote('validated'))
+            ->bind(':user_id', $userId, ParameterType::INTEGER)
+            ->bind(':id', $id, ParameterType::INTEGER);
+
+        $db->setQuery($query)->execute();
+
+        if ($db->getAffectedRows() > 0) {
+            $app->enqueueMessage(Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_UNVALIDATED'), 'message');
+        } else {
+            $app->enqueueMessage(Text::_('COM_KJEHOLTBUSINESS_TIMEREPORTS_ERROR_UNVALIDATE'), 'warning');
+        }
+
+        $this->setRedirect(Route::_('index.php?option=com_kjeholtbusiness&view=timereports', false));
+    }
+
     public function delete()
     {
         $this->checkToken();

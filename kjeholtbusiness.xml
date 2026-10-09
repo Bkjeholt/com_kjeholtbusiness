@@ -113,6 +113,7 @@
 			<action name="timereport.edit" title="COM_KJEHOLTBUSINESS_ACTION_EDIT_TIMEREPORT" description="COM_KJEHOLTBUSINESS_ACTION_EDIT_TIMEREPORT_DESC"/>
 			<action name="timereport.delete" title="COM_KJEHOLTBUSINESS_ACTION_DELETE_TIMEREPORT" description="COM_KJEHOLTBUSINESS_ACTION_DELETE_TIMEREPORT_DESC"/>
 			<action name="timereport.view" title="COM_KJEHOLTBUSINESS_ACTION_VIEW_TIMEREPORT" description="COM_KJEHOLTBUSINESS_ACTION_VIEW_TIMEREPORT_DESC"/>
+			<action name="timereport.unvalidate" title="COM_KJEHOLTBUSINESS_ACTION_UNVALIDATE_TIMEREPORT" description="COM_KJEHOLTBUSINESS_ACTION_UNVALIDATE_TIMEREPORT_DESC"/>
         </section>
         <section name="invoice">
 			<action name="invoice.create" title="COM_KJEHOLTBUSINESS_ACTION_CREATE_INVOICE" description="COM_KJEHOLTBUSINESS_ACTION_CREATE_INVOICE_DESC"/>
