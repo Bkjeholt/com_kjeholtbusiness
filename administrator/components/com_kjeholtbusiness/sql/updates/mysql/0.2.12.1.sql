@@ -57,3 +57,8 @@ CREATE TABLE IF NOT EXISTS `#__kjeholtbusiness_invoice_subprojects` (
   KEY `idx_invsub_invoice` (`invoice_id`),
   KEY `idx_invsub_subproject` (`subproject_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE `#__kjeholtbusiness_subprojects`
+  ADD COLUMN `rot` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0 AFTER `estimated_amount_of_hours`,
+  ADD COLUMN `rut` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0 AFTER `rot`,
+  ADD COLUMN `vat` DECIMAL(5,2) NOT NULL DEFAULT 25.00 AFTER `rut`;

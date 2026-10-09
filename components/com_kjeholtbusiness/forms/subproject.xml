@@ -33,6 +33,15 @@
            default="0" 
            label="COM_KJEHOLTBUSINESS_SUBPROJECT_FIELD_ESTIMATED_HOURS_LABEL" 
            description="COM_KJEHOLTBUSINESS_SUBPROJECT_FIELD_ESTIMATED_HOURS_DESC" />
+    <field name="rot" type="radio" label="COM_KJEHOLTBUSINESS_SUBPROJECT_FIELD_ROT_LABEL" default="0" filter="integer">
+        <option value="0">JNO</option>
+        <option value="1">JYES</option>
+    </field>
+    <field name="rut" type="radio" label="COM_KJEHOLTBUSINESS_SUBPROJECT_FIELD_RUT_LABEL" default="0" filter="integer">
+        <option value="0">JNO</option>
+        <option value="1">JYES</option>
+    </field>
+    <field name="vat" type="text" label="COM_KJEHOLTBUSINESS_SUBPROJECT_FIELD_VAT_LABEL" default="25" filter="float" />
     <field name="status" type="hidden" />
 </form>
 

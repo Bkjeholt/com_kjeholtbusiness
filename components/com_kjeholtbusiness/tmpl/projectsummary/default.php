@@ -12,6 +12,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
+use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\ProjectAcl;
 ?>
 <div class="kjeholtbusiness-projectsummary">
     <h1><?php echo Text::_('COM_KJEHOLTBUSINESS_PROJECTSUMMARY_TITLE'); ?></h1>
@@ -37,6 +38,12 @@ use Joomla\CMS\Router\Route;
             </dl>
         </div>
 
+        <?php if (ProjectAcl::canEditProject($this->item)) : ?>
+            <a class="btn btn-primary mb-2" href="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=project&layout=edit&id=' . (int) $this->item->id); ?>">
+                <?php echo Text::_('JACTION_EDIT'); ?> <?php echo Text::_('COM_KJEHOLTBUSINESS_PROJECT_TITLE'); ?>
+            </a>
+        <?php endif; ?>
+
         <div class="project-subprojects">
             <h3><?php echo Text::_('COM_KJEHOLTBUSINESS_SUBPROJECTS_TITLE'); ?></h3>
             <div class="table-responsive">
@@ -59,6 +66,11 @@ use Joomla\CMS\Router\Route;
                                     <a href="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=subproject&id=' . (int) $subproject->id); ?>">
                                         <?php echo $this->escape($subproject->name); ?>
                                     </a>
+                                    <?php if (ProjectAcl::canEditSubproject($subproject)) : ?>
+                                        <a class="btn btn-sm btn-outline-secondary ms-1" href="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=subproject&layout=edit&id=' . (int) $subproject->id); ?>">
+                                            <?php echo Text::_('JACTION_EDIT'); ?>
+                                        </a>
+                                    <?php endif; ?>
                                 </td>
                                 <td><?php echo Text::_('COM_KJEHOLTBUSINESS_SUBPROJECT_STATUS_' . strtoupper($subproject->status)); ?></td>
                                 <td><?php echo $subproject->start_date; ?></td>

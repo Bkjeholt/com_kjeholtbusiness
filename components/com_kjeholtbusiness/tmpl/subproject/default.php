@@ -36,6 +36,12 @@ use Joomla\CMS\Router\Route;
                 <dd><?php echo (int) $this->item->estimated_amount_of_hours; ?></dd>
                 <dt><?php echo Text::_('COM_KJEHOLTBUSINESS_SUBPROJECTS_STATUS'); ?></dt>
                 <dd><?php echo Text::_('COM_KJEHOLTBUSINESS_SUBPROJECT_STATUS_' . strtoupper($this->item->status)); ?></dd>
+                <dt><?php echo Text::_('COM_KJEHOLTBUSINESS_SUBPROJECT_FIELD_ROT_LABEL'); ?></dt>
+                <dd><?php echo $this->item->rot ? Text::_('JYES') : Text::_('JNO'); ?></dd>
+                <dt><?php echo Text::_('COM_KJEHOLTBUSINESS_SUBPROJECT_FIELD_RUT_LABEL'); ?></dt>
+                <dd><?php echo $this->item->rut ? Text::_('JYES') : Text::_('JNO'); ?></dd>
+                <dt><?php echo Text::_('COM_KJEHOLTBUSINESS_SUBPROJECT_FIELD_VAT_LABEL'); ?></dt>
+                <dd><?php echo number_format((float) ($this->item->vat ?? 25), 2, ',', ' '); ?>%</dd>
             </dl>
         </div>
 
