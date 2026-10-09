@@ -13,7 +13,6 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
-use Joomla\CMS\Factory;
 ?>
 <?php $statusFilter = (string) Factory::getApplication()->getUserState('com_kjeholtbusiness.invoices.status', ''); ?>
 <div class="kjeholtbusiness-invoices">
