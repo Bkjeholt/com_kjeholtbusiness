@@ -43,6 +43,44 @@ class SubprojectModel extends FormModel
         return $this->item;
     }
 
+    public function save(array $data): bool
+    {
+        $db     = $this->getDatabase();
+        $userId = (int) Factory::getUser()->id;
+        $id     = (int) ($data['id'] ?? 0);
+
+        if (!$id) {
+            $this->setError('No subproject id provided.');
+            return false;
+        }
+
+        $existing = $this->getItem($id);
+
+        if (!$existing) {
+            $this->setError('Subproject not found.');
+            return false;
+        }
+
+        $row = new \stdClass();
+        $row->id          = $id;
+        $row->name        = (string) ($data['name'] ?? $existing->name);
+        $row->description = (string) ($data['description'] ?? '');
+        $row->start_date  = (string) ($data['start_date'] ?? '');
+        $row->hourly_rate = (float) ($data['hourly_rate'] ?? 0);
+        $row->estimated_amount_of_hours = (int) ($data['estimated_amount_of_hours'] ?? 0);
+        $row->rot = (int) ($data['rot'] ?? 0) ? 1 : 0;
+        $row->rut = (int) ($data['rut'] ?? 0) ? 1 : 0;
+        $row->vat = (float) ($data['vat'] ?? 25);
+        $row->modified_by = $userId;
+
+        try {
+            return $db->updateObject('#__kjeholtbusiness_subprojects', $row, 'id');
+        } catch (\Exception $e) {
+            $this->setError($e->getMessage());
+            return false;
+        }
+    }
+
     public function getForm($data = [], $loadData = true)
     {
         $form = $this->loadForm(
