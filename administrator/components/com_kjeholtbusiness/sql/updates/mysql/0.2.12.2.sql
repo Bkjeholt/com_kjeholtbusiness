@@ -62,3 +62,8 @@ ALTER TABLE `#__kjeholtbusiness_subprojects`
   ADD COLUMN `rot` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0 AFTER `estimated_amount_of_hours`,
   ADD COLUMN `rut` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0 AFTER `rot`,
   ADD COLUMN `vat` DECIMAL(5,2) NOT NULL DEFAULT 25.00 AFTER `rut`;
+
+ALTER TABLE `#__kjeholtbusiness_customers`
+  ADD COLUMN `ssn` VARCHAR(20) DEFAULT NULL AFTER `org_number`,
+  ADD COLUMN `property_name` VARCHAR(255) DEFAULT NULL AFTER `city`,
+  ADD COLUMN `property_address` VARCHAR(255) DEFAULT NULL AFTER `property_name`;
