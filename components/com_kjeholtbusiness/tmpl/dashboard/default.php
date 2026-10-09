@@ -12,6 +12,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
+use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\BssAcl;
 use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\CompanyAcl;
 use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\LogbookAcl;
 use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\TimereportAcl;
@@ -57,6 +58,13 @@ $user = Factory::getUser();
                                 <?php echo Text::_('COM_KJEHOLTBUSINESS_PROJECTS_TITLE'); ?>
                             </a>
                         </li>
+                        <?php if (BssAcl::hasAccessAny('project:edit')) : ?>
+                        <li class="list-group-item">
+                            <a href="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=project&layout=create'); ?>">
+                                <?php echo Text::_('COM_KJEHOLTBUSINESS_PROJECTS_NEW'); ?>
+                            </a>
+                        </li>
+                        <?php endif; ?>
                         <li class="list-group-item">
                             <a href="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=subprojects'); ?>">
                                 <?php echo Text::_('COM_KJEHOLTBUSINESS_SUBPROJECTS_TITLE'); ?>
