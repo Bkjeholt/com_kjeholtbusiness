@@ -8,6 +8,7 @@ use Joomla\CMS\Installer\Installer;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Table\Table;
+use Joomla\CMS\Access\UserGroups;
 
 
 class Com_KjeholtbusinessInstallerScript
@@ -169,24 +170,14 @@ class Com_KjeholtbusinessInstallerScript
         //   UG: KjeEng-BSS:<CompanyName>:Employee
         //   UG: KjeEng-BSS:<CompanyName>:Visitor
         // ------------------------------------------------------------------
-        $companyName = 'Företaget Test AB';
-
+        // Only the structural groups are created - no companies or other
+        // predefined content. Per-company groups are created when a company
+        // is added by a suite SuperAdmin.
         $bssRootId = $this->createUserGroup('UG: KjeEng-BSS', 1);
         Log::add('UserGroup "UG: KjeEng-BSS" skapad/hittad med id=' . $bssRootId, Log::DEBUG, 'com_kjeholtbusiness');
 
         $suiteSuperAdminId = $this->createUserGroup('UG: KjeEng-BSS:SuperAdmin', $bssRootId);
         Log::add('UserGroup "UG: KjeEng-BSS:SuperAdmin" skapad/hittad med id=' . $suiteSuperAdminId, Log::DEBUG, 'com_kjeholtbusiness');
-
-        $companyGroupId = $this->createUserGroup('UG: KjeEng-BSS:' . $companyName, $bssRootId);
-        $companyId = $this->createCompany($companyName);
-        Log::add('UserGroup "UG: KjeEng-BSS:' . $companyName . '" skapad/hittad med id=' . $companyGroupId, Log::DEBUG, 'com_kjeholtbusiness');
-
-        $companyProfiles = ['SuperAdmin', 'Admin', 'Economy', 'Employee', 'Visitor'];
-
-        foreach ($companyProfiles as $profile) {
-            $groupId = $this->createUserGroup('UG: KjeEng-BSS:' . $companyName . ':' . $profile, $companyGroupId);
-            Log::add('UserGroup "UG: KjeEng-BSS:' . $companyName . ':' . $profile . '" skapad/hittad med id=' . $groupId, Log::DEBUG, 'com_kjeholtbusiness');
-        }
 
         Log::add('Installationen slutförd.', Log::DEBUG, 'com_kjeholtbusiness');
         $app->enqueueMessage('Installationen av com_kjeholtbusiness slutförd.', 'message');
@@ -253,9 +244,50 @@ class Com_KjeholtbusinessInstallerScript
             }
         }
         
-        // Uninstall av ACL-grupper och UserGroups kan gör
+        // Remove the component's user groups (UG: KjeEng-BSS*) via the API,
+        // keeping the nested-set tree (lft/rgt) consistent
+        $this->removeUserGroupsByPattern('UG: KjeEng-BSS%');
+        $this->removeUserGroupsByPattern('KjeBus: %');
         
         Log::add('Avinstallationen av com_kjeholtbusiness slutförd.', Log::INFO, 'com_kjeholtbusiness');
         $app->enqueueMessage('Avinstallationen av com_kjeholtbusiness slutförd.', 'message');
+    }
+
+    /**
+     * Remove all user groups whose title matches the given LIKE pattern,
+     * children first, using the UserGroups API to keep the tree consistent.
+     */
+    private function removeUserGroupsByPattern(string $pattern): void
+    {
+        $db    = Factory::getDbo();
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('id'))
+            ->from($db->quoteName('#__usergroups'))
+            ->where($db->quoteName('title') . ' LIKE :pattern')
+            ->bind(':pattern', $pattern);
+
+        $groupIds = $db->setQuery($query)->loadColumn() ?: [];
+
+        if (!$groupIds) {
+            return;
+        }
+
+        // Delete deepest groups first (higher rgt = deeper or later; sort by rgt DESC)
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('id'))
+            ->from($db->quoteName('#__usergroups'))
+            ->where($db->quoteName('id') . ' IN (' . implode(',', array_map('intval', $groupIds)) . ')')
+            ->order($db->quoteName('rgt') . ' DESC');
+
+        $ordered = $db->setQuery($query)->loadColumn() ?: [];
+
+        foreach ($ordered as $groupId) {
+            try {
+                UserGroups::delete((int) $groupId);
+                Log::add('UserGroup med id=' . $groupId . ' borttagen.', Log::DEBUG, 'com_kjeholtbusiness');
+            } catch (\Throwable $e) {
+                Log::add('Kunde inte ta bort UserGroup id=' . $groupId . ': ' . $e->getMessage(), Log::ERROR, 'com_kjeholtbusiness');
+            }
+        }
     }
 }
