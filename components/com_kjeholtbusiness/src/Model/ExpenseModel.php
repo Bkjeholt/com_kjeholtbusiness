@@ -70,6 +70,12 @@ class ExpenseModel extends FormModel
         $row->created_by   = $userId;
 
         $id = (int) ($data['id'] ?? 0);
+        $previousStatus = null;
+
+        if ($id > 0) {
+            $existingBeforeSave = $this->getItem($id);
+            $previousStatus = $existingBeforeSave->status ?? null;
+        }
 
         try {
             if ($id > 0) {
@@ -92,6 +98,19 @@ class ExpenseModel extends FormModel
                 if (!$db->insertObject('#__kjeholtbusiness_expenses', $row, 'id')) {
                     throw new \RuntimeException($db->getError());
                 }
+                $id = (int) $row->id;
+            }
+
+            if ($previousStatus !== null && $previousStatus !== $row->status) {
+                Logbook::log(
+                    'expense.status_changed',
+                    sprintf(
+                        'Expense #%d changed state from %s to %s.',
+                        $id,
+                        $previousStatus,
+                        $row->status
+                    )
+                );
             }
         } catch (\Throwable $e) {
             $this->setError($e->getMessage());
