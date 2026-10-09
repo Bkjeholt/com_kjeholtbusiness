@@ -60,28 +60,30 @@ class ProjectModel extends FormModel
     protected function loadFormData()
     {
         Log::add('ProjectModel->loadFormData ', Log::DEBUG, 'com_kjeholtbusiness');
-        
-        $projectId = 0;
-        $companyId = 1;
-        
-        
-        // Check the session for previously entered form data.
-        
-        $data = Factory::getApplication()->getUserState(
-            'com_kjeholtbusiness.project_create',
-            [
-                "id" => null,
-                "name" => null,
-                "property_name" => null,
-                "project_status" => "preliminary",
-                "start_date" => Factory::getDate()->format('Y-m-d'),
-                "company_id" => $companyId,
-                "subproject_selector" => "1",
-                "subproject_subforms" => [],
-            ]
-        );
 
-        return $data;
+        $sessionData = Factory::getApplication()->getUserState('com_kjeholtbusiness.project_create');
+
+        if ($sessionData) {
+            return $sessionData;
+        }
+
+        // Fall back to the loaded project item (edit view)
+        $item = $this->getItem();
+
+        if ($item) {
+            return (array) $item;
+        }
+
+        return [
+            "id" => null,
+            "name" => null,
+            "property_name" => null,
+            "project_status" => "preliminary",
+            "start_date" => Factory::getDate()->format('Y-m-d'),
+            "company_id" => 1,
+            "subproject_selector" => "1",
+            "subproject_subforms" => [],
+        ];
     }
 
     private function getTimeReportsForSubProject($subProjectId,$costPerHour = 1) {
