@@ -125,6 +125,74 @@ class CompanyModel extends FormModel
     }
 
     /**
+     * Delete a company and its user groups (UG: KjeEng-BSS:<CompanyName>*).
+     */
+    public function delete(int $id): bool
+    {
+        $db = $this->getDatabase();
+
+        $item = $this->getItem($id);
+
+        if (!$item) {
+            $this->setError('Company not found.');
+            return false;
+        }
+
+        try {
+            // Remove the company's user groups first (children before the company group)
+            $this->deleteCompanyUserGroups((string) $item->name);
+
+            $query = $db->getQuery(true)
+                ->delete($db->quoteName('#__kjeholtbusiness_companies'))
+                ->where($db->quoteName('id') . ' = :id')
+                ->bind(':id', $id, ParameterType::INTEGER);
+            $db->setQuery($query)->execute();
+
+            \KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\Logbook::log(
+                'company.deleted',
+                sprintf('Company #%d (%s) was deleted.', $id, $item->name)
+            );
+
+            return true;
+        } catch (\Exception $e) {
+            $this->setError($e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Remove the UG: KjeEng-BSS:<CompanyName> group and its children,
+     * deepest first, using the UserGroups API to keep the tree consistent.
+     */
+    private function deleteCompanyUserGroups(string $companyName): void
+    {
+        $db    = $this->getDatabase();
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('id'))
+            ->from($db->quoteName('#__usergroups'))
+            ->where($db->quoteName('title') . ' LIKE :pattern')
+            ->bind(':pattern', 'UG: KjeEng-BSS:' . $companyName . '%');
+
+        $groupIds = $db->setQuery($query)->loadColumn() ?: [];
+
+        if (!$groupIds) {
+            return;
+        }
+
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('id'))
+            ->from($db->quoteName('#__usergroups'))
+            ->where($db->quoteName('id') . ' IN (' . \implode(',', \array_map('intval', $groupIds)) . ')')
+            ->order($db->quoteName('rgt') . ' DESC');
+
+        $ordered = $db->setQuery($query)->loadColumn() ?: [];
+
+        foreach ($ordered as $groupId) {
+            \Joomla\CMS\Access\UserGroups::delete((int) $groupId);
+        }
+    }
+
+    /**
      * Create the UG: KjeEng-BSS:<CompanyName> group hierarchy for a new company.
      */
     private function createCompanyUserGroups(string $companyName): void

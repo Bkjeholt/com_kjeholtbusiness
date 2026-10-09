@@ -12,6 +12,36 @@ use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\Logbook;
 
 class CompanyController extends BaseController
 {
+    public function delete()
+    {
+        $this->checkToken();
+
+        if (!CompanyAcl::isSuiteSuperAdmin()) {
+            throw new \Exception(Text::_('JERROR_ALERTNOAUTHOR'), 403);
+        }
+
+        $app = Factory::getApplication();
+        $id  = (int) $app->input->getInt('id', 0);
+
+        $model = $this->getModel('Company');
+        $item  = $model->getItem($id);
+
+        if (!$item) {
+            $app->enqueueMessage(Text::_('COM_KJEHOLTBUSINESS_COMPANY_NOT_FOUND'), 'warning');
+            $this->setRedirect(Route::_('index.php?option=com_kjeholtbusiness&view=companies', false));
+            return false;
+        }
+
+        if ($model->delete($id)) {
+            $app->enqueueMessage(Text::_('COM_KJEHOLTBUSINESS_COMPANY_DELETED'), 'message');
+        } else {
+            $app->enqueueMessage($model->getError(), 'error');
+        }
+
+        $this->setRedirect(Route::_('index.php?option=com_kjeholtbusiness&view=companies', false));
+        return true;
+    }
+
     public function save()
     {
         $this->checkToken();
