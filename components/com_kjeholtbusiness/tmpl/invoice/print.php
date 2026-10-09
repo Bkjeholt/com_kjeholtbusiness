@@ -87,7 +87,7 @@ use Joomla\CMS\Factory;
 
     <table class="totals">
         <tr>
-            <td><?php echo Text::_('COM_KJEHOLTBUSINESS_INVOICES_TOTAL'); ?></td>
+            <td><?php echo Text::_('COM_KJEHOLTBUSINESS_INVOICES_TOTAL'); ?> (<?php echo Text::_('COM_KJEHOLTBUSINESS_INVOICES_EXCL_VAT'); ?>)</td>
             <td class="text-end"><?php echo number_format((float) $this->item->total_amount, 2, ',', ' '); ?></td>
         </tr>
         <?php if ((float) $this->item->rot_amount > 0) : ?>
@@ -102,12 +102,29 @@ use Joomla\CMS\Factory;
             <td class="text-end">- <?php echo number_format((float) $this->item->rut_amount, 2, ',', ' '); ?></td>
         </tr>
         <?php endif; ?>
-        <tr class="grand">
-            <td><?php echo Text::_('COM_KJEHOLTBUSINESS_PROJECTSUMMARY_GRAND_TOTAL'); ?></td>
+        <tr>
+            <td><?php echo Text::_('COM_KJEHOLTBUSINESS_PROJECTSUMMARY_GRAND_TOTAL'); ?> (<?php echo Text::_('COM_KJEHOLTBUSINESS_INVOICES_EXCL_VAT'); ?>)</td>
             <td class="text-end">
                 <?php
-                $toPay = (float) $this->item->total_amount - (float) $this->item->rot_amount - (float) $this->item->rut_amount;
-                echo number_format($toPay, 2, ',', ' ');
+                $toPayExcl = (float) $this->item->total_amount - (float) $this->item->rot_amount - (float) $this->item->rut_amount;
+                echo number_format($toPayExcl, 2, ',', ' ');
+                ?>
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo Text::_('COM_KJEHOLTBUSINESS_INVOICES_VAT'); ?> (25%)</td>
+            <td class="text-end">
+                <?php
+                $vat = round($toPayExcl * 0.25, 2);
+                echo number_format($vat, 2, ',', ' ');
+                ?>
+            </td>
+        </tr>
+        <tr class="grand">
+            <td><?php echo Text::_('COM_KJEHOLTBUSINESS_PROJECTSUMMARY_GRAND_TOTAL'); ?> (<?php echo Text::_('COM_KJEHOLTBUSINESS_INVOICES_INCL_VAT'); ?>)</td>
+            <td class="text-end">
+                <?php
+                echo number_format($toPayExcl + $vat, 2, ',', ' ');
                 ?>
             </td>
         </tr>
