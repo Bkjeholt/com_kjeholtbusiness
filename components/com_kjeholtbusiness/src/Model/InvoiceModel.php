@@ -65,6 +65,42 @@ class InvoiceModel extends FormModel
         return \array_map('intval', $db->loadColumn() ?: []);
     }
 
+    public function getSubprojectLines(int $invoiceId): array
+    {
+        $db    = $this->getDatabase();
+        $query = $db->getQuery(true);
+
+        $validatedCards = $db->quoteName('tc.status') . ' IN (' . $db->quote('validated') . ', ' . $db->quote('froozen') . ')';
+        $validatedExp   = $db->quoteName('e.status') . ' IN (' . $db->quote('validated') . ', ' . $db->quote('froozen') . ')';
+
+        $query->select(
+            [
+                $db->quoteName('sp.id'),
+                $db->quoteName('sp.name'),
+                $db->quoteName('sp.hourly_rate'),
+                'COALESCE(SUM(TIMESTAMPDIFF(MINUTE, tc.start_time, tc.end_time) + tc.adjustment) / 60, 0) AS ' . $db->quoteName('hours'),
+                'COALESCE((SELECT SUM(e.amount) FROM #__kjeholtbusiness_expenses AS e WHERE e.subproject_id = ' . $db->quoteName('sp.id') . ' AND ' . $validatedExp . '), 0) AS ' . $db->quoteName('expense_amount'),
+            ]
+        )
+            ->from($db->quoteName('#__kjeholtbusiness_invoice_subprojects', 'is'))
+            ->join('INNER', $db->quoteName('#__kjeholtbusiness_subprojects', 'sp'), $db->quoteName('sp.id') . ' = ' . $db->quoteName('is.subproject_id'))
+            ->join('LEFT', $db->quoteName('#__kjeholtbusiness_timecards', 'tc'), $db->quoteName('tc.subproject_id') . ' = ' . $db->quoteName('sp.id') . ' AND ' . $validatedCards)
+            ->where($db->quoteName('is.invoice_id') . ' = :invoice_id')
+            ->bind(':invoice_id', $invoiceId, ParameterType::INTEGER)
+            ->group($db->quoteName('sp.id'));
+
+        $db->setQuery($query);
+
+        $lines = $db->loadObjectList() ?: [];
+
+        foreach ($lines as $line) {
+            $line->time_cost  = round((float) $line->hours * (float) $line->hourly_rate, 2);
+            $line->line_total = round($line->time_cost + (float) $line->expense_amount, 2);
+        }
+
+        return $lines;
+    }
+
     public function getForm($data = [], $loadData = true)
     {
         \Joomla\CMS\Form\Form::addFieldPath(JPATH_SITE . '/components/com_kjeholtbusiness/src/Field');

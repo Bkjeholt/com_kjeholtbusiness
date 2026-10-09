@@ -11,6 +11,7 @@ class HtmlView extends BaseHtmlView
 {
     protected $item;
     protected $form;
+    protected $lines;
 
     public function display($tpl = null)
     {
@@ -24,6 +25,10 @@ class HtmlView extends BaseHtmlView
 
         $this->item = $this->get('Item');
         $this->form = $this->get('Form');
+
+        if ($this->getLayout() === 'print') {
+            $this->lines = $this->get('SubprojectLines');
+        }
 
         return parent::display($tpl);
     }
