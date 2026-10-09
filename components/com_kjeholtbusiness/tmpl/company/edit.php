@@ -18,6 +18,7 @@ use Joomla\CMS\Router\Route;
 
     <form action="<?php echo Route::_('index.php?option=com_kjeholtbusiness&task=company.save'); ?>"
           method="post" name="adminForm" id="company-form" class="form-validate">
+        <?php echo $this->form->getInput('id'); ?>
         <div class="form-horizontal">
             <?php foreach (['name', 'org_number', 'address', 'postal_code', 'city', 'phone', 'website', 'email', 'bank_name', 'bankgiro', 'iban'] as $field) : ?>
                 <div class="control-group">
