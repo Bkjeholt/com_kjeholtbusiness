@@ -6,17 +6,19 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 
 /**
- * ACL helper for the logbook.
+ * Logbook ACL based on the KjeEng-BSS access levels.
  *
- * Company admins (members of a "UG: KjeEng-BSS:<company>:Admin" user group)
- * may view and comment all entries; regular users only see and may
- * comment their own entries.
+ * Suite SuperAdmins and company Admins (level "Admin") may view
+ * and comment all entries for their company; other users only
+ * see and may comment their own entries.
+ *
+ * NOTE: per your matrix, the logbook cannot be modified - the
+ * comment field is the only editable part and stays restricted.
  */
 class LogbookAcl
 {
     /**
-     * True when the current user is a company admin
-     * (member of any "UG: KjeEng-BSS:<company>:Admin" group).
+     * True when the user holds any company "Admin" level (or is suite SuperAdmin).
      */
     public static function isCompanyAdmin(): bool
     {
@@ -26,31 +28,11 @@ class LogbookAcl
             return false;
         }
 
-        $groupIds = $user->getAuthorisedGroups();
-
-        if (!$groupIds) {
-            return false;
+        if (CompanyAcl::mayListAllCompanies()) {
+            return true;
         }
 
-        $db    = Factory::getDbo();
-        $query = $db->getQuery(true)
-            ->select($db->quoteName('id'))
-            ->from($db->quoteName('#__usergroups'))
-            ->where($db->quoteName('title') . ' LIKE ' . $db->quote('UG: KjeEng-BSS:%:Admin'));
-
-        $adminGroupIds = $db->setQuery($query)->loadColumn();
-
-        if (!$adminGroupIds) {
-            return false;
-        }
-
-        foreach ($groupIds as $groupId) {
-            if (\in_array((int) $groupId, \array_map('intval', $adminGroupIds), true)) {
-                return true;
-            }
-        }
-
-        return false;
+        return BssAcl::hasAccessAny('Admin');
     }
 
     /**

@@ -4,52 +4,53 @@ namespace KjeholtEngineering\Component\KjeholtBusiness\Site\Helper;
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
+use Joomla\Database\ParameterType;
 
 /**
- * Project/subproject ACL helper.
+ * Project/subproject ACL based on the KjeEng-BSS access levels.
  *
- * A user may modify a project or its subprojects when they:
- *  - created the record (owner), or
- *  - are member of the "UG: KjeEng-BSS:<Company>:Admin" usergroup for the
- *    company owning the project.
+ * project:edit - UG <Company>:Admin, :Economy (+ company/ suite SuperAdmin)
+ * project:view - UG <Company>:Admin, :Economy, :Employee, :Visitor
+ *
+ * The owning company of a project is looked up via projects.company_id.
+ * A user may always edit a project/subproject they created (owner).
  */
 class ProjectAcl
 {
-    private static function userInGroupLike(string $pattern): bool
+    private static function companyNameForProject(int $projectId): ?string
     {
-        $user = Factory::getUser();
-
-        if ($user->guest) {
-            return false;
-        }
-
         $db    = Factory::getDbo();
         $query = $db->getQuery(true)
-            ->select($db->quoteName('id'))
-            ->from($db->quoteName('#__usergroups'))
-            ->where($db->quoteName('title') . ' LIKE :title')
-            ->bind(':title', $pattern);
+            ->select($db->quoteName('c.name'))
+            ->from($db->quoteName('#__kjeholtbusiness_projects', 'p'))
+            ->join('LEFT', $db->quoteName('#__kjeholtbusiness_companies', 'c'), $db->quoteName('c.id') . ' = ' . $db->quoteName('p.company_id'))
+            ->where($db->quoteName('p.id') . ' = :pid')
+            ->bind(':pid', $projectId, ParameterType::INTEGER);
 
-        $groupIds = $db->setQuery($query)->loadColumn() ?: [];
+        $name = $db->setQuery($query)->loadResult();
 
-        if (!$groupIds) {
-            return false;
-        }
+        return $name ?: null;
+    }
 
-        $userGroups = \array_map('intval', $user->getAuthorisedGroups());
+    private static function companyNameForSubproject(int $subprojectId): ?string
+    {
+        $db    = Factory::getDbo();
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('c.name'))
+            ->from($db->quoteName('#__kjeholtbusiness_subprojects', 'sp'))
+            ->join('LEFT', $db->quoteName('#__kjeholtbusiness_projects', 'p'), $db->quoteName('p.id') . ' = ' . $db->quoteName('sp.project_id'))
+            ->join('LEFT', $db->quoteName('#__kjeholtbusiness_companies', 'c'), $db->quoteName('c.id') . ' = ' . $db->quoteName('p.company_id'))
+            ->where($db->quoteName('sp.id') . ' = :sid')
+            ->bind(':sid', $subprojectId, ParameterType::INTEGER);
 
-        foreach ($groupIds as $groupId) {
-            if (\in_array((int) $groupId, $userGroups, true)) {
-                return true;
-            }
-        }
+        $name = $db->setQuery($query)->loadResult();
 
-        return false;
+        return $name ?: null;
     }
 
     /**
      * May the current user modify the given project?
-     * Owner (created_by) or Project - Admin group member.
+     * Owner (created_by) or the company's project:edit level.
      */
     public static function canEditProject(?object $project): bool
     {
@@ -63,12 +64,14 @@ class ProjectAcl
             return true;
         }
 
-        return self::userInGroupLike('UG: KjeEng-BSS:%:Admin');
+        $companyName = self::companyNameForProject((int) $project->id);
+
+        return $companyName !== null && BssAcl::hasAccess($companyName, 'project:edit');
     }
 
     /**
      * May the current user modify the given subproject?
-     * Owner of the subproject or its parent project, or Project - Admin.
+     * Owner of the subproject or its parent project, or project:edit.
      */
     public static function canEditSubproject(?object $subproject): bool
     {
@@ -83,14 +86,14 @@ class ProjectAcl
             return true;
         }
 
-        // Fall back to the parent project owner
+        // Parent project owner
         if (!empty($subproject->project_id)) {
             $db    = Factory::getDbo();
             $query = $db->getQuery(true)
                 ->select($db->quoteName('created_by'))
                 ->from($db->quoteName('#__kjeholtbusiness_projects'))
                 ->where($db->quoteName('id') . ' = :pid')
-                ->bind(':pid', (int) $subproject->project_id, \Joomla\Database\ParameterType::INTEGER);
+                ->bind(':pid', (int) $subproject->project_id, ParameterType::INTEGER);
             $projectOwner = $db->setQuery($query)->loadResult();
 
             if ((int) $projectOwner === (int) $user->id && (int) $user->id > 0) {
@@ -98,6 +101,8 @@ class ProjectAcl
             }
         }
 
-        return self::userInGroupLike('UG: KjeEng-BSS:%:Admin');
+        $companyName = self::companyNameForSubproject((int) $subproject->id);
+
+        return $companyName !== null && BssAcl::hasAccess($companyName, 'project:edit');
     }
 }
