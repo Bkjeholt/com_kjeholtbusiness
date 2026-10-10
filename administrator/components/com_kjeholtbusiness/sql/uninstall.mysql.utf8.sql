@@ -10,6 +10,7 @@ DROP TABLE IF EXISTS `#__kjeholtbusiness_user_authorities`;
 
 DELETE FROM `#__usergroups` WHERE `title` LIKE 'UG: KjeEng-BSS%';
 DELETE FROM `#__viewlevels` WHERE `title` LIKE 'UG: KjeEng-BSS%';
+DELETE FROM `#__viewlevels` WHERE `title` LIKE 'ACL: KjeEng-BSS%';
 DELETE FROM `#__usergroups` WHERE `title` LIKE 'KjeBus: %';
 DELETE FROM `#__viewlevels` WHERE `title` LIKE 'KjeBus: %';
 

@@ -179,6 +179,12 @@ class Com_KjeholtbusinessInstallerScript
         $suiteSuperAdminId = $this->createUserGroup('UG: KjeEng-BSS:SuperAdmin', $bssRootId);
         Log::add('UserGroup "UG: KjeEng-BSS:SuperAdmin" skapad/hittad med id=' . $suiteSuperAdminId, Log::DEBUG, 'com_kjeholtbusiness');
 
+        // Create the global access levels (ACL: KjeEng-BSS:<Level>)
+        // linked to the suite SuperAdmin group. When companies are created,
+        // their profile groups are merged into the level rules.
+        \KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\BssAcl::syncLevels();
+        Log::add('Access levels (ACL: KjeEng-BSS:*) synkroniserade.', Log::DEBUG, 'com_kjeholtbusiness');
+
         Log::add('Installationen slutförd.', Log::DEBUG, 'com_kjeholtbusiness');
         $app->enqueueMessage('Installationen av com_kjeholtbusiness slutförd.', 'message');
     }
