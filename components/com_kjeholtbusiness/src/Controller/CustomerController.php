@@ -7,6 +7,8 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\Router\Route;
+use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\BssAcl;
+use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\CompanyUser;
 use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\Logbook;
 
 class CustomerController extends BaseController
@@ -22,15 +24,21 @@ class CustomerController extends BaseController
         $id    = (int) ($jform['id'] ?? 0);
         $isNew = $id === 0;
 
-        if ($isNew) {
-            $allowed = Factory::getUser()->authorise('core.create', 'com_kjeholtbusiness');
-        } else {
-            $item    = $model->getItem($id);
-            $allowed = $item && (int) $item->created_by === (int) Factory::getUser()->id;
+        if (!BssAcl::hasAccessAny('project:edit')) {
+            throw new \Exception(Text::_('JERROR_ALERTNOAUTHOR'), 403);
         }
 
-        if (!$allowed) {
-            throw new \Exception(Text::_('JERROR_ALERTNOAUTHOR'), 403);
+        if (!$isNew) {
+            $item = $model->getItem($id);
+
+            // Owner or within the same company may edit
+            $companyId = (int) (CompanyUser::companyId() ?? 0);
+
+            if ($item
+                && (int) $item->created_by !== (int) Factory::getUser()->id
+                && (!BssAcl::hasAccessAny('Admin') || ((int) ($item->company_id ?? 0) !== $companyId))) {
+                throw new \Exception(Text::_('JERROR_ALERTNOAUTHOR'), 403);
+            }
         }
 
         $form = $model->getForm(null, false);

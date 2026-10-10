@@ -12,7 +12,7 @@ class TimeChartsModel extends ListModel
     protected function getListQuery()
     {
         $app       = Factory::getApplication();
-        $companyId = (int) $app->getUserState('com_kjeholtbusiness.company.id', 1);
+        $companyId = (int) (\KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\CompanyUser::companyId() ?? 0);
 
         $db    = $this->getDatabase();
         $query = $db->getQuery(true);

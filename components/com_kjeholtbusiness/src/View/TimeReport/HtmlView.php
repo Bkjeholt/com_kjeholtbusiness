@@ -4,7 +4,9 @@ namespace KjeholtEngineering\Component\KjeholtBusiness\Site\View\TimeReport;
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Form\Form;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\BssAcl;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Log\Log;
 use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\TimecardService;
@@ -16,6 +18,10 @@ class HtmlView extends BaseHtmlView
 
     public function display($tpl = null)
     {
+        if (!BssAcl::hasAccessAny('timereport:view')) {
+            throw new \Exception(Text::_('JERROR_ALERTNOAUTHOR'), 403);
+        }
+
         $app = Factory::getApplication();
         $task = $app->input->getCmd('task');
 

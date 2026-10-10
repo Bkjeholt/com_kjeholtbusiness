@@ -81,6 +81,37 @@ class SubprojectModel extends FormModel
         }
     }
 
+    public function getItems(): array
+    {
+        $db    = $this->getDatabase();
+        $query = $db->getQuery(true);
+
+        $query->select(
+            [
+                $db->quoteName('sp.id'),
+                $db->quoteName('sp.name'),
+                $db->quoteName('sp.status'),
+                $db->quoteName('sp.start_date'),
+                $db->quoteName('sp.hourly_rate'),
+                $db->quoteName('p.name', 'project_name'),
+            ]
+        )
+            ->from($db->quoteName('#__kjeholtbusiness_subprojects', 'sp'))
+            ->join('LEFT', $db->quoteName('#__kjeholtbusiness_projects', 'p'), $db->quoteName('p.id') . ' = ' . $db->quoteName('sp.project_id'))
+            ->order($db->quoteName('p.name') . ' ASC, ' . $db->quoteName('sp.name') . ' ASC');
+
+        $companyId = \KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\CompanyUser::companyId();
+
+        if ($companyId) {
+            $query->where($db->quoteName('p.company_id') . ' = :company_id')
+                ->bind(':company_id', $companyId, ParameterType::INTEGER);
+        }
+
+        $db->setQuery($query);
+
+        return $db->loadObjectList() ?: [];
+    }
+
     public function getForm($data = [], $loadData = true)
     {
         $form = $this->loadForm(

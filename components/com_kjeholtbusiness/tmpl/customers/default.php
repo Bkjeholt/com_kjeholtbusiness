@@ -11,12 +11,13 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
+use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\BssAcl;
 use Joomla\CMS\Factory;
 ?>
 <div class="kjeholtbusiness-customers">
     <h1><?php echo Text::_('COM_KJEHOLTBUSINESS_CUSTOMERS_TITLE'); ?></h1>
 
-    <?php if (Factory::getUser()->authorise('core.create', 'com_kjeholtbusiness')) : ?>
+    <?php if (BssAcl::hasAccessAny('project:edit')) : ?>
         <a class="btn btn-primary mb-3" href="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=customer&layout=edit'); ?>">
             <?php echo Text::_('COM_KJEHOLTBUSINESS_CUSTOMERS_NEW'); ?>
         </a>
@@ -46,7 +47,7 @@ use Joomla\CMS\Factory;
                         <td><?php echo $this->escape($item->email ?? ''); ?></td>
                         <td>
                             <?php if ((int) $item->created_by === (int) Factory::getUser()->id
-                                || Factory::getUser()->authorise('core.edit', 'com_kjeholtbusiness')) : ?>
+                                || BssAcl::hasAccessAny('project:edit')) : ?>
                                 <a class="btn btn-sm btn-outline-secondary"
                                    href="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=customer&layout=edit&id=' . (int) $item->id); ?>">
                                     <?php echo Text::_('JACTION_EDIT'); ?>
