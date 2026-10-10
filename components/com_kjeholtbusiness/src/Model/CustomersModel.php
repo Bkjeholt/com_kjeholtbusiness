@@ -27,6 +27,13 @@ class CustomersModel extends BaseDatabaseModel
             ->from($db->quoteName('#__kjeholtbusiness_customers'))
             ->order($db->quoteName('name') . ' ASC');
 
+        $companyId = \KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\CompanyUser::companyId();
+
+        if ($companyId) {
+            $query->where($db->quoteName('company_id') . ' = :company_id')
+                ->bind(':company_id', $companyId, \Joomla\Database\ParameterType::INTEGER);
+        }
+
         $db->setQuery($query);
 
         return $db->loadObjectList() ?: [];

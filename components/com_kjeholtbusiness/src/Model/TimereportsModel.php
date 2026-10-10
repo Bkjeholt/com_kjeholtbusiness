@@ -41,9 +41,17 @@ class TimereportsModel extends ListModel
 
         $query = $db->getQuery(true);
 
+        $companyId = \KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\CompanyUser::companyId();
+
         if (!TimereportAcl::seesAll()) {
             $query->where($db->quoteName('tc.created_by') . ' = :user_id')
                 ->bind(':user_id', $userId, ParameterType::INTEGER);
+        } elseif ($companyId) {
+            // SeesAll users see all reports within their own company
+            $query->where(
+                'tc.created_by IN (SELECT cu.user_id FROM #__kjeholtbusiness_company_users AS cu'
+                . ' WHERE cu.company_id = :scope_company_id)'
+            )->bind(':scope_company_id', $companyId, ParameterType::INTEGER);
         }
 
         $query->select(
