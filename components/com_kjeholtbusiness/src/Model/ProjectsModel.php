@@ -12,7 +12,7 @@ class ProjectsModel extends ListModel
     public function getItems() { /* Changed from getListQuery() to getList() to match the method name in the ListModel class */
         $app = Factory::getApplication();
         
-        $companyId = $app->getUserState('com_kjeholtbusiness.company.id', null);
+        $companyId = \KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\CompanyUser::companyId();
 
         Log::add('ProjectsModel->getListQuery: companyId (from cookie)='.$companyId, Log::DEBUG, 'com_kjeholtbusiness');
         

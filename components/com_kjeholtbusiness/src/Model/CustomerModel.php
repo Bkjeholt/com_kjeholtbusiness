@@ -76,6 +76,7 @@ class CustomerModel extends FormModel
         $id     = (int) ($data['id'] ?? 0);
 
         $row = new \stdClass();
+        $row->company_id       = (int) ($data['company_id'] ?? \KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\CompanyUser::companyId() ?? 0);
         $row->name             = (string) ($data['name'] ?? '');
         $row->ssn              = (string) ($data['ssn'] ?? '');
         $row->org_number       = (string) ($data['org_number'] ?? '');

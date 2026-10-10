@@ -27,6 +27,21 @@ CREATE TABLE IF NOT EXISTS `#__kjeholtbusiness_companies` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
 
 -- Projects table
+-- Company users table (connects users to companies)
+-- One user belongs to one company (for now); a company has many users.
+-- Designed to support multiple companies per user in the future.
+CREATE TABLE IF NOT EXISTS `#__kjeholtbusiness_company_users` (
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` INT(11) UNSIGNED NOT NULL,
+  `company_id` INT(11) UNSIGNED NOT NULL,
+  `is_primary` TINYINT(1) UNSIGNED NOT NULL DEFAULT 1,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `created_by` INT(11) UNSIGNED NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_company_users_user` (`user_id`),
+  KEY `idx_company_users_company` (`company_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE IF NOT EXISTS `#__kjeholtbusiness_projects` (
   `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL DEFAULT '',
@@ -135,6 +150,7 @@ CREATE TABLE IF NOT EXISTS `#__kjeholtbusiness_timecards` (
 
 CREATE TABLE IF NOT EXISTS `#__kjeholtbusiness_customers` (
   `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `company_id` INT(11) UNSIGNED DEFAULT NULL,
   `name` VARCHAR(255) NOT NULL DEFAULT '',
   `org_number` VARCHAR(50) DEFAULT NULL,
   `ssn` VARCHAR(20) DEFAULT NULL,
