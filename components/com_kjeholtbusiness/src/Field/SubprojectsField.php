@@ -29,6 +29,13 @@ class SubprojectsField extends ListField
             ->join('LEFT', $db->quoteName('#__kjeholtbusiness_projects', 'p'), $db->quoteName('p.id') . ' = ' . $db->quoteName('sp.project_id'))
             ->order($db->quoteName('p.name') . ' ASC, ' . $db->quoteName('sp.name') . ' ASC');
 
+        $companyId = \KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\CompanyUser::companyId();
+
+        if ($companyId) {
+            $query->where($db->quoteName('p.company_id') . ' = :company_id')
+                ->bind(':company_id', $companyId, \Joomla\Database\ParameterType::INTEGER);
+        }
+
         try {
             $rows = $db->setQuery($query)->loadObjectList() ?: [];
         } catch (\Exception $e) {

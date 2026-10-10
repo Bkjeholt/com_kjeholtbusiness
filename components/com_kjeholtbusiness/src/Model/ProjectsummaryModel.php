@@ -38,6 +38,19 @@ class ProjectsummaryModel extends ItemModel
         $db->setQuery($query);
 
         $this->item = $db->loadObject();
+
+        // Company scoping: only return the project when it belongs to
+        // the user's company (suite/company admins see all via BssAcl view level)
+        if ($this->item) {
+            $companyId = (int) (\KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\CompanyUser::companyId() ?? 0);
+
+            if ($companyId
+                && (int) $this->item->company_id !== $companyId
+                && !\KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\BssAcl::hasAccessAny('Admin')) {
+                $this->item = null;
+            }
+        }
+
         $this->setState('projectsummary.id', $pk);
 
         return $this->item;
