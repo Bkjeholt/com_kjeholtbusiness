@@ -68,6 +68,23 @@ class CompanyUser
     }
 
     /**
+     * The name of the company with the given id. Null if not found or deleted.
+     */
+    public static function companyNameForId(int $companyId): ?string
+    {
+        $db    = Factory::getDbo();
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('name'))
+            ->from($db->quoteName('#__kjeholtbusiness_companies'))
+            ->where($db->quoteName('id') . ' = :id')
+            ->bind(':id', $companyId, ParameterType::INTEGER);
+
+        $name = $db->setQuery($query)->loadResult();
+
+        return $name ?: null;
+    }
+
+    /**
      * All user ids connected to the given company.
      *
      * @return int[]

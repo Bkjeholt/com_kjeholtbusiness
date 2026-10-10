@@ -117,6 +117,11 @@ $user = Factory::getUser();
                             </a>
                         </li>
                         <?php endif; ?>
+                        <li class="list-group-item">
+                            <a href="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=companyusers'); ?>">
+                                <?php echo Text::_('COM_KJEHOLTBUSINESS_COMPANYUSERS_TITLE'); ?>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
