@@ -8,18 +8,24 @@ use Joomla\CMS\Factory;
 /**
  * KjeEng-BSS access level (view level) helper.
  *
- * Access levels are Joomla view levels named "ACL: KjeEng-BSS:<Company>:<Level>"
- * and are linked to the component's user groups (UG) as follows.
+ * SIMPLIFIED SCHEME:
+ * One global set of access levels named "ACL: KjeEng-BSS:<Level>".
+ * Company isolation is handled through the company_users table
+ * (users are connected to a company and the data queries are
+ * scoped to that company), so per-company levels are not needed.
  *
- * Every per-company level implicitly includes:
- *   UG: KjeEng-BSS:SuperAdmin  (suite super admin may do everything)
- *   UG: KjeEng-BSS:<Company>:SuperAdmin
- * plus the profiles listed in the matrix below.
+ * Each level's rules include:
+ *   UG: KjeEng-BSS:SuperAdmin
+ *   UG: KjeEng-BSS:<AnyCompany>:SuperAdmin
+ * plus the profile groups of ALL companies as defined in the matrix.
+ *
+ * The matrix maps each level to the company profiles (relative to
+ * UG: KjeEng-BSS:<Company>:<Profile>) that hold it.
  */
 class BssAcl
 {
     /**
-     * Level => member profiles (relative to UG: KjeEng-BSS:<Company>:<Profile>).
+     * Level => member profiles.
      */
     private static $matrix = [
         'Admin'            => ['Admin', 'Economy'],
@@ -39,34 +45,23 @@ class BssAcl
         return \array_keys(self::$matrix);
     }
 
-    public static function levelTitle(string $companyName, string $level): string
+    public static function levelTitle(string $level): string
     {
-        return 'ACL: KjeEng-BSS:' . $companyName . ':' . $level;
+        return 'ACL: KjeEng-BSS:' . $level;
     }
 
     /**
-     * True when the current user holds the given access level for the company.
+     * True when the current user holds the given access level.
+     * (Levels are global; company isolation comes from the
+     * company_users table and data scoping.)
      */
     public static function hasAccess(string $companyName, string $level): bool
     {
-        $user = Factory::getUser();
-
-        if ($user->guest) {
-            return false;
-        }
-
-        $levelId = self::levelId(self::levelTitle($companyName, $level));
-
-        if (!$levelId) {
-            return false;
-        }
-
-        return \in_array((int) $levelId, \array_map('intval', $user->getAuthorisedViewLevels()), true);
+        return self::hasAccessAny($level);
     }
 
     /**
-     * True when the current user holds the given access level for ANY company.
-     * (A user normally belongs to one company, so this is equivalent in practice.)
+     * True when the current user holds the given access level.
      */
     public static function hasAccessAny(string $level): bool
     {
@@ -76,43 +71,59 @@ class BssAcl
             return false;
         }
 
-        $db    = Factory::getDbo();
-        $query = $db->getQuery(true)
-            ->select($db->quoteName('id'))
-            ->from($db->quoteName('#__viewlevels'))
-            ->where($db->quoteName('title') . ' LIKE :title');
+        $levelId = self::levelId(self::levelTitle($level));
 
-        $title = 'ACL: KjeEng-BSS:%:' . $level;
-        $query->bind(':title', $title);
-
-        $levelIds = \array_map('intval', $db->setQuery($query)->loadColumn() ?: []);
-
-        if (!$levelIds) {
+        if (!$levelId) {
             return false;
         }
 
-        $userLevels = \array_map('intval', $user->getAuthorisedViewLevels());
-
-        foreach ($userLevels as $userLevel) {
-            if (\in_array($userLevel, $levelIds, true)) {
-                return true;
-            }
-        }
-
-        return false;
+        return \in_array((int) $levelId, \array_map('intval', $user->getAuthorisedViewLevels()), true);
     }
 
     /**
-     * Create the access levels for a company, based on the matrix.
+     * (Re)create the global access levels, linking them to the
+     * profile user groups of ALL existing companies per the matrix.
+     * Called on install and whenever a company is created.
      *
-     * $profileGroupIds maps profile name (SuperAdmin/Admin/...) to the
-     * user group id of "UG: KjeEng-BSS:<Company>:<Profile>".
+     * $extraProfileGroupIds maps profile name to a user group id of a
+     * newly created company, merged into the global rules.
      */
-    public static function createCompanyLevels(string $companyName, array $profileGroupIds): void
+    public static function syncLevels(array $extraProfileGroupIds = []): void
     {
         $db = Factory::getDbo();
 
         $suiteSuperAdminId = self::suiteSuperAdminGroupId();
+
+        // Collect all company profile groups: UG: KjeEng-BSS:<Company>:<Profile>
+        $query = $db->getQuery(true)
+            ->select([$db->quoteName('id'), $db->quoteName('title')])
+            ->from($db->quoteName('#__usergroups'))
+            ->where($db->quoteName('title') . ' LIKE :pattern');
+
+        $pattern = 'UG: KjeEng-BSS:%';
+        $query->bind(':pattern', $pattern);
+
+        $rows = $db->setQuery($query)->loadObjectList() ?: [];
+
+        $profileGroupIds = [];
+
+        foreach ($rows as $row) {
+            // "UG: KjeEng-BSS:<Company>:<Profile>" -> [Company, Profile]
+            $parts = \explode(':', $row->title);
+
+            if (\count($parts) !== 4) {
+                continue;
+            }
+
+            $profile = $parts[3];
+
+            $profileGroupIds[$profile][] = (int) $row->id;
+        }
+
+        // Merge groups of a newly created company
+        foreach ($extraProfileGroupIds as $profile => $groupId) {
+            $profileGroupIds[$profile][] = (int) $groupId;
+        }
 
         foreach (self::$matrix as $level => $profiles) {
             $groupIds = [];
@@ -121,17 +132,18 @@ class BssAcl
                 $groupIds[] = (int) $suiteSuperAdminId;
             }
 
-            if (!empty($profileGroupIds['SuperAdmin'])) {
-                $groupIds[] = (int) $profileGroupIds['SuperAdmin'];
+            // All company SuperAdmin groups
+            foreach ($profileGroupIds['SuperAdmin'] ?? [] as $groupId) {
+                $groupIds[] = $groupId;
             }
 
             foreach ($profiles as $profile) {
-                if (!empty($profileGroupIds[$profile])) {
-                    $groupIds[] = (int) $profileGroupIds[$profile];
+                foreach ($profileGroupIds[$profile] ?? [] as $groupId) {
+                    $groupIds[] = $groupId;
                 }
             }
 
-            $title = self::levelTitle($companyName, $level);
+            $title      = self::levelTitle($level);
             $existingId = self::levelId($title);
 
             if ($existingId) {
@@ -148,14 +160,25 @@ class BssAcl
         }
     }
 
+    /**
+     * Kept for backwards compatibility with earlier call sites.
+     * Creates/refreshes the global levels, optionally merging a
+     * new company's profile groups.
+     */
+    public static function createCompanyLevels(string $companyName, array $profileGroupIds): void
+    {
+        self::syncLevels($profileGroupIds);
+    }
+
     private static function levelId(string $title): int
     {
         $db    = Factory::getDbo();
         $query = $db->getQuery(true)
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__viewlevels'))
-            ->where($db->quoteName('title') . ' = :title')
-            ->bind(':title', $title);
+            ->where($db->quoteName('title') . ' = :title');
+
+        $query->bind(':title', $title);
 
         return (int) $db->setQuery($query)->loadResult();
     }
