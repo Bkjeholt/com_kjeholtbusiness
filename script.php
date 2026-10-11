@@ -20,7 +20,13 @@ class Com_KjeholtbusinessInstallerScript
      */
     public function install($parent)
     {
-        $parent->getParent()->setRedirectURL('index.php?option=com_kjeholtbusiness');
+        $installer = $parent->getParent();
+
+        if (method_exists($installer, 'setRedirectURL'))
+        {
+            $installer->setRedirectURL('index.php?option=com_kjeholtbusiness');
+        }
+
         return true;
     }
 
