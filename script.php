@@ -182,6 +182,19 @@ class Com_KjeholtbusinessInstallerScript
         // Create the global access levels (ACL: KjeEng-BSS:<Level>)
         // linked to the suite SuperAdmin group. When companies are created,
         // their profile groups are merged into the level rules.
+        // During installation the component namespace is not registered with
+        // the CMS autoloader yet, so load the helper class explicitly.
+        $bssAclFile = JPATH_SITE . '/components/com_kjeholtbusiness/src/Helper/BssAcl.php';
+
+        if (!is_file($bssAclFile))
+        {
+            Log::add('BssAcl.php hittades inte: ' . $bssAclFile, Log::ERROR, 'com_kjeholtbusiness');
+            $app->enqueueMessage('BssAcl.php hittades inte: ' . $bssAclFile, 'error');
+            return false;
+        }
+
+        require_once $bssAclFile;
+
         \KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\BssAcl::syncLevels();
         Log::add('Access levels (ACL: KjeEng-BSS:*) synkroniserade.', Log::DEBUG, 'com_kjeholtbusiness');
 
