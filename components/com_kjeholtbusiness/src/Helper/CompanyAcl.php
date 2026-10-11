@@ -30,18 +30,16 @@ class CompanyAcl
         $query = $db->getQuery(true)
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__usergroups'))
-            ->where($db->quoteName('title') . ' = :title');
+            ->where($db->quoteName('title') . ' LIKE :title');
+        $query->bind(':title', 'UG: KjeEng-BSS%SuperAdmin');
 
-        $suiteSuperAdminTitle = 'UG: KjeEng-BSS:SuperAdmin';
-        $query->bind(':title', $suiteSuperAdminTitle);
+        $groupIds = \array_map('intval', $db->setQuery($query)->loadColumn() ?: []);
 
-        $groupId = (int) $db->setQuery($query)->loadResult();
-
-        if (!$groupId) {
+        if (!$groupIds) {
             return false;
         }
 
-        return \in_array($groupId, \array_map('intval', $user->getAuthorisedGroups()), true);
+        return (bool) \array_intersect($groupIds, \array_map('intval', $user->getAuthorisedGroups()));
     }
 
     /**
