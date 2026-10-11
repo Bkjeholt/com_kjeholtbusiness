@@ -92,7 +92,7 @@ class TimecardService
      */
     public static function autoCloseAfter24h(int $userId): int
     {
-        $db = Factory::getDbo();
+        $cutoff = Factory::getDate()->modify('-24 hours')->toSql();        $db = Factory::getDbo();
 
         $query = $db->getQuery(true)
             ->select('*')
@@ -101,7 +101,7 @@ class TimecardService
             ->where($db->quoteName('status') . ' = ' . $db->quote('ongoing'))
             ->where($db->quoteName('start_time') . ' < :cutoff')
             ->bind(':user_id', $userId, ParameterType::INTEGER)
-            ->bind(':cutoff', Factory::getDate()->modify('-24 hours')->toSql());
+            ->bind(':cutoff', $cutoff);
 
         $stale = $db->setQuery($query)->loadObjectList();
 
