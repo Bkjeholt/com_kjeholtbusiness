@@ -202,6 +202,46 @@ class Com_KjeholtbusinessInstallerScript
         $app->enqueueMessage('Installationen av com_kjeholtbusiness slutförd.', 'message');
     }
     
+    /**
+     * Runs after every install and update. Ensures the structural user
+     * groups and the global access levels (ACL: KjeEng-BSS:*) exist even
+     * when the component is updated on an existing site, where install()
+     (and thus ACL creation) never runs.
+     */
+    public function postflight($type, $parent)
+    {
+        $this->ensureAcl();
+
+        return true;
+    }
+
+    private function ensureAcl()
+    {
+        $app = Factory::getApplication();
+
+        $bssRootId = $this->createUserGroup('UG: KjeEng-BSS', 1);
+        $suiteSuperAdminId = $this->createUserGroup('UG: KjeEng-BSS:SuperAdmin', $bssRootId);
+
+        Log::add('UserGroup "UG: KjeEng-BSS:SuperAdmin" säkerställd med id=' . $suiteSuperAdminId, Log::DEBUG, 'com_kjeholtbusiness');
+
+        $bssAclFile = JPATH_SITE . '/components/com_kjeholtbusiness/src/Helper/BssAcl.php';
+
+        if (!is_file($bssAclFile))
+        {
+            Log::add('BssAcl.php hittades inte: ' . $bssAclFile, Log::ERROR, 'com_kjeholtbusiness');
+            $app->enqueueMessage('BssAcl.php hittades inte: ' . $bssAclFile, 'error');
+            return false;
+        }
+
+        require_once $bssAclFile;
+
+        \KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\BssAcl::syncLevels();
+
+        Log::add('Access levels (ACL: KjeEng-BSS:*) synkroniserade.', Log::DEBUG, 'com_kjeholtbusiness');
+
+        return true;
+    }
+
     public function uninstall($parent)
     {
         $db = Factory::getDbo();
