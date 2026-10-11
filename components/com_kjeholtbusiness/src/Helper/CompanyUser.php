@@ -142,12 +142,14 @@ class CompanyUser
     {
         $flags = array_values(array_intersect(BssAcl::FLAGS, $flags));
 
+        $permissions = implode(',', $flags);
+
         $db    = Factory::getDbo();
         $query = $db->getQuery(true)
             ->update($db->quoteName('#__kjeholtbusiness_company_users'))
             ->set($db->quoteName('permissions') . ' = :permissions')
             ->where($db->quoteName('user_id') . ' = :user_id')
-            ->bind(':permissions', implode(',', $flags))
+            ->bind(':permissions', $permissions)
             ->bind(':user_id', $userId, ParameterType::INTEGER);
 
         try {
@@ -225,7 +227,8 @@ class CompanyUser
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__usergroups'))
             ->where($db->quoteName('title') . ' = :title');
-        $query->bind(':title', CompanyAcl::GROUP_USER);
+        $title = CompanyAcl::GROUP_USER;
+        $query->bind(':title', $title);
         $groupId = (int) $db->setQuery($query)->loadResult();
 
         if (!$groupId) {

@@ -123,7 +123,8 @@ class CompanyAcl
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__usergroups'))
             ->where($db->quoteName('title') . ' = :title');
-        $query->bind(':title', self::GROUP_ADMIN);
+        $title = self::GROUP_ADMIN;
+        $query->bind(':title', $title);
 
         return self::$adminGroupId = (int) $db->setQuery($query)->loadResult();
     }
