@@ -15,15 +15,13 @@ CREATE TABLE IF NOT EXISTS `#__kjeholtbusiness_companies` (
   `iban` VARCHAR(50) DEFAULT NULL,
   `deleted` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
   `description` TEXT,
-  `acl_view_id` INT(11) UNSIGNED DEFAULT 0,
-  `acl_user_id` INT(11) UNSIGNED DEFAULT 0,
-  `acl_admin_id` INT(11) UNSIGNED DEFAULT 0,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `created_by` INT(11) UNSIGNED NOT NULL DEFAULT 0,
   `modified_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `modified_by` INT(11) UNSIGNED NOT NULL DEFAULT 0,
   `params` TEXT,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_companies_name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
 
 -- Projects table
