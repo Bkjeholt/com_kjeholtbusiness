@@ -31,6 +31,7 @@ class CompanyusersModel extends BaseDatabaseModel
                 $db->quoteName('u.username'),
                 $db->quoteName('u.email'),
                 $db->quoteName('cu.is_primary'),
+                $db->quoteName('cu.permissions'),
             ]
         )
             ->from($db->quoteName('#__kjeholtbusiness_company_users', 'cu'))

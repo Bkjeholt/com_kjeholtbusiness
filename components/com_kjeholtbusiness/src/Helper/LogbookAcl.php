@@ -28,11 +28,11 @@ class LogbookAcl
             return false;
         }
 
-        if (CompanyAcl::mayListAllCompanies()) {
+        if (CompanyAcl::isCompanyAdmin()) {
             return true;
         }
 
-        return BssAcl::hasAccessAny('Admin');
+        return BssAcl::can('logbook-view');
     }
 
     /**

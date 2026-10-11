@@ -41,6 +41,7 @@ use Joomla\CMS\Router\Route;
                     <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_COMPANYUSERS_NAME'); ?></th>
                     <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_COMPANYUSERS_USERNAME'); ?></th>
                     <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_COMPANYUSERS_EMAIL'); ?></th>
+                    <th scope="col"><?php echo Text::_('COM_KJEHOLTBUSINESS_COMPANYUSERS_PERMISSIONS'); ?></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -50,6 +51,28 @@ use Joomla\CMS\Router\Route;
                         <td><?php echo $this->escape($item->name); ?></td>
                         <td><?php echo $this->escape($item->username); ?></td>
                         <td><?php echo $this->escape($item->email); ?></td>
+                        <td>
+                            <form action="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=companyusers&company_id=' . (int) $this->companyId); ?>"
+                                  method="post" class="d-flex gap-2 align-items-center">
+                                <?php
+                                $current = array_filter(array_map('trim', explode(',', (string) ($item->permissions ?? ''))));
+                                foreach (\KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\BssAcl::FLAGS as $flag) :
+                                    ?>
+                                    <label class="form-check-label small text-nowrap">
+                                        <input class="form-check-input me-1" type="checkbox" name="permissions[]"
+                                               value="<?php echo $this->escape($flag); ?>"
+                                               <?php echo in_array($flag, $current, true) ? 'checked' : ''; ?> />
+                                        <?php echo Text::_('COM_KJEHOLTBUSINESS_PERMISSION_' . strtoupper(str_replace('-', '_', $flag))); ?>
+                                    </label>
+                                <?php endforeach; ?>
+                                <input type="hidden" name="task" value="companyusers.permissions" />
+                                <input type="hidden" name="user_id" value="<?php echo (int) $item->id; ?>" />
+                                <?php echo HTMLHelper::_('form.token'); ?>
+                                <button type="submit" class="btn btn-sm btn-primary">
+                                    <?php echo Text::_('JSAVE'); ?>
+                                </button>
+                            </form>
+                        </td>
                         <td>
                             <form action="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=companyusers&company_id=' . (int) $this->companyId); ?>"
                                   method="post" class="d-inline"
@@ -65,7 +88,7 @@ use Joomla\CMS\Router\Route;
                     </tr>
                 <?php endforeach; ?>
                 <?php if (empty($this->items)) : ?>
-                    <tr><td colspan="4"><?php echo Text::_('COM_KJEHOLTBUSINESS_COMPANYUSERS_EMPTY'); ?></td></tr>
+                    <tr><td colspan="5"><?php echo Text::_('COM_KJEHOLTBUSINESS_COMPANYUSERS_EMPTY'); ?></td></tr>
                 <?php endif; ?>
             </tbody>
         </table>

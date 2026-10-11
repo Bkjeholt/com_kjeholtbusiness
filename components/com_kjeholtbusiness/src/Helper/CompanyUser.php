@@ -110,10 +110,60 @@ class CompanyUser
     }
 
     /**
-     * Connect a user to a company. In the one-company model this
-     * replaces any existing connection. Returns true on success.
+     * The permission flags (company_users.permissions SET) of the
+     * given user. Empty when the user is not connected to a company.
+     *
+     * @return string[]
      */
-    public static function connect(int $userId, int $companyId): bool
+    public static function permissions(int $userId): array
+    {
+        $db    = Factory::getDbo();
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('permissions'))
+            ->from($db->quoteName('#__kjeholtbusiness_company_users'))
+            ->where($db->quoteName('user_id') . ' = :user_id')
+            ->bind(':user_id', $userId, ParameterType::INTEGER);
+
+        $raw = $db->setQuery($query)->loadResult();
+
+        if (!$raw) {
+            return [];
+        }
+
+        return array_values(array_filter(array_map('trim', explode(',', (string) $raw))));
+    }
+
+    /**
+     * Replace the permission flags of a connected user.
+     *
+     * @param string[] $flags
+     */
+    public static function setPermissions(int $userId, array $flags): bool
+    {
+        $flags = array_values(array_intersect(BssAcl::FLAGS, $flags));
+
+        $db    = Factory::getDbo();
+        $query = $db->getQuery(true)
+            ->update($db->quoteName('#__kjeholtbusiness_company_users'))
+            ->set($db->quoteName('permissions') . ' = :permissions')
+            ->where($db->quoteName('user_id') . ' = :user_id')
+            ->bind(':permissions', implode(',', $flags))
+            ->bind(':user_id', $userId, ParameterType::INTEGER);
+
+        try {
+            $db->setQuery($query)->execute();
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Connect a user to a company. In the one-company model this
+     * replaces any existing connection. The user is added to the
+     * UG:KjeEng-BSS:User group. Returns true on success.
+     */
+    public static function connect(int $userId, int $companyId, array $permissions = []): bool
     {
         $db = Factory::getDbo();
 
@@ -125,12 +175,17 @@ class CompanyUser
                 ->bind(':user_id', $userId, ParameterType::INTEGER);
             $db->setQuery($query)->execute();
 
+            $flags = array_values(array_intersect(BssAcl::FLAGS, $permissions));
+
             $row            = new \stdClass();
             $row->user_id   = $userId;
             $row->company_id = $companyId;
             $row->is_primary = 1;
+            $row->permissions = implode(',', $flags);
             $row->created_by = (int) Factory::getUser()->id;
             $db->insertObject('#__kjeholtbusiness_company_users', $row, 'id');
+
+            self::syncUserGroup($userId);
 
             return true;
         } catch (\Exception $e) {
@@ -139,7 +194,8 @@ class CompanyUser
     }
 
     /**
-     * Remove a user's company connection.
+     * Remove a user's company connection and the UG:KjeEng-BSS:User
+     * group membership.
      */
     public static function disconnect(int $userId): bool
     {
@@ -151,9 +207,48 @@ class CompanyUser
 
         try {
             $db->setQuery($query)->execute();
+            self::syncUserGroup($userId);
             return true;
         } catch (\Exception $e) {
             return false;
         }
+    }
+
+    /**
+     * Add the user to (or remove from) the UG:KjeEng-BSS:User group
+     * depending on whether they are connected to a company.
+     */
+    private static function syncUserGroup(int $userId): void
+    {
+        $db    = Factory::getDbo();
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('id'))
+            ->from($db->quoteName('#__usergroups'))
+            ->where($db->quoteName('title') . ' = :title');
+        $query->bind(':title', CompanyAcl::GROUP_USER);
+        $groupId = (int) $db->setQuery($query)->loadResult();
+
+        if (!$groupId) {
+            return;
+        }
+
+        $user = Factory::getUser($userId);
+
+        if ($user->guest) {
+            return;
+        }
+
+        $groups = array_map('intval', $user->groups ?: []);
+        $connected = self::companyId($userId) !== null;
+
+        if ($connected && !in_array($groupId, $groups, true)) {
+            $user->groups = array_merge($groups, [$groupId]);
+            $user->save();
+        } elseif (!$connected && in_array($groupId, $groups, true)) {
+            $user->groups = array_values(array_diff($groups, [$groupId]));
+            $user->save();
+        }
+
+        Factory::getUser($userId)->clearAccessRights();
     }
 }

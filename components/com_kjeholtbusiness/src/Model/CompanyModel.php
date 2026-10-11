@@ -112,9 +112,6 @@ class CompanyModel extends FormModel
                 $row->created_by = $userId;
                 $db->insertObject('#__kjeholtbusiness_companies', $row, 'id');
                 $id = (int) $row->id;
-
-                // Create the company's user groups (UG: KjeEng-BSS:<Company>:*)
-                $this->createCompanyUserGroups((string) $row->name);
             }
 
             return true;
@@ -161,55 +158,5 @@ class CompanyModel extends FormModel
         }
     }
 
-    /**
-     * Create the UG: KjeEng-BSS:<CompanyName> group hierarchy for a new company.
-     */
-    private function createCompanyUserGroups(string $companyName): void
-    {
-        $db    = $this->getDatabase();
-        $query = $db->getQuery(true)
-            ->select($db->quoteName('id'))
-            ->from($db->quoteName('#__usergroups'))
-            ->where($db->quoteName('title') . ' = :title');
 
-        $bssRootTitle = 'UG: KjeEng-BSS';
-        $query->bind(':title', $bssRootTitle);
-
-        $bssRootId = (int) $db->setQuery($query)->loadResult();
-
-        if (!$bssRootId) {
-            return;
-        }
-
-        // Company group under the BSS root
-        $companyGroup        = new \stdClass();
-        $companyGroup->title = 'UG: KjeEng-BSS:' . $companyName;
-        $companyGroup->parent_id = $bssRootId;
-        $db->insertObject('#__usergroups', $companyGroup);
-        $companyGroupId = (int) $companyGroup->id = $db->insertid();
-
-        $profiles = ['SuperAdmin', 'Admin', 'Economy', 'Employee', 'Visitor'];
-        $profileGroupIds = [];
-
-        foreach ($profiles as $profile) {
-            $profileGroup            = new \stdClass();
-            $profileGroup->parent_id = $companyGroupId;
-            $profileGroup->title     = 'UG: KjeEng-BSS:' . $companyName . ':' . $profile;
-            $db->insertObject('#__usergroups', $profileGroup);
-            $profileGroupIds[$profile] = (int) $db->insertid();
-        }
-
-        // Create the access levels (ACL: KjeEng-BSS:<Company>:<Level>)
-        \KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\BssAcl::createCompanyLevels(
-            $companyName,
-            $profileGroupIds
-        );
-
-        // Rebuild the nested-set tree so lft/rgt stay consistent
-        $table = \Joomla\CMS\Table\Table::getInstance('Usergroup');
-        $table->rebuild();
-
-        // Flush the cached access rules so new groups take effect immediately
-        \Joomla\CMS\Access\Access::clearStatics();
-    }
 }

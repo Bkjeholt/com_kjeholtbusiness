@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS `#__kjeholtbusiness_company_users` (
   `user_id` INT(11) UNSIGNED NOT NULL,
   `company_id` INT(11) UNSIGNED NOT NULL,
   `is_primary` TINYINT(1) UNSIGNED NOT NULL DEFAULT 1,
+  `permissions` SET('admin','user-edit','project-edit','project-view','subproject-edit','timereport-edit','timereport-view','expense-edit','expense-view','invoice-approve','invoice-edit','customer-edit','customer-view','logbook-view') NOT NULL DEFAULT '',
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `created_by` INT(11) UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),

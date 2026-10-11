@@ -161,39 +161,20 @@ class Com_KjeholtbusinessInstallerScript
         }
 
 // ------------------------------------------------------------------
-        // User groups (UG) - KjeEng-BSS scheme
-        //
-        //   UG: KjeEng-BSS:SuperAdmin
-        //   UG: KjeEng-BSS:<CompanyName>:SuperAdmin
-        //   UG: KjeEng-BSS:<CompanyName>:Admin
-        //   UG: KjeEng-BSS:<CompanyName>:Economy
-        //   UG: KjeEng-BSS:<CompanyName>:Employee
-        //   UG: KjeEng-BSS:<CompanyName>:Visitor
+        // User groups (UG) - KjeEng-BSS scheme (redesigned): only two groups,
+        // UG:KjeEng-BSS:Admin and UG:KjeEng-BSS:User. Fine-grained rights
+        // are SET flags in the company_users.permissions column.
         // ------------------------------------------------------------------
-        // Only the structural groups are created - no companies or other
-        // predefined content. Per-company groups are created when a company
-        // is added by a suite SuperAdmin.
-        $bssRootId = $this->createUserGroup('UG: KjeEng-BSS', 1);
-        Log::add('UserGroup "UG: KjeEng-BSS" skapad/hittad med id=' . $bssRootId, Log::DEBUG, 'com_kjeholtbusiness');
-
-        $suiteSuperAdminId = $this->createUserGroup('UG: KjeEng-BSS:SuperAdmin', $bssRootId);
-        Log::add('UserGroup "UG: KjeEng-BSS:SuperAdmin" skapad/hittad med id=' . $suiteSuperAdminId, Log::DEBUG, 'com_kjeholtbusiness');
-
-        // Create the global access levels (ACL: KjeEng-BSS:<Level>)
-        // linked to the suite SuperAdmin group. When companies are created,
-        // their profile groups are merged into the level rules.
         // During installation the component namespace is not registered with
         // the CMS autoloader yet, so load the helper class explicitly.
         $bssAclFile = JPATH_SITE . '/components/com_kjeholtbusiness/src/Helper/BssAcl.php';
-
         if (!is_file($bssAclFile))
         {
             Log::add('BssAcl.php hittades inte: ' . $bssAclFile, Log::ERROR, 'com_kjeholtbusiness');
             $app->enqueueMessage('BssAcl.php hittades inte: ' . $bssAclFile, 'error');
             return false;
         }
-
-        require_once $bssAclFile;
+require_once $bssAclFile;
 
         \KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\BssAcl::syncLevels();
         Log::add('Access levels (ACL: KjeEng-BSS:*) synkroniserade.', Log::DEBUG, 'com_kjeholtbusiness');
@@ -219,12 +200,7 @@ class Com_KjeholtbusinessInstallerScript
     {
         $app = Factory::getApplication();
 
-        $bssRootId = $this->createUserGroup('UG: KjeEng-BSS', 1);
-        $suiteSuperAdminId = $this->createUserGroup('UG: KjeEng-BSS:SuperAdmin', $bssRootId);
-
-        Log::add('UserGroup "UG: KjeEng-BSS:SuperAdmin" säkerställd med id=' . $suiteSuperAdminId, Log::DEBUG, 'com_kjeholtbusiness');
-
-        $bssAclFile = JPATH_SITE . '/components/com_kjeholtbusiness/src/Helper/BssAcl.php';
+                $bssAclFile = JPATH_SITE . '/components/com_kjeholtbusiness/src/Helper/BssAcl.php';
 
         if (!is_file($bssAclFile))
         {
@@ -306,6 +282,7 @@ class Com_KjeholtbusinessInstallerScript
         // Remove the component's user groups (UG: KjeEng-BSS*) via the API,
         // keeping the nested-set tree (lft/rgt) consistent
         $this->removeUserGroupsByPattern('UG: KjeEng-BSS%');
+        $this->removeUserGroupsByPattern('UG:KjeEng-BSS%');
         $this->removeUserGroupsByPattern('KjeBus: %');
         
         Log::add('Avinstallationen av com_kjeholtbusiness slutförd.', Log::INFO, 'com_kjeholtbusiness');

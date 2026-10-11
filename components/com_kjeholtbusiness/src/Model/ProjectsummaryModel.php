@@ -46,7 +46,7 @@ class ProjectsummaryModel extends ItemModel
 
             if ($companyId
                 && (int) $this->item->company_id !== $companyId
-                && !\KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\BssAcl::hasAccessAny('Admin')) {
+                && !\KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\CompanyAcl::isCompanyAdmin()) {
                 $this->item = null;
             }
         }

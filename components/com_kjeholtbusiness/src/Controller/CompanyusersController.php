@@ -23,12 +23,8 @@ class CompanyusersController extends BaseController
         $companyId = (int) Factory::getApplication()->input->getInt('company_id', 0)
             ?: (int) (CompanyUser::companyId() ?? 0);
 
-        // Suite SuperAdmin or a member of this company's Admin level may manage users
-        $companyName = CompanyUser::companyNameForId($companyId);
-
-        $allowed = \KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\CompanyAcl::isSuiteSuperAdmin()
-            || ($companyName !== null
-                && \KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\BssAcl::hasAccess($companyName, 'Admin'));
+        // Suite admins and company admins ('admin' flag) may manage users
+        $allowed = \KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\CompanyAcl::isCompanyAdmin();
 
         if (!$allowed) {
             throw new \Exception(Text::_('JERROR_ALERTNOAUTHOR'), 403);
@@ -51,12 +47,39 @@ class CompanyusersController extends BaseController
             return false;
         }
 
-        if (CompanyUser::connect($userId, $companyId)) {
+        $permissions = (array) $app->input->post->get('permissions', [], 'array');
+
+        if (CompanyUser::connect($userId, $companyId, $permissions)) {
             Logbook::log(
                 'companyuser.connected',
                 sprintf('User #%d was connected to company #%d.', $userId, $companyId)
             );
             $app->enqueueMessage(Text::_('COM_KJEHOLTBUSINESS_COMPANYUSERS_CONNECTED'), 'message');
+        } else {
+            $app->enqueueMessage(Text::_('COM_KJEHOLTBUSINESS_COMPANYUSERS_ERROR_CONNECT'), 'error');
+        }
+
+        $this->setRedirect(Route::_('index.php?option=com_kjeholtbusiness&view=companyusers&company_id=' . $companyId, false));
+        return true;
+    }
+
+    public function permissions()
+    {
+        $this->checkToken();
+        $app      = Factory::getApplication();
+        $companyId = $this->assertCompanyAdmin();
+        $userId   = (int) $app->input->getInt('user_id', 0);
+
+        if (!$userId) {
+            $app->enqueueMessage(Text::_('COM_KJEHOLTBUSINESS_COMPANYUSERS_ERROR_PARAMS'), 'warning');
+            $this->setRedirect(Route::_('index.php?option=com_kjeholtbusiness&view=companyusers&company_id=' . $companyId, false));
+            return false;
+        }
+
+        $flags = (array) $app->input->post->get('permissions', [], 'array');
+
+        if (CompanyUser::setPermissions($userId, $flags)) {
+            $app->enqueueMessage(Text::_('COM_KJEHOLTBUSINESS_COMPANYUSERS_PERMISSIONS_SAVED'), 'message');
         } else {
             $app->enqueueMessage(Text::_('COM_KJEHOLTBUSINESS_COMPANYUSERS_ERROR_CONNECT'), 'error');
         }

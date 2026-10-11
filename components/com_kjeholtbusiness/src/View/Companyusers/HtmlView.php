@@ -24,8 +24,7 @@ class HtmlView extends BaseHtmlView
 
         $companyName = CompanyUser::companyNameForId($companyId);
 
-        $allowed = CompanyAcl::isSuiteSuperAdmin()
-            || ($companyName !== null && BssAcl::hasAccess($companyName, 'Admin'));
+        $allowed = CompanyAcl::isCompanyAdmin();
 
         if (!$allowed) {
             throw new \Exception(Text::_('JERROR_ALERTNOAUTHOR'), 403);
