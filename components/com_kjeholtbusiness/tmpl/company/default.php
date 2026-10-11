@@ -11,6 +11,7 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\HTML\HTMLHelper;
 use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\CompanyAcl;
 ?>
 <div class="kjeholtbusiness-company">
@@ -61,6 +62,41 @@ use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\CompanyAcl;
                 <dt><?php echo Text::_('COM_KJEHOLTBUSINESS_COMPANY_ORG_NUMBER'); ?></dt>
                 <dd><?php echo $this->escape($this->item->org_number ?? ''); ?></dd>
             </dl>
+        </div>
+    <?php endif; ?>
+
+
+    <?php if (!empty($this->item) && CompanyAcl::isSuiteAdmin()) : ?>
+        <div class="company-admin mt-4">
+            <h3><?php echo Text::_('COM_KJEHOLTBUSINESS_COMPANY_ADMIN'); ?></h3>
+            <?php if (!empty($this->adminUser)) : ?>
+                <p>
+                    <?php echo Text::_('COM_KJEHOLTBUSINESS_COMPANY_ADMIN_CURRENT'); ?>:
+                    <strong><?php echo $this->escape($this->adminUser->name); ?></strong>
+                    (<?php echo $this->escape($this->adminUser->username); ?>)
+                </p>
+            <?php else : ?>
+                <p><?php echo Text::_('COM_KJEHOLTBUSINESS_COMPANY_ADMIN_NONE'); ?></p>
+            <?php endif; ?>
+            <form action="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=company&id=' . (int) $this->item->id); ?>"
+                  method="post" class="d-flex gap-2">
+                <input type="hidden" name="task" value="company.admin" />
+                <select name="user_id" class="form-select">
+                    <option value=""><?php echo Text::_('COM_KJEHOLTBUSINESS_COMPANY_ADMIN_SELECT'); ?></option>
+                    <?php foreach ($this->availableAdminUsers as $user) : ?>
+                        <option value="<?php echo (int) $user->id; ?>">
+                            <?php echo $this->escape($user->name . ' (' . $user->username . ')'); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+                <?php echo HTMLHelper::_('form.token'); ?>
+                <button type="submit" class="btn btn-primary">
+                    <?php echo Text::_('COM_KJEHOLTBUSINESS_COMPANY_ADMIN_ASSIGN'); ?>
+                </button>
+            </form>
+            <p class="small text-muted mt-1">
+                <?php echo Text::_('COM_KJEHOLTBUSINESS_COMPANY_ADMIN_HINT'); ?>
+            </p>
         </div>
     <?php endif; ?>
 

@@ -11,6 +11,8 @@ class HtmlView extends BaseHtmlView
 {
     protected $item;
     protected $form;
+    protected $adminUser;
+    protected $availableAdminUsers;
 
     public function display($tpl = null)
     {
@@ -18,6 +20,13 @@ class HtmlView extends BaseHtmlView
 
         if ($this->item && !CompanyAcl::canViewCompany($this->item)) {
             throw new \Exception(Text::_('JERROR_ALERTNOAUTHOR'), 403);
+        }
+
+        // Responsible company admin (suite admins may assign it)
+        if ($this->item && CompanyAcl::isSuiteAdmin()) {
+            $model = $this->getModel();
+            $this->adminUser           = $model->getAdmin((int) $this->item->id);
+            $this->availableAdminUsers = $model->getAvailableAdminUsers();
         }
 
         $layout = $this->getLayout();

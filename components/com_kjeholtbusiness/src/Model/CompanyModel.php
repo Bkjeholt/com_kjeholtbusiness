@@ -4,12 +4,91 @@ namespace KjeholtEngineering\Component\KjeholtBusiness\Site\Model;
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
+use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\CompanyUser;
 use Joomla\CMS\MVC\Model\FormModel;
 use Joomla\Database\ParameterType;
 
 class CompanyModel extends FormModel
 {
     protected $item;
+
+
+    /**
+     * The responsible company admin user for the given company:
+     * the user connected via company_users who holds the 'admin' flag.
+     */
+    public function getAdmin(int $companyId = 0): ?object
+    {
+        if (!$companyId) {
+            $item = $this->getItem();
+            $companyId = (int) ($item->id ?? 0);
+        }
+
+        if (!$companyId) {
+            return null;
+        }
+
+        $db    = $this->getDatabase();
+        $query = $db->getQuery(true);
+        $query->select(
+            [
+                $db->quoteName('u.id'),
+                $db->quoteName('u.name'),
+                $db->quoteName('u.username'),
+                $db->quoteName('u.email'),
+            ]
+        )
+            ->from($db->quoteName('#__kjeholtbusiness_company_users', 'cu'))
+            ->join('INNER', $db->quoteName('#__users', 'u'), $db->quoteName('u.id') . ' = ' . $db->quoteName('cu.user_id'))
+            ->where($db->quoteName('cu.company_id') . ' = :company_id')
+            ->where("FIND_IN_SET('admin', " . $db->quoteName('cu.permissions') . ")")
+            ->bind(':company_id', $companyId, ParameterType::INTEGER)
+            ->order($db->quoteName('cu.id') . ' ASC');
+
+        return $db->setQuery($query)->loadObject() ?: null;
+    }
+
+    /**
+     * Make the given user the responsible company admin: connect the
+     * user to the company (if needed) with the 'admin' permission flag.
+     */
+    public function setAdmin(int $companyId, int $userId): bool
+    {
+        $existing = CompanyUser::permissions($userId);
+
+        if (!in_array('admin', $existing, true)) {
+            $existing[] = 'admin';
+        }
+
+        if (CompanyUser::companyId($userId) === $companyId) {
+            return CompanyUser::setPermissions($userId, $existing);
+        }
+
+        return CompanyUser::connect($userId, $companyId, $existing);
+    }
+
+    /**
+     * Joomla users available for assignment as company admin: not
+     * connected to another company.
+     */
+    public function getAvailableAdminUsers(): array
+    {
+        $db    = $this->getDatabase();
+        $query = $db->getQuery(true);
+        $query->select(
+            [
+                $db->quoteName('u.id'),
+                $db->quoteName('u.name'),
+                $db->quoteName('u.username'),
+            ]
+        )
+            ->from($db->quoteName('#__users', 'u'))
+            ->where($db->quoteName('u.block') . ' = 0')
+            ->where($db->quoteName('u.id') . ' NOT IN (SELECT user_id FROM #__kjeholtbusiness_company_users)')
+            ->order($db->quoteName('u.name') . ' ASC');
+
+        return $db->setQuery($query)->loadObjectList() ?: [];
+    }
 
     public function getItem(int $id = 0): ?object
     {

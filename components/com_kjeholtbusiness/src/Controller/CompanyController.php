@@ -42,6 +42,39 @@ class CompanyController extends BaseController
         return true;
     }
 
+    /**
+     * Assign the responsible company admin (suite admins only).
+     */
+    public function admin()
+    {
+        $this->checkToken();
+
+        if (!CompanyAcl::isSuiteAdmin()) {
+            throw new \Exception(Text::_('JERROR_ALERTNOAUTHOR'), 403);
+        }
+
+        $app       = Factory::getApplication();
+        $companyId = (int) $app->input->getInt('id', 0);
+        $userId    = (int) $app->input->getInt('user_id', 0);
+
+        if (!$companyId || !$userId) {
+            $app->enqueueMessage(Text::_('COM_KJEHOLTBUSINESS_COMPANYUSERS_ERROR_PARAMS'), 'warning');
+            $this->setRedirect(Route::_('index.php?option=com_kjeholtbusiness&view=company&id=' . $companyId, false));
+            return false;
+        }
+
+        $model = $this->getModel('Company');
+
+        if ($model->setAdmin($companyId, $userId)) {
+            $app->enqueueMessage(Text::_('COM_KJEHOLTBUSINESS_COMPANY_ADMIN_SAVED'), 'message');
+        } else {
+            $app->enqueueMessage(Text::_('COM_KJEHOLTBUSINESS_COMPANY_ADMIN_ERROR'), 'error');
+        }
+
+        $this->setRedirect(Route::_('index.php?option=com_kjeholtbusiness&view=company&id=' . $companyId, false));
+        return true;
+    }
+
     public function save()
     {
         $this->checkToken();
