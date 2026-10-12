@@ -18,7 +18,7 @@ $wa->useScript('form.validate');
 // $wa->useScript('com_exampleform.validate-no-uppercase');
 
 ?>
-<form action="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=timereport_started'); ?>"
+<form action="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=timereportstart'); ?>"
     class="form-validate" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
 
     <?php echo $this->form->renderFieldset('startTimeReportingFieldset');  ?>
