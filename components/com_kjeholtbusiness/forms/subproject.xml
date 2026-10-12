@@ -42,6 +42,12 @@
         <option value="1">JYES</option>
     </field>
     <field name="vat" type="text" label="COM_KJEHOLTBUSINESS_SUBPROJECT_FIELD_VAT_LABEL" default="25" filter="float" />
-    <field name="status" type="hidden" />
+    <field name="status" type="list" label="COM_KJEHOLTBUSINESS_SUBPROJECT_FIELD_STATUS_LABEL" default="not_started">
+        <option value="not_started">COM_KJEHOLTBUSINESS_SUBPROJECT_STATUS_NOT_STARTED</option>
+        <option value="ongoing">COM_KJEHOLTBUSINESS_SUBPROJECT_STATUS_ONGOING</option>
+        <option value="waiting_for_payment">COM_KJEHOLTBUSINESS_SUBPROJECT_STATUS_WAITING_FOR_PAYMENT</option>
+        <option value="finalized">COM_KJEHOLTBUSINESS_SUBPROJECT_STATUS_FINALIZED</option>
+        <option value="cancelled">COM_KJEHOLTBUSINESS_SUBPROJECT_STATUS_CANCELLED</option>
+    </field>
 </form>
 

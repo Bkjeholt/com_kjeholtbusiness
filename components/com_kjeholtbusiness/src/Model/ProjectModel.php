@@ -276,6 +276,38 @@ class ProjectModel extends FormModel
         }
     }
 
+
+    /**
+     * Change only the status of a project.
+     */
+    public function setStatus(int $id, string $status): bool
+    {
+        $allowed = ['preliminary', 'confirmed', 'ongoing', 'closing', 'finalized', 'cancelled'];
+
+        if (!in_array($status, $allowed, true)) {
+            $this->setError('Invalid status.');
+            return false;
+        }
+
+        $db    = $this->getDatabase();
+        $query = $db->getQuery(true)
+            ->update($db->quoteName('#__kjeholtbusiness_projects'))
+            ->set($db->quoteName('status') . ' = :status')
+            ->set($db->quoteName('modified_by') . ' = :user_id')
+            ->where($db->quoteName('id') . ' = :id')
+            ->bind(':status', $status)
+            ->bind(':user_id', (int) Factory::getUser()->id, \Joomla\Database\ParameterType::INTEGER)
+            ->bind(':id', $id, \Joomla\Database\ParameterType::INTEGER);
+
+        try {
+            $db->setQuery($query)->execute();
+            return true;
+        } catch (\Exception $e) {
+            $this->setError($e->getMessage());
+            return false;
+        }
+    }
+
     public function getItem() { 
         Log::add('ProjectModel->item ', Log::DEBUG, 'com_kjeholtbusiness');
 

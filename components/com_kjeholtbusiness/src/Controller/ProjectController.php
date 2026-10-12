@@ -106,6 +106,34 @@ class ProjectController extends FormController
         return true;
     }
 
+
+    /**
+     * Change the status of a project.
+     */
+    public function status()
+    {
+        $this->checkToken();
+
+        $app     = Factory::getApplication();
+        $model   = $this->getModel('Project');
+        $id      = (int) $app->input->getInt('id', 0);
+        $status  = (string) $app->input->getCmd('status', '');
+        $item    = $id ? $model->getItem($id) : null;
+
+        if (!ProjectAcl::canEditProject($item)) {
+            throw new \Exception(Text::_('JERROR_ALERTNOAUTHOR'), 403);
+        }
+
+        if (!$model->setStatus($id, $status)) {
+            $app->enqueueMessage($model->getError(), 'error');
+        } else {
+            $app->enqueueMessage(Text::_('COM_KJEHOLTBUSINESS_PROJECT_STATUS_SAVED'), 'message');
+        }
+
+        $this->setRedirect(Route::_('index.php?option=com_kjeholtbusiness&view=projectsummary&id=' . $id, false));
+        return true;
+    }
+
     public function submit($key = null, $urlVar = null)
     {
         Log::add('ProjectController: submit() called', Log::DEBUG, 'com_kjeholtbusiness');

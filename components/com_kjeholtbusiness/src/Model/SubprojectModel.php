@@ -49,32 +49,92 @@ class SubprojectModel extends FormModel
         $userId = (int) Factory::getUser()->id;
         $id     = (int) ($data['id'] ?? 0);
 
-        if (!$id) {
-            $this->setError('No subproject id provided.');
-            return false;
-        }
-
-        $existing = $this->getItem($id);
-
-        if (!$existing) {
-            $this->setError('Subproject not found.');
-            return false;
-        }
-
         $row = new \stdClass();
-        $row->id          = $id;
-        $row->name        = (string) ($data['name'] ?? $existing->name);
+        $row->name        = (string) ($data['name'] ?? '');
         $row->description = (string) ($data['description'] ?? '');
-        $row->start_date  = (string) ($data['start_date'] ?? '');
         $row->hourly_rate = (float) ($data['hourly_rate'] ?? 0);
         $row->estimated_amount_of_hours = (int) ($data['estimated_amount_of_hours'] ?? 0);
         $row->rot = (int) ($data['rot'] ?? 0) ? 1 : 0;
         $row->rut = (int) ($data['rut'] ?? 0) ? 1 : 0;
         $row->vat = (float) ($data['vat'] ?? 25);
+        $row->status     = (string) ($data['status'] ?? 'not_started');
+        $row->project_id = (int) ($data['project_id'] ?? 0);
         $row->modified_by = $userId;
 
+        // Start date: own, else the parent project's, else today
+        $startDate = trim((string) ($data['start_date'] ?? ''));
+
+        if ($startDate === '' && $row->project_id) {
+            $query = $db->getQuery(true)
+                ->select($db->quoteName('start_date'))
+                ->from($db->quoteName('#__kjeholtbusiness_projects'))
+                ->where($db->quoteName('id') . ' = :pid')
+                ->bind(':pid', $row->project_id, ParameterType::INTEGER);
+            $startDate = (string) ($db->setQuery($query)->loadResult() ?? '');
+        }
+
+        $row->start_date = $startDate !== '' ? $startDate : Factory::getDate()->format('Y-m-d');
+
         try {
-            return $db->updateObject('#__kjeholtbusiness_subprojects', $row, 'id');
+            if ($id) {
+                $existing = $this->getItem($id);
+
+                if (!$existing) {
+                    $this->setError('Subproject not found.');
+                    return false;
+                }
+
+                if ($row->name === '') {
+                    $row->name = (string) $existing->name;
+                }
+
+                if (!$row->project_id) {
+                    $row->project_id = (int) $existing->project_id;
+                }
+
+                $row->id = $id;
+
+                return $db->updateObject('#__kjeholtbusiness_subprojects', $row, 'id');
+            }
+
+            if (!$row->project_id) {
+                $this->setError('No project id provided.');
+                return false;
+            }
+
+            $row->created_by = $userId;
+            return $db->insertObject('#__kjeholtbusiness_subprojects', $row, 'id');
+        } catch (\Exception $e) {
+            $this->setError($e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Change only the status of a subproject.
+     */
+    public function setStatus(int $id, string $status): bool
+    {
+        $allowed = ['not_started', 'ongoing', 'waiting_for_payment', 'finalized', 'cancelled'];
+
+        if (!in_array($status, $allowed, true)) {
+            $this->setError('Invalid status.');
+            return false;
+        }
+
+        $db    = $this->getDatabase();
+        $query = $db->getQuery(true)
+            ->update($db->quoteName('#__kjeholtbusiness_subprojects'))
+            ->set($db->quoteName('status') . ' = :status')
+            ->set($db->quoteName('modified_by') . ' = :user_id')
+            ->where($db->quoteName('id') . ' = :id')
+            ->bind(':status', $status)
+            ->bind(':user_id', (int) Factory::getUser()->id, ParameterType::INTEGER)
+            ->bind(':id', $id, ParameterType::INTEGER);
+
+        try {
+            $db->setQuery($query)->execute();
+            return true;
         } catch (\Exception $e) {
             $this->setError($e->getMessage());
             return false;
@@ -132,9 +192,20 @@ class SubprojectModel extends FormModel
 
     protected function loadFormData()
     {
-        return $this->item !== null
-            ? (array) $this->item
-            : Factory::getApplication()->getUserState('com_kjeholtbusiness.subproject.edit.data', []);
+        if ($this->item !== null) {
+            return (array) $this->item;
+        }
+
+        $sessionData = Factory::getApplication()->getUserState('com_kjeholtbusiness.subproject.edit.data', []);
+
+        if ($sessionData) {
+            return $sessionData;
+        }
+
+        return [
+            'id'         => 0,
+            'project_id' => (int) Factory::getApplication()->input->getInt('project_id', 0),
+        ];
     }
 
     public function getTimecards($pk = null)

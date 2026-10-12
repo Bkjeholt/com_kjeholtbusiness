@@ -23,6 +23,52 @@ class SubprojectController extends FormController
         return BssAcl::hasAccessAny('project:edit');
     }
 
+
+    /**
+     * Show the form for a new subproject under the given project.
+     */
+    public function add()
+    {
+        $app       = Factory::getApplication();
+        $projectId = (int) $app->input->getInt('project_id', 0);
+
+        if (!ProjectAcl::canEditProject((object) ['id' => $projectId])) {
+            throw new \Exception(Text::_('JERROR_ALERTNOAUTHOR'), 403);
+        }
+
+        $this->setRedirect(Route::_('index.php?option=com_kjeholtbusiness&view=subproject&layout=edit&project_id=' . $projectId, false));
+        return true;
+    }
+
+    /**
+     * Change the status of a subproject.
+     */
+    public function status()
+    {
+        $this->checkToken();
+
+        $app     = Factory::getApplication();
+        $model   = $this->getModel('Subproject');
+        $id      = (int) $app->input->getInt('id', 0);
+        $status  = (string) $app->input->getCmd('status', '');
+        $item    = $id ? $model->getItem($id) : null;
+
+        if (!ProjectAcl::canEditSubproject($item)) {
+            throw new \Exception(Text::_('JERROR_ALERTNOAUTHOR'), 403);
+        }
+
+        if (!$model->setStatus($id, $status)) {
+            $app->enqueueMessage($model->getError(), 'error');
+        } else {
+            Logbook::log('subproject.status', sprintf('Subproject #%d status set to %s.', $id, $status));
+            $app->enqueueMessage(Text::_('COM_KJEHOLTBUSINESS_SUBPROJECT_STATUS_SAVED'), 'message');
+        }
+
+        $projectId = (int) ($item->project_id ?? 0);
+        $this->setRedirect(Route::_('index.php?option=com_kjeholtbusiness&view=projectsummary&id=' . $projectId, false));
+        return true;
+    }
+
     public function save($key = null, $urlVar = null)
     {
         $this->checkToken();
@@ -35,8 +81,16 @@ class SubprojectController extends FormController
 
         $item = $id > 0 ? $model->getItem($id) : null;
 
-        if (!ProjectAcl::canEditSubproject($item)) {
+        if ($id && !ProjectAcl::canEditSubproject($item)) {
             throw new \Exception(Text::_('JERROR_ALERTNOAUTHOR'), 403);
+        }
+
+        if (!$id) {
+            $projectId = (int) ($jform['project_id'] ?? 0);
+
+            if (!$projectId || !ProjectAcl::canEditProject((object) ['id' => $projectId])) {
+                throw new \Exception(Text::_('JERROR_ALERTNOAUTHOR'), 403);
+            }
         }
 
         $form = $model->getForm(null, false);
@@ -70,12 +124,13 @@ class SubprojectController extends FormController
         $app->setUserState('com_kjeholtbusiness.subproject.edit.data', null);
 
         Logbook::log(
-            'subproject.updated',
-            sprintf('Subproject #%d (%s) was updated.', $id, $validData['name'] ?? '')
+            $id ? 'subproject.updated' : 'subproject.created',
+            sprintf('Subproject #%d (%s) was %s.', $id, $validData['name'] ?? '', $id ? 'updated' : 'created')
         );
 
         $app->enqueueMessage(Text::_('COM_KJEHOLTBUSINESS_SUBPROJECT_SAVED'), 'message');
-        $this->setRedirect(Route::_('index.php?option=com_kjeholtbusiness&view=subproject&id=' . $id, false));
+        $projectId = (int) ($validData['project_id'] ?? ($item->project_id ?? 0));
+        $this->setRedirect(Route::_('index.php?option=com_kjeholtbusiness&view=projectsummary&id=' . $projectId, false));
         return true;
     }
 }

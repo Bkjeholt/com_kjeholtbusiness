@@ -27,6 +27,7 @@ use Joomla\CMS\Router\Route;
                 'start_date',
                 'hourly_rate',
                 'estimated_amount_of_hours',
+                'status',
                 'rot',
                 'rut',
                 'vat',
@@ -46,7 +47,7 @@ use Joomla\CMS\Router\Route;
         <button type="submit" class="btn btn-primary">
             <?php echo Text::_('JSAVE'); ?>
         </button>
-        <a class="btn btn-secondary" href="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=subproject&id=' . (int) $this->item->id); ?>">
+        <a class="btn btn-secondary" href="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=projectsummary&id=' . (int) ($this->form->getValue('project_id') ?? ($this->item->project_id ?? 0))); ?>">
             <?php echo Text::_('JCANCEL'); ?>
         </a>
     </form>

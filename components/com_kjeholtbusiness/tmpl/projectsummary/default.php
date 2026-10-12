@@ -12,6 +12,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\HTML\HTMLHelper;
 use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\ProjectAcl;
 ?>
 <div class="kjeholtbusiness-projectsummary">
@@ -34,13 +35,39 @@ use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\ProjectAcl;
                 <dt><?php echo Text::_('COM_KJEHOLTBUSINESS_PROJECTS_START_DATE'); ?></dt>
                 <dd><?php echo HTMLHelper::_('date', $this->item->start_date, Text::_('DATE_FORMAT_LC4')); ?></dd>
                 <dt><?php echo Text::_('COM_KJEHOLTBUSINESS_PROJECTS_STATUS'); ?></dt>
-                <dd><?php echo Text::_('COM_KJEHOLTBUSINESS_PROJECT_STATUS_' . strtoupper($this->item->status)); ?></dd>
+                <dd>
+                    <?php if (ProjectAcl::canEditProject($this->item)) : ?>
+                        <form action="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=projectsummary&id=' . (int) $this->item->id); ?>"
+                              method="post" class="d-inline-flex gap-1">
+                            <?php
+                            $projectStatusOptions = [
+                                'preliminary' => Text::_('COM_KJEHOLTBUSINESS_PROJECT_STATUS_PRELIMINARY'),
+                                'confirmed'    => Text::_('COM_KJEHOLTBUSINESS_PROJECT_STATUS_CONFIRMED'),
+                                'ongoing'      => Text::_('COM_KJEHOLTBUSINESS_PROJECT_STATUS_ONGOING'),
+                                'closing'      => Text::_('COM_KJEHOLTBUSINESS_PROJECT_STATUS_CLOSING'),
+                                'finalized'    => Text::_('COM_KJEHOLTBUSINESS_PROJECT_STATUS_FINALIZED'),
+                                'cancelled'    => Text::_('COM_KJEHOLTBUSINESS_PROJECT_STATUS_CANCELLED'),
+                            ];
+                            echo HTMLHelper::_('select.genericlist', $projectStatusOptions, 'status', 'class="form-select form-select-sm"', 'value', 'text', $this->item->status);
+                            ?>
+                            <input type="hidden" name="task" value="project.status" />
+                            <input type="hidden" name="id" value="<?php echo (int) $this->item->id; ?>" />
+                            <?php echo HTMLHelper::_('form.token'); ?>
+                            <button type="submit" class="btn btn-sm btn-outline-primary"><?php echo Text::_('JSUBMIT'); ?></button>
+                        </form>
+                    <?php else : ?>
+                        <?php echo Text::_('COM_KJEHOLTBUSINESS_PROJECT_STATUS_' . strtoupper($this->item->status)); ?>
+                    <?php endif; ?>
+                </dd>
             </dl>
         </div>
 
         <?php if (ProjectAcl::canEditProject($this->item)) : ?>
             <a class="btn btn-primary mb-2" href="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=project&layout=edit&id=' . (int) $this->item->id); ?>">
                 <?php echo Text::_('JACTION_EDIT'); ?> <?php echo Text::_('COM_KJEHOLTBUSINESS_PROJECT_TITLE'); ?>
+            </a>
+            <a class="btn btn-success mb-2" href="<?php echo Route::_('index.php?option=com_kjeholtbusiness&task=subproject.add&project_id=' . (int) $this->item->id); ?>">
+                <?php echo Text::_('COM_KJEHOLTBUSINESS_SUBPROJECT_NEW'); ?>
             </a>
         <?php endif; ?>
 
@@ -72,7 +99,29 @@ use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\ProjectAcl;
                                         </a>
                                     <?php endif; ?>
                                 </td>
-                                <td><?php echo Text::_('COM_KJEHOLTBUSINESS_SUBPROJECT_STATUS_' . strtoupper($subproject->status)); ?></td>
+                                <td>
+                                    <?php if (ProjectAcl::canEditSubproject($subproject)) : ?>
+                                        <form action="<?php echo Route::_('index.php?option=com_kjeholtbusiness&view=projectsummary&id=' . (int) $this->item->id); ?>"
+                                              method="post" class="d-inline-flex gap-1">
+                                            <?php
+                                            $spStatusOptions = [
+                                                'not_started'        => Text::_('COM_KJEHOLTBUSINESS_SUBPROJECT_STATUS_NOT_STARTED'),
+                                                'ongoing'            => Text::_('COM_KJEHOLTBUSINESS_SUBPROJECT_STATUS_ONGOING'),
+                                                'waiting_for_payment' => Text::_('COM_KJEHOLTBUSINESS_SUBPROJECT_STATUS_WAITING_FOR_PAYMENT'),
+                                                'finalized'          => Text::_('COM_KJEHOLTBUSINESS_SUBPROJECT_STATUS_FINALIZED'),
+                                                'cancelled'          => Text::_('COM_KJEHOLTBUSINESS_SUBPROJECT_STATUS_CANCELLED'),
+                                            ];
+                                            echo HTMLHelper::_('select.genericlist', $spStatusOptions, 'status', 'class="form-select form-select-sm"', 'value', 'text', $subproject->status);
+                                            ?>
+                                            <input type="hidden" name="task" value="subproject.status" />
+                                            <input type="hidden" name="id" value="<?php echo (int) $subproject->id; ?>" />
+                                            <?php echo HTMLHelper::_('form.token'); ?>
+                                            <button type="submit" class="btn btn-sm btn-outline-primary"><?php echo Text::_('JSUBMIT'); ?></button>
+                                        </form>
+                                    <?php else : ?>
+                                        <?php echo Text::_('COM_KJEHOLTBUSINESS_SUBPROJECT_STATUS_' . strtoupper($subproject->status)); ?>
+                                    <?php endif; ?>
+                                </td>
                                 <td><?php echo $subproject->start_date; ?></td>
                                 <td class="text-end"><?php echo number_format((float) $subproject->spent_hours, 2, ',', ' '); ?></td>
                                 <td class="text-end"><?php echo number_format((float) $subproject->time_cost, 2, ',', ' '); ?></td>
