@@ -216,12 +216,13 @@ class CompanyModel extends FormModel
         }
 
         try {
-            $query = $db->getQuery(true)
+
+            $userId = (int) Factory::getUser()->id;            $query = $db->getQuery(true)
                 ->update($db->quoteName('#__kjeholtbusiness_companies'))
                 ->set($db->quoteName('deleted') . ' = 1')
                 ->set($db->quoteName('modified_by') . ' = :user_id')
                 ->where($db->quoteName('id') . ' = :id')
-                ->bind(':user_id', (int) Factory::getUser()->id, ParameterType::INTEGER)
+                ->bind(':user_id', $userId, ParameterType::INTEGER)
                 ->bind(':id', $id, ParameterType::INTEGER);
             $db->setQuery($query)->execute();
 

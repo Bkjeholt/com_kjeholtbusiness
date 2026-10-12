@@ -89,11 +89,12 @@ class ProjectAcl
         // Parent project owner
         if (!empty($subproject->project_id)) {
             $db    = Factory::getDbo();
+            $pid = (int) $subproject->project_id;
             $query = $db->getQuery(true)
                 ->select($db->quoteName('created_by'))
                 ->from($db->quoteName('#__kjeholtbusiness_projects'))
                 ->where($db->quoteName('id') . ' = :pid')
-                ->bind(':pid', (int) $subproject->project_id, ParameterType::INTEGER);
+                ->bind(':pid', $pid, ParameterType::INTEGER);
             $projectOwner = $db->setQuery($query)->loadResult();
 
             if ((int) $projectOwner === (int) $user->id && (int) $user->id > 0) {

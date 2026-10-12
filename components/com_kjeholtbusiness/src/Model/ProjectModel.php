@@ -289,6 +289,7 @@ class ProjectModel extends FormModel
             return false;
         }
 
+        $userId = (int) Factory::getUser()->id;
         $db    = $this->getDatabase();
         $query = $db->getQuery(true)
             ->update($db->quoteName('#__kjeholtbusiness_projects'))
@@ -296,7 +297,7 @@ class ProjectModel extends FormModel
             ->set($db->quoteName('modified_by') . ' = :user_id')
             ->where($db->quoteName('id') . ' = :id')
             ->bind(':status', $status)
-            ->bind(':user_id', (int) Factory::getUser()->id, \Joomla\Database\ParameterType::INTEGER)
+            ->bind(':user_id', $userId, \Joomla\Database\ParameterType::INTEGER)
             ->bind(':id', $id, \Joomla\Database\ParameterType::INTEGER);
 
         try {

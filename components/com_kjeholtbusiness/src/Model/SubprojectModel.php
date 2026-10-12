@@ -65,11 +65,12 @@ class SubprojectModel extends FormModel
         $startDate = trim((string) ($data['start_date'] ?? ''));
 
         if ($startDate === '' && $row->project_id) {
+            $pid = (int) $row->project_id;
             $query = $db->getQuery(true)
                 ->select($db->quoteName('start_date'))
                 ->from($db->quoteName('#__kjeholtbusiness_projects'))
                 ->where($db->quoteName('id') . ' = :pid')
-                ->bind(':pid', $row->project_id, ParameterType::INTEGER);
+                ->bind(':pid', $pid, ParameterType::INTEGER);
             $startDate = (string) ($db->setQuery($query)->loadResult() ?? '');
         }
 
@@ -122,6 +123,7 @@ class SubprojectModel extends FormModel
             return false;
         }
 
+        $userId = (int) Factory::getUser()->id;
         $db    = $this->getDatabase();
         $query = $db->getQuery(true)
             ->update($db->quoteName('#__kjeholtbusiness_subprojects'))
@@ -129,7 +131,7 @@ class SubprojectModel extends FormModel
             ->set($db->quoteName('modified_by') . ' = :user_id')
             ->where($db->quoteName('id') . ' = :id')
             ->bind(':status', $status)
-            ->bind(':user_id', (int) Factory::getUser()->id, ParameterType::INTEGER)
+            ->bind(':user_id', $userId, ParameterType::INTEGER)
             ->bind(':id', $id, ParameterType::INTEGER);
 
         try {

@@ -23,6 +23,7 @@ class InvoiceController extends BaseController
         }
 
         $id = (int) $app->input->getInt('id', 0);
+        $userId = (int) Factory::getUser()->id;
         $db = Factory::getDbo();
 
         // Only draft invoices can be marked as sent
@@ -32,7 +33,7 @@ class InvoiceController extends BaseController
             ->set($db->quoteName('modified_by') . ' = :user_id')
             ->where($db->quoteName('id') . ' = :id')
             ->where($db->quoteName('status') . ' = ' . $db->quote('draft'))
-            ->bind(':user_id', (int) Factory::getUser()->id, \Joomla\Database\ParameterType::INTEGER)
+            ->bind(':user_id', $userId, \Joomla\Database\ParameterType::INTEGER)
             ->bind(':id', $id, \Joomla\Database\ParameterType::INTEGER);
 
         try {
