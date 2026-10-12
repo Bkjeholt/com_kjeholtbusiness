@@ -28,7 +28,7 @@ class InvoiceModel extends FormModel
 
         $query->select(
             [
-                $db->quoteName('i.*'),
+                'i.*',
                 $db->quoteName('c.name', 'customer_name'),
                 $db->quoteName('p.name', 'project_name'),
             ]

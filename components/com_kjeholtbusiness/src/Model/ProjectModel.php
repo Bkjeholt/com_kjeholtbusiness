@@ -96,7 +96,7 @@ class ProjectModel extends FormModel
         $summaryHours = 0;
         
         $query
-        ->select($db->quoteName('a.*'))
+        ->select('a.*')
         ->from($db->quoteName('#__kjeholtbusiness_timecards', 'a'))
         ->where($db->quoteName('subproject_id') . ' = :subproject_id')
         ->order($db->quoteName('id') . ' ASC')
@@ -159,7 +159,7 @@ class ProjectModel extends FormModel
         $query = $db->getQuery(true);
         
         $query
-        ->select($db->quoteName('a.*'))
+        ->select('a.*')
         ->from($db->quoteName('#__kjeholtbusiness_subprojects', 'a'))
         ->where($db->quoteName('project_id') . ' = :project_id')
         ->order($db->quoteName('id') . ' ASC')
