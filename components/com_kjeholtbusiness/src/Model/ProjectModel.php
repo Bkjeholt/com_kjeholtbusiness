@@ -229,6 +229,53 @@ class ProjectModel extends FormModel
         return $projectResultObject;
         
     }
+
+    /**
+     * Update an existing project's editable fields.
+     */
+    public function save(array $data): bool
+    {
+        $db   = $this->getDatabase();
+        $id   = (int) ($data['id'] ?? 0);
+
+        if (!$id) {
+            $this->setError('No project id provided.');
+            return false;
+        }
+
+        $row = new \stdClass();
+        $row->id = $id;
+
+        if (array_key_exists('name', $data)) {
+            $row->name = (string) $data['name'];
+        }
+
+        if (array_key_exists('description', $data)) {
+            $row->description = (string) $data['description'];
+        }
+
+        if (array_key_exists('property_name', $data)) {
+            $row->property_name = (string) $data['property_name'];
+        }
+
+        if (!empty($data['start_date'])) {
+            $row->start_date = (string) $data['start_date'];
+        }
+
+        if (array_key_exists('status', $data) && $data['status'] !== '') {
+            $row->status = (string) $data['status'];
+        }
+
+        $row->modified_by = (int) Factory::getUser()->id;
+
+        try {
+            return $db->updateObject('#__kjeholtbusiness_projects', $row, 'id');
+        } catch (\Exception $e) {
+            $this->setError($e->getMessage());
+            return false;
+        }
+    }
+
     public function getItem() { 
         Log::add('ProjectModel->item ', Log::DEBUG, 'com_kjeholtbusiness');
 

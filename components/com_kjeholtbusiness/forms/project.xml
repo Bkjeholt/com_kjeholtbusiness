@@ -4,6 +4,8 @@
     <fieldset name="mainFieldset" 
               label="mainFieldsetLabel" 
               description="mainFieldsetDescription">
+        <field name="id"
+               type="hidden" />
         <field name="project_id" 
                type="hidden" />
         <field name="project_status" 

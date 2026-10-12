@@ -9,6 +9,7 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\BssAcl;
+use KjeholtEngineering\Component\KjeholtBusiness\Site\Helper\ProjectAcl;
 
 class ProjectController extends FormController
 {
@@ -69,6 +70,42 @@ class ProjectController extends FormController
         return ['projectId' => $projectId, 'start_date' => $data->start_date];
     }
     
+
+    /**
+     * Save changes to an existing project.
+     */
+    public function save($key = null, $urlVar = null)
+    {
+        $this->checkToken();
+
+        $app   = Factory::getApplication();
+        $model = $this->getModel('Project');
+        $jform = $this->input->post->get('jform', [], 'array');
+        $id    = (int) ($jform['id'] ?? 0);
+
+        $item = $id > 0 ? $model->getItem($id) : null;
+
+        if (!ProjectAcl::canEditProject($item)) {
+            throw new \Exception(Text::_('JERROR_ALERTNOAUTHOR'), 403);
+        }
+
+        if (!$id || !$item) {
+            $app->enqueueMessage(Text::_('COM_KJEHOLTBUSINESS_PROJECT_NOT_FOUND'), 'error');
+            $this->setRedirect(Route::_('index.php?option=com_kjeholtbusiness&view=projects', false));
+            return false;
+        }
+
+        if (!$model->save($jform)) {
+            $app->enqueueMessage($model->getError(), 'error');
+            $this->setRedirect(Route::_('index.php?option=com_kjeholtbusiness&view=project&layout=edit&id=' . $id, false));
+            return false;
+        }
+
+        $app->enqueueMessage(Text::_('COM_KJEHOLTBUSINESS_PROJECT_SAVED'), 'message');
+        $this->setRedirect(Route::_('index.php?option=com_kjeholtbusiness&view=projectsummary&id=' . $id, false));
+        return true;
+    }
+
     public function submit($key = null, $urlVar = null)
     {
         Log::add('ProjectController: submit() called', Log::DEBUG, 'com_kjeholtbusiness');
