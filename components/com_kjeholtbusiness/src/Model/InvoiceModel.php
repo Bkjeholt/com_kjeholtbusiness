@@ -103,7 +103,7 @@ class InvoiceModel extends FormModel
 
     public function getForm($data = [], $loadData = true)
     {
-        \Joomla\CMS\Form\Form::addFieldPath(JPATH_SITE . '/components/com_kjeholtbusiness/src/Field');
+        \Joomla\CMS\Form\FormHelper::addFieldPrefix('KjeholtEngineering\Component\KjeholtBusiness\Site\Field');
 
         $form = $this->loadForm(
             'com_kjeholtbusiness.invoice',
